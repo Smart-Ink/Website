@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Demo Inteligente | Smart Ink</title>
+    <link rel="icon" type="image/png" href="favicon.ico" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              navy: "#0A192F",
+              gold: "#C9A227",
+              radar: "#00FF94",
+            },
+            fontFamily: {
+              sans: ["Inter", "ui-sans-serif", "system-ui", "-apple-system", "BlinkMacSystemFont"],
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      body {
+        background-color: #0a192f;
+        color: #ffffff;
+        font-family: 'Inter', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont;
+      }
+      .hud-overlay::before,
+      .hud-overlay::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        z-index: 0;
+      }
+      .hud-overlay::before {
+        background-image: linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+        background-size: 60px 60px;
+      }
+      .hud-overlay::after {
+        background: radial-gradient(circle at 30% 20%, rgba(201, 162, 39, 0.2), transparent 55%),
+          radial-gradient(circle at 80% 65%, rgba(0, 255, 148, 0.08), transparent 60%);
+      }
+      .card-bg {
+        background: rgba(10, 25, 47, 0.85);
+        backdrop-filter: blur(8px);
+      }
+      .chart-wrapper {
+        height: 320px;
+      }
+    </style>
+  </head>
+  <body class="min-h-screen relative hud-overlay overflow-x-hidden">
+    <div class="relative z-10">
+      <header class="flex items-center justify-between px-6 py-4 md:px-12">
+        <div class="flex items-center space-x-3">
+          <img src="logo.png" alt="Smart Ink" class="h-10 w-auto" />
+          <span class="text-sm uppercase tracking-[0.3em] text-white/70">Smart Ink</span>
+        </div>
+        <a
+          href="index.html"
+          class="rounded-2xl border border-gold/60 bg-gold px-5 py-2 text-sm font-semibold text-navy shadow-lg shadow-gold/30 transition hover:-translate-y-0.5 hover:shadow-xl"
+        >
+          Volver al inicio
+        </a>
+      </header>
+
+      <main class="px-6 pb-16 pt-6 md:px-12">
+        <div class="mx-auto max-w-5xl">
+          <div class="mb-10 text-center">
+            <h1 class="text-3xl font-semibold md:text-4xl">Demo Inteligente</h1>
+            <p class="mt-3 text-base text-white/70 md:text-lg">
+              Visualiza cómo Smart Ink automatiza el procesamiento documental y transforma tus datos en indicadores accionables.
+            </p>
+          </div>
+
+          <div class="rounded-3xl border border-white/10 bg-white/5 p-2">
+            <div id="root" class="min-h-[200px] text-center text-white/60">Cargando Demo…</div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <noscript>
+      <div class="text-center text-white/80">
+        Cargando Demo… Activa JavaScript para ver la experiencia completa.
+      </div>
+    </noscript>
+
+    <script src="https://unpkg.com/react@17/umd/react.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js" crossorigin></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/recharts/1.8.5/Recharts.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <script>
+      window.addEventListener('load', function () {
+        const rootElement = document.getElementById('root');
+        if (!rootElement) {
+          return;
+        }
+
+        if (!window.React || !window.ReactDOM) {
+          rootElement.innerHTML =
+            '<div class="py-10 text-center text-red-300">No se pudo cargar React. Verifica tu conexión e intenta nuevamente.</div>';
+          return;
+        }
+
+        const RechartsGlobal = window.Recharts;
+        if (!RechartsGlobal) {
+          rootElement.innerHTML =
+            '<div class="py-10 text-center text-red-300">No se pudieron cargar los gráficos. Verifica tu conexión e intenta nuevamente.</div>';
+          return;
+        }
+
+        const e = React.createElement;
+        const { useState, useEffect, useMemo, useRef } = React;
+        const {
+          BarChart,
+          Bar,
+          XAxis,
+          YAxis,
+          Tooltip,
+          ResponsiveContainer,
+          CartesianGrid,
+          LineChart,
+          Line,
+        } = RechartsGlobal;
+
+        const tabs = [
+          { key: 'presentacion', label: 'Presentación automática' },
+          { key: 'calculadora', label: 'Calculadora interactiva' },
+        ];
+
+        const daysOfWeek = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'];
+
+        const generateBarData = function () {
+          return daysOfWeek.map(function (day) {
+            return {
+              dia: day,
+              facturas: Math.floor(Math.random() * 51) + 50,
+            };
+          });
+        };
+
+        const DemoTabPresentation = function () {
+          const [progress, setProgress] = useState(0);
+          const [isRunning, setIsRunning] = useState(false);
+          const [data, setData] = useState(generateBarData);
+          const intervalRef = useRef(null);
+
+          useEffect(
+            function () {
+              if (isRunning && progress < 100) {
+                intervalRef.current = setInterval(function () {
+                  setProgress(function (prev) {
+                    const next = prev + 2;
+                    if (next >= 100) {
+                      clearInterval(intervalRef.current);
+                      return 100;
+                    }
+                    return next;
+                  });
+                }, 100);
+              }
+              return function () {
+                clearInterval(intervalRef.current);
+              };
+            },
+            [isRunning]
+          );
+
+          useEffect(
+            function () {
+              if (progress === 100) {
+                setIsRunning(false);
+              }
+            },
+            [progress]
+          );
+
+          const handleStart = function () {
+            clearInterval(intervalRef.current);
+            setData(generateBarData());
+            setProgress(0);
+            setIsRunning(true);
+          };
+
+          const handleReset = function () {
+            clearInterval(intervalRef.current);
+            setProgress(0);
+            setIsRunning(false);
+          };
+
+          return e(
+            'div',
+            { className: 'card-bg relative overflow-hidden rounded-3xl p-8 text-white shadow-xl' },
+            e(
+              'div',
+              { className: 'relative z-10' },
+              e('h2', { className: 'text-2xl font-semibold' }, 'Presentación automática'),
+              e(
+                'p',
+                { className: 'mt-2 text-sm text-white/70 md:text-base' },
+                'Inicia la demo para ver cómo Smart Ink procesa documentos y genera métricas.'
+              ),
+              e(
+                'div',
+                { className: 'mt-8 grid gap-6 md:grid-cols-[1fr_auto] md:items-center' },
+                e(
+                  'div',
+                  null,
+                  progress < 100
+                    ? e(
+                        React.Fragment,
+                        null,
+                        e(
+                          'p',
+                          { className: 'mb-3 text-sm uppercase tracking-widest text-white/60' },
+                          'Procesando documentos…'
+                        ),
+                        e(
+                          'div',
+                          { className: 'h-3 w-full overflow-hidden rounded-full bg-white/10' },
+                          e('div', {
+                            className: 'h-full rounded-full bg-gold transition-all duration-100',
+                            style: { width: progress + '%' },
+                          })
+                        ),
+                        e(
+                          'p',
+                          { className: 'mt-2 text-right text-xs text-white/60' },
+                          progress + '%'
+                        )
+                      )
+                    : e(
+                        'div',
+                        { className: 'chart-wrapper' },
+                        e(
+                          ResponsiveContainer,
+                          { width: '100%', height: '100%' },
+                          e(
+                            BarChart,
+                            { data: data },
+                            e(CartesianGrid, { stroke: 'rgba(255,255,255,0.1)', vertical: false }),
+                            e(XAxis, { dataKey: 'dia', stroke: '#ffffff', tick: { fill: '#ffffff' } }),
+                            e(YAxis, { stroke: '#ffffff', tick: { fill: '#ffffff' }, allowDecimals: false }),
+                            e(Tooltip, {
+                              contentStyle: {
+                                backgroundColor: '#0A192F',
+                                borderRadius: '12px',
+                                border: '1px solid rgba(255,255,255,0.1)',
+                                color: '#ffffff',
+                              },
+                            }),
+                            e(Bar, { dataKey: 'facturas', fill: '#C9A227', radius: [10, 10, 0, 0] })
+                          )
+                        )
+                      )
+                ),
+                e(
+                  'div',
+                  { className: 'flex flex-col gap-3' },
+                  e(
+                    'button',
+                    {
+                      onClick: handleStart,
+                      className:
+                        'rounded-2xl bg-gold px-5 py-3 text-sm font-semibold text-navy shadow-lg shadow-gold/30 transition hover:-translate-y-0.5 hover:shadow-xl',
+                    },
+                    'Iniciar demo'
+                  ),
+                  e(
+                    'button',
+                    {
+                      onClick: handleReset,
+                      className:
+                        'rounded-2xl border border-white/20 px-5 py-3 text-sm font-semibold text-white/80 transition hover:border-white/40',
+                    },
+                    'Reiniciar demo'
+                  )
+                )
+              )
+            )
+          );
+        };
+
+        const KPI = function (props) {
+          return e(
+            'div',
+            { className: 'card-bg rounded-3xl border border-white/10 p-6 text-left' },
+            e('div', { className: 'text-2xl', 'aria-hidden': 'true' }, props.icon),
+            e(
+              'p',
+              { className: 'mt-4 text-sm font-medium uppercase tracking-[0.2em] text-white/60' },
+              props.label
+            ),
+            e('p', { className: 'mt-2 text-2xl font-semibold ' + props.accent }, props.value)
+          );
+        };
+
+        const DemoTabCalculator = function () {
+          const [ingresos, setIngresos] = useState(35000);
+          const [gastos, setGastos] = useState(18000);
+          const [facturas, setFacturas] = useState(250);
+
+          const metrics = useMemo(
+            function () {
+              const ahorro = ingresos * 0.05 - gastos * 0.02 + facturas * 5;
+              const roi = gastos > 0 ? (ahorro / gastos) * 100 : 0;
+              const dias = Math.max(10, Math.round(90 - roi / 2));
+              const trend = Array.from({ length: 5 }, function (_, idx) {
+                return {
+                  etiqueta: 'Semana ' + (idx + 1),
+                  roi: Math.max(roi * (0.85 + idx * 0.04), 0),
+                };
+              });
+              return { ahorro: ahorro, roi: roi, dias: dias, trend: trend };
+            },
+            [ingresos, gastos, facturas]
+          );
+
+          const formatCurrency = function (value) {
+            return value.toLocaleString('es-MX', {
+              style: 'currency',
+              currency: 'MXN',
+              maximumFractionDigits: 0,
+            });
+          };
+
+          const formatPercent = function (value) {
+            return value.toFixed(1) + '%';
+          };
+
+          return e(
+            'div',
+            { className: 'card-bg rounded-3xl p-8 text-white shadow-xl' },
+            e('h2', { className: 'text-2xl font-semibold' }, 'Calculadora interactiva'),
+            e(
+              'p',
+              { className: 'mt-2 text-sm text-white/70 md:text-base' },
+              'Ajusta tus métricas para estimar el impacto de Smart Ink en tus resultados.'
+            ),
+            e(
+              'div',
+              { className: 'mt-8 grid gap-6 md:grid-cols-2' },
+              e(
+                'div',
+                { className: 'space-y-6' },
+                e(
+                  'div',
+                  null,
+                  e(
+                    'div',
+                    { className: 'flex items-center justify-between text-sm text-white/70' },
+                    e('span', null, 'Ingresos'),
+                    e('span', null, formatCurrency(ingresos))
+                  ),
+                  e('input', {
+                    type: 'range',
+                    min: '1000',
+                    max: '100000',
+                    value: ingresos,
+                    onChange: function (event) {
+                      setIngresos(parseInt(event.target.value, 10));
+                    },
+                    className: 'w-full accent-gold',
+                  })
+                ),
+                e(
+                  'div',
+                  null,
+                  e(
+                    'div',
+                    { className: 'flex items-center justify-between text-sm text-white/70' },
+                    e('span', null, 'Gastos'),
+                    e('span', null, formatCurrency(gastos))
+                  ),
+                  e('input', {
+                    type: 'range',
+                    min: '1000',
+                    max: '100000',
+                    value: gastos,
+                    onChange: function (event) {
+                      setGastos(parseInt(event.target.value, 10));
+                    },
+                    className: 'w-full accent-gold',
+                  })
+                ),
+                e(
+                  'div',
+                  null,
+                  e(
+                    'div',
+                    { className: 'flex items-center justify-between text-sm text-white/70' },
+                    e('span', null, 'Facturas'),
+                    e('span', null, facturas.toLocaleString('es-MX'))
+                  ),
+                  e('input', {
+                    type: 'range',
+                    min: '10',
+                    max: '1000',
+                    value: facturas,
+                    onChange: function (event) {
+                      setFacturas(parseInt(event.target.value, 10));
+                    },
+                    className: 'w-full accent-gold',
+                  })
+                )
+              ),
+              e(
+                'div',
+                { className: 'space-y-6' },
+                e(
+                  'div',
+                  { className: 'grid gap-4 md:grid-cols-3' },
+                  e(KPI, {
+                    icon: '💰',
+                    label: 'Ahorro potencial',
+                    value: formatCurrency(metrics.ahorro),
+                    accent: 'text-gold',
+                  }),
+                  e(KPI, {
+                    icon: '📈',
+                    label: 'ROI estimado',
+                    value: formatPercent(metrics.roi),
+                    accent: 'text-gold',
+                  }),
+                  e(KPI, {
+                    icon: '⏱',
+                    label: 'Recuperación',
+                    value: metrics.dias + ' días',
+                    accent: 'text-radar',
+                  })
+                ),
+                e(
+                  'div',
+                  { className: 'chart-wrapper' },
+                  e(
+                    ResponsiveContainer,
+                    { width: '100%', height: '100%' },
+                    e(
+                      LineChart,
+                      { data: metrics.trend },
+                      e(CartesianGrid, { stroke: 'rgba(255,255,255,0.08)' }),
+                      e(XAxis, { dataKey: 'etiqueta', stroke: '#ffffff', tick: { fill: '#ffffff' } }),
+                      e(YAxis, { stroke: '#ffffff', tick: { fill: '#ffffff' } }),
+                      e(Tooltip, {
+                        formatter: function (value) {
+                          return [value.toFixed(1) + '%', 'ROI'];
+                        },
+                        contentStyle: {
+                          backgroundColor: '#0A192F',
+                          borderRadius: '12px',
+                          border: '1px solid rgba(255,255,255,0.1)',
+                          color: '#ffffff',
+                        },
+                      }),
+                      e(Line, {
+                        type: 'monotone',
+                        dataKey: 'roi',
+                        stroke: '#C9A227',
+                        strokeWidth: 3,
+                        dot: { r: 4 },
+                      })
+                    )
+                  )
+                )
+              )
+            )
+          );
+        };
+
+        const DemoApp = function () {
+          const [activeTab, setActiveTab] = useState('presentacion');
+
+          return e(
+            'div',
+            { className: 'relative' },
+            e(
+              'div',
+              { className: 'flex flex-wrap gap-2 rounded-3xl bg-white/5 p-2' },
+              tabs.map(function (tab) {
+                const isActive = activeTab === tab.key;
+                const className =
+                  'flex-1 rounded-2xl px-5 py-3 text-sm font-semibold transition md:text-base ' +
+                  (isActive
+                    ? 'bg-gold text-navy shadow-lg shadow-gold/30'
+                    : 'text-white/70 hover:text-white bg-transparent');
+
+                return e(
+                  'button',
+                  {
+                    key: tab.key,
+                    onClick: function () {
+                      setActiveTab(tab.key);
+                    },
+                    className: className,
+                  },
+                  tab.label
+                );
+              })
+            ),
+            e(
+              'div',
+              { className: 'mt-6' },
+              activeTab === 'presentacion'
+                ? e(DemoTabPresentation, null)
+                : e(DemoTabCalculator, null)
+            )
+          );
+        };
+
+        ReactDOM.render(e(DemoApp), rootElement);
+      });
+    </script>
+  </body>
+</html>
