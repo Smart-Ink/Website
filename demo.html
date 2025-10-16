@@ -38,20 +38,29 @@
   </footer>
 
   <script type="text/javascript">
-    window.onload = function() {
-      const scriptReact = document.createElement('script');
-      const scriptDOM = document.createElement('script');
-      const scriptRecharts = document.createElement('script');
+    const loadScript = (src) => new Promise((resolve, reject) => {
+      const script = document.createElement('script');
+      script.src = src;
+      script.async = true;
+      script.onload = () => resolve(script);
+      script.onerror = (error) => reject(error);
+      document.body.appendChild(script);
+    });
 
-      scriptReact.src = 'https://esm.sh/react@17.0.2/umd/react.development.js';
-      scriptDOM.src = 'https://esm.sh/react-dom@17.0.2/umd/react-dom.development.js';
-      scriptRecharts.src = 'https://unpkg.com/recharts/umd/Recharts.min.js';
+    window.onload = async function() {
+      try {
+        await Promise.all([
+          loadScript('https://esm.sh/react@17.0.2/umd/react.development.js'),
+          loadScript('https://esm.sh/react-dom@17.0.2/umd/react-dom.development.js')
+        ]);
 
-      document.body.appendChild(scriptReact);
-      document.body.appendChild(scriptDOM);
-      document.body.appendChild(scriptRecharts);
+        await loadScript('https://unpkg.com/recharts/umd/Recharts.min.js');
 
-      scriptRecharts.onload = function() {
+        if (typeof React === 'undefined' || typeof ReactDOM === 'undefined' || typeof Recharts === 'undefined') {
+          console.error('No se pudieron cargar las dependencias necesarias.');
+          return;
+        }
+
         const { useState, useEffect } = React;
         const { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } = Recharts;
 
@@ -164,7 +173,9 @@
         }
 
         ReactDOM.render(React.createElement(App),document.getElementById('root'));
-      };
+      } catch (error) {
+        console.error('Error al cargar los scripts de la demo:', error);
+      }
     };
   </script>
 </body>
