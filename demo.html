@@ -1,192 +1,352 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="es">
-<head>
-  <meta charset="utf-8" />
-  < name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Smart Ink — Demo Inteligente</title>
-  <link rel="icon" href="favicon.ico" type="image/x-icon">
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = { theme: { extend: { colors: { navy:'#0A192F', gold:'#C9A227', radar:'#00FF94' } } } };
-  </script>
-  <style>.hud-layer{pointer-events:none} body{background-color:#0A192F;color:#fff}</style>
-  <script crossorigin src="https://unpkg.com/react@17/umd/react.production.min.js"></script>
-  <script crossorigin src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js"></script>
-  <script src="https://unpkg.com/recharts/umd/Recharts.min.js"></script>
-</head>
-<body class="min-h-screen bg-navy text-white selection:bg-white/10 selection:text-white">
-  <div class="hud-layer fixed inset-0 bg-[radial-gradient(ellipse_at_top,rgba(29,174,255,0.08),transparent_55%),radial-gradient(ellipse_at_bottom,rgba(0,255,148,0.06),transparent_55%)]"></div>
-  <div class="hud-layer fixed inset-0 [background-image:linear-gradient(rgba(255,255,255,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.05)_1px,transparent_1px)] [background-size:40px_40px] opacity-30"></div>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Smart Ink | Demo Inteligente</title>
 
-  <header class="relative z-10">
-    <div class="mx-auto max-w-6xl px-6 py-6 flex items-center justify-between">
-      <div class="flex items-center gap-3">
-        <div class="h-9 w-9 rounded-xl bg-white/10 grid place-content-center border border-white/10 overflow-hidden">
-          <img src="logo.png" alt="Smart Ink" class="h-9 w-9 object-contain" />
-        </div>
-        <span class="font-semibold tracking-wide">Smart Ink</span>
-      </div>
-      <a href="index.html" class="inline-flex items-center gap-2 rounded-2xl bg-gold px-4 py-2 text-sm font-medium text-navy hover:brightness-110 transition">Volver al inicio</a>
-    </div>
-  </header>
+    <!-- TailwindCSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
 
-  <main id="root" class="relative z-10 mx-auto max-w-6xl px-6 py-8"></main>
+    <!-- React + ReactDOM + Recharts (UMD builds) -->
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/recharts/umd/Recharts.min.js"></script>
 
-  <footer class="relative z-10 border-t border-white/10">
-    <div class="mx-auto max-w-6xl px-6 py-10 text-sm text-white/60 flex items-center justify-between">
-      <span>© <span id="year"></span> Smart Ink</span>
-    </div>
-  </footer>
+    <style>
+      body {
+        background-color: #0a192f;
+        color: #fff;
+        font-family: "Inter", sans-serif;
+        overflow-x: hidden;
+      }
+      .hud-grid::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        background-image: linear-gradient(
+            rgba(201, 162, 39, 0.05) 1px,
+            transparent 1px
+          ),
+          linear-gradient(
+            90deg,
+            rgba(201, 162, 39, 0.05) 1px,
+            transparent 1px
+          );
+        background-size: 40px 40px;
+        z-index: 0;
+      }
+      .glow {
+        text-shadow: 0 0 10px #c9a227;
+      }
+    </style>
+  </head>
 
-  <script>
-  (function(){
-    const e = React.createElement;
-    const {useState, useEffect, useRef} = React;
-    const { ResponsiveContainer, BarChart, Bar, CartesianGrid, XAxis, YAxis, Tooltip, LineChart, Line, Legend } = Recharts;
-    const fmtMoney = (n) => n.toLocaleString('es-MX', {maximumFractionDigits:0});
-    const clamp = (v, min, max) => Math.max(min, Math.min(max, v));
+  <body class="hud-grid">
+    <header
+      class="flex items-center justify-between px-6 py-4 border-b border-yellow-600 relative z-10"
+    >
+      <img src="logo.png" alt="Smart Ink" class="h-10" />
+      <a
+        href="index.html"
+        class="text-yellow-500 hover:text-yellow-300 font-semibold"
+        >Volver al inicio</a
+      >
+    </header>
 
-    function KPI({label, value, suffix='', highlight=false}){
-      return e('div',{className:'rounded-2xl border border-white/10 bg-white/5 p-5 text-center'},
-        e('div',{className:`text-2xl font-semibold ${highlight?'text-gold':''}`}, `${value}${suffix}`),
-        e('div',{className:'text-xs text-white/70 mt-1'}, label)
-      );
-    }
+    <main id="root" class="relative z-10"></main>
 
-    function AutoDemo(){
-      const days = ['Lun','Mar','Mié','Jue','Vie','Sáb','Dom'];
-      const [data, setData] = useState(days.map(d => ({dia:d, count:0})));
-      const [total, setTotal] = useState(0);
-      const [valor, setValor] = useState(0);
-      const [iva, setIva] = useState(0);
-      const target = 72;
-      const timerRef = useRef(null);
+    <footer
+      class="text-center text-sm text-yellow-600 py-4 border-t border-yellow-700 mt-8 relative z-10"
+    >
+      © Smart Ink
+    </footer>
 
-      useEffect(() => {
-        let processed = 0;
-        timerRef.current = setInterval(() => {
-          processed++;
-          const dayIndex = Math.floor(Math.random()*days.length);
-          const invoiceValue = 1500 + Math.random()*4500;
-          setData(prev => prev.map((row, i) => i===dayIndex ? {...row, count: row.count + 1} : row));
-          setTotal(p => p + 1);
-          setValor(p => p + invoiceValue);
-          setIva(p => p + invoiceValue*0.16);
-          if(processed >= target){ clearInterval(timerRef.current); }
-        }, 140);
-        return () => clearInterval(timerRef.current);
-      }, []);
+    <script>
+      const { useState, useEffect } = React;
+      const {
+        BarChart,
+        Bar,
+        XAxis,
+        YAxis,
+        CartesianGrid,
+        Tooltip,
+        Legend,
+        ResponsiveContainer,
+        LineChart,
+        Line,
+      } = Recharts;
 
-      return e('section', {className:'mb-14'},
-        e('div',{className:'text-center mb-6'},
-          e('h2',{className:'text-3xl font-semibold'},'Presentación automática'),
-          e('p',{className:'text-white/70'},'Facturas “entrando” y transformándose en indicadores y gráficas.')
-        ),
-        e('div',{className:'grid grid-cols-1 md:grid-cols-3 gap-4 mb-6'},
-          e(KPI,{label:'Facturas procesadas', value: fmtMoney(total), highlight:true}),
-          e(KPI,{label:'Valor total (MXN)', value: '$'+fmtMoney(valor)}),
-          e(KPI,{label:'IVA total (16%)', value: '$'+fmtMoney(iva)}),
-        ),
-        e('div',{className:'mb-6 grid grid-cols-6 sm:grid-cols-12 gap-2'},
-          Array.from({length: Math.min(total, 24)}).map((_,i) =>
-            e('div',{key:i, className:'h-8 rounded-md bg-white/10 border border-white/10 animate-pulse'})
-          )
-        ),
-        e('div',{style:{width:'100%', height:320}, className:'rounded-2xl border border-white/10 bg-white/5 p-2'},
-          e(ResponsiveContainer,null,
-            e(BarChart,{data},
-              e(CartesianGrid,{strokeDasharray:'3 3', stroke:'#ffffff20'}),
-              e(XAxis,{dataKey:'dia', stroke:'#ffffff90'}),
-              e(YAxis,{stroke:'#ffffff90'}),
-              e(Tooltip,null),
-              e(Bar,{dataKey:'count', fill:'#C9A227', radius:[6,6,0,0]})
+      // Utility functions
+      function randomDay() {
+        const days = ["Lun", "Mar", "Mié", "Jue", "Vie", "Sáb", "Dom"];
+        return days[Math.floor(Math.random() * days.length)];
+      }
+      function random(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+      }
+
+      // ----- COMPONENT: App -----
+      function App() {
+        return React.createElement(
+          "div",
+          { className: "flex flex-col items-center w-full" },
+          React.createElement(AutoPresentationSection),
+          React.createElement(InteractiveCalculatorSection)
+        );
+      }
+
+      // ----- COMPONENT: Auto Presentation -----
+      function AutoPresentationSection() {
+        const [invoices, setInvoices] = useState([]);
+        const [done, setDone] = useState(false);
+
+        useEffect(() => {
+          let count = 0;
+          const timer = setInterval(() => {
+            if (count >= 20) {
+              clearInterval(timer);
+              setDone(true);
+            } else {
+              setInvoices((prev) => [
+                ...prev,
+                { day: randomDay(), value: random(1000, 5000) },
+              ]);
+              count++;
+            }
+          }, 150);
+          return () => clearInterval(timer);
+        }, []);
+
+        const totalValue = invoices.reduce((a, b) => a + b.value, 0);
+        const totalIVA = totalValue * 0.16;
+        const grouped = {};
+        invoices.forEach((i) => {
+          grouped[i.day] = (grouped[i.day] || 0) + 1;
+        });
+        const data = ["Lun", "Mar", "Mié", "Jue", "Vie", "Sáb", "Dom"].map(
+          (d) => ({ day: d, facturas: grouped[d] || 0 })
+        );
+
+        return React.createElement(
+          "section",
+          { className: "w-full max-w-5xl mt-10 text-center" },
+          React.createElement(
+            "h2",
+            { className: "text-3xl font-bold mb-6 text-yellow-400 glow" },
+            "Procesamiento Automático de Facturas"
+          ),
+          React.createElement(
+            "div",
+            {
+              className:
+                "grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 text-yellow-400",
+            },
+            [
+              { label: "Facturas procesadas", value: invoices.length },
+              {
+                label: "Valor total (MXN)",
+                value: totalValue.toLocaleString("es-MX"),
+              },
+              {
+                label: "IVA estimado (16%)",
+                value: totalIVA.toLocaleString("es-MX"),
+              },
+            ].map((kpi, idx) =>
+              React.createElement(
+                "div",
+                {
+                  key: idx,
+                  className:
+                    "border border-yellow-700 rounded-xl p-4 shadow-lg shadow-yellow-900/40",
+                },
+                React.createElement(
+                  "p",
+                  { className: "text-sm uppercase mb-1 text-yellow-500" },
+                  kpi.label
+                ),
+                React.createElement(
+                  "p",
+                  { className: "text-2xl font-bold glow" },
+                  kpi.value
+                )
+              )
+            )
+          ),
+          React.createElement(
+            "div",
+            { className: "w-full h-64" },
+            React.createElement(
+              ResponsiveContainer,
+              { width: "100%", height: "100%" },
+              React.createElement(
+                BarChart,
+                { data: data },
+                React.createElement(CartesianGrid, {
+                  strokeDasharray: "3 3",
+                  stroke: "#2d3e59",
+                }),
+                React.createElement(XAxis, { dataKey: "day", stroke: "#fff" }),
+                React.createElement(YAxis, { stroke: "#fff" }),
+                React.createElement(Tooltip, { contentStyle: { background: "#0A192F", border: "1px solid #C9A227" } }),
+                React.createElement(Bar, {
+                  dataKey: "facturas",
+                  fill: "#C9A227",
+                  animationDuration: 800,
+                })
+              )
             )
           )
-        )
-      );
-    }
+        );
+      }
 
-    function Calculator(){
-      const [ingresos, setIngresos] = useState(50000);
-      const [gastos, setGastos] = useState(25000);
-      const [facturas, setFacturas] = useState(200);
+      // ----- COMPONENT: Interactive Calculator -----
+      function InteractiveCalculatorSection() {
+        const [ingresos, setIngresos] = useState(50000);
+        const [gastos, setGastos] = useState(30000);
+        const [facturas, setFacturas] = useState(200);
 
-      const ahorro = (facturas*45) + (ingresos*0.03) - (gastos*0.015);
-      const roi = clamp((ahorro / Math.max(1,gastos))*100, -100, 300);
-      const dias = clamp(Math.round(90 - (roi/2)), 10, 120);
+        const ahorro =
+          facturas * 45 + ingresos * 0.03 - gastos * 0.015;
+        const ROI = (ahorro / gastos) * 100;
+        const recuperacion = Math.min(120, Math.max(10, 90 - ROI / 2));
 
-      const baseline = [1,2,3,4,5,6].map(x => ({x, base: Math.max(0, roi*0.5*(x/6))}));
-      const projected = [1,2,3,4,5,6].map(x => ({x, smart: Math.max(0, roi*(x/6))}));
-      const merged = baseline.map((b,i) => ({x:b.x, base:b.base, smart: projected[i].smart}));
+        const chartData = Array.from({ length: 6 }).map((_, i) => ({
+          mes: `Mes ${i + 1}`,
+          Base: ingresos - gastos - i * 500,
+          "Con Smart Ink": ingresos - gastos + ahorro / 6 - i * 500,
+        }));
 
-      return e('section', {id:'calc', className:'mb-8'},
-        e('div',{className:'text-center mb-6'},
-          e('h2',{className:'text-3xl font-semibold'},'Calculadora interactiva'),
-          e('p',{className:'text-white/70'},'Ajusta tus números para ver impacto en ahorro, ROI y recuperación.')
-        ),
-        e('div',{className:'grid grid-cols-1 md:grid-cols-3 gap-6 mb-6'},
-          e('div',null,
-            e('label',{className:'text-sm text-white/70'},'Ingresos mensuales (MXN)'),
-            e('input',{type:'range', min:10000, max:100000, step:1000, value:ingresos,
-              onChange:(ev)=>setIngresos(+ev.target.value), className:'w-full accent-gold'}),
-            e('div',{className:'text-right text-sm text-white/70'},'$'+fmtMoney(ingresos))
+        return React.createElement(
+          "section",
+          { className: "w-full max-w-5xl mt-20 text-center" },
+          React.createElement(
+            "h2",
+            { className: "text-3xl font-bold mb-6 text-yellow-400 glow" },
+            "Calculadora Interactiva"
           ),
-          e('div',null,
-            e('label',{className:'text-sm text-white/70'},'Gastos mensuales (MXN)'),
-            e('input',{type:'range', min:5000, max:90000, step:1000, value:gastos,
-              onChange:(ev)=>setGastos(+ev.target.value), className:'w-full accent-gold'}),
-            e('div',{className:'text-right text-sm text-white/70'},'$'+fmtMoney(gastos))
+          React.createElement(
+            "div",
+            { className: "grid md:grid-cols-3 gap-6 text-left mb-6" },
+            [
+              {
+                label: "Ingresos (MXN)",
+                value: ingresos,
+                setter: setIngresos,
+                min: 10000,
+                max: 100000,
+              },
+              {
+                label: "Gastos (MXN)",
+                value: gastos,
+                setter: setGastos,
+                min: 5000,
+                max: 90000,
+              },
+              {
+                label: "Facturas",
+                value: facturas,
+                setter: setFacturas,
+                min: 10,
+                max: 1000,
+              },
+            ].map((input, idx) =>
+              React.createElement(
+                "div",
+                { key: idx },
+                React.createElement(
+                  "label",
+                  { className: "block mb-2 text-yellow-500" },
+                  `${input.label}: ${input.value.toLocaleString("es-MX")}`
+                ),
+                React.createElement("input", {
+                  type: "range",
+                  min: input.min,
+                  max: input.max,
+                  value: input.value,
+                  onChange: (e) => input.setter(Number(e.target.value)),
+                  className:
+                    "w-full accent-yellow-500 cursor-pointer h-2 rounded-lg",
+                })
+              )
+            )
           ),
-          e('div',null,
-            e('label',{className:'text-sm text-white/70'},'Facturas procesadas / mes'),
-            e('input',{type:'range', min:10, max:1000, step:10, value:facturas,
-              onChange:(ev)=>setFacturas(+ev.target.value), className:'w-full accent-gold'}),
-            e('div',{className:'text-right text-sm text-white/70'},fmtMoney(facturas)+' facturas')
-          )
-        ),
-        e('div',{className:'grid grid-cols-1 md:grid-cols-3 gap-4 mb-6'},
-          e(KPI,{label:'Ahorro estimado', value:'$'+fmtMoney(ahorro), highlight:true}),
-          e(KPI,{label:'ROI estimado', value:roi.toFixed(1), suffix:'%'}),
-          e(KPI,{label:'Recuperación', value:String(dias), suffix:' días'}),
-        ),
-        e('div',{style:{width:'100%', height:320}, className:'rounded-2xl border border-white/10 bg-white/5 p-2'},
-          e(ResponsiveContainer,null,
-            e(LineChart,{data: merged},
-              e(CartesianGrid,{strokeDasharray:'3 3', stroke:'#ffffff20'}),
-              e(XAxis,{dataKey:'x', stroke:'#ffffff90'}),
-              e(YAxis,{stroke:'#ffffff90'}),
-              e(Tooltip,null),
-              e(Legend,{wrapperStyle:{color:'#fff'}}),
-              e(Line,{type:'monotone', dataKey:'base', name:'Antes', stroke:'#888888', strokeWidth:2}),
-              e(Line,{type:'monotone', dataKey:'smart', name:'Con Smart Ink', stroke:'#C9A227', strokeWidth:2})
+          React.createElement(
+            "div",
+            {
+              className:
+                "grid grid-cols-1 md:grid-cols-3 gap-6 mb-10 text-yellow-400",
+            },
+            [
+              { label: "Ahorro estimado", value: ahorro.toFixed(2) + " MXN" },
+              { label: "ROI estimado", value: ROI.toFixed(2) + " %" },
+              {
+                label: "Recuperación",
+                value: recuperacion.toFixed(0) + " días",
+              },
+            ].map((kpi, idx) =>
+              React.createElement(
+                "div",
+                {
+                  key: idx,
+                  className:
+                    "border border-yellow-700 rounded-xl p-4 shadow-lg shadow-yellow-900/40",
+                },
+                React.createElement(
+                  "p",
+                  { className: "text-sm uppercase mb-1 text-yellow-500" },
+                  kpi.label
+                ),
+                React.createElement(
+                  "p",
+                  { className: "text-2xl font-bold glow" },
+                  kpi.value
+                )
+              )
+            )
+          ),
+          React.createElement(
+            "div",
+            { className: "w-full h-72" },
+            React.createElement(
+              ResponsiveContainer,
+              { width: "100%", height: "100%" },
+              React.createElement(
+                LineChart,
+                { data: chartData },
+                React.createElement(CartesianGrid, {
+                  strokeDasharray: "3 3",
+                  stroke: "#2d3e59",
+                }),
+                React.createElement(XAxis, { dataKey: "mes", stroke: "#fff" }),
+                React.createElement(YAxis, { stroke: "#fff" }),
+                React.createElement(Tooltip, { contentStyle: { background: "#0A192F", border: "1px solid #C9A227" } }),
+                React.createElement(Legend, null),
+                React.createElement(Line, {
+                  type: "monotone",
+                  dataKey: "Base",
+                  stroke: "#888888",
+                  strokeWidth: 2,
+                  dot: false,
+                }),
+                React.createElement(Line, {
+                  type: "monotone",
+                  dataKey: "Con Smart Ink",
+                  stroke: "#C9A227",
+                  strokeWidth: 3,
+                  dot: true,
+                })
+              )
             )
           )
-        ),
-        e('div',{className:'mt-4 text-white/70 text-sm text-center'},'La gráfica compara ROI (Antes vs Con Smart Ink) para 6 periodos.')
-      );
-    }
+        );
+      }
 
-    function App(){
-      useEffect(()=>{
-        const y=document.getElementById('year'); if(y) y.textContent=new Date().getFullYear();
-      },[]);
-
-      return e('div',{},
-        e(AutoDemo,null),
-        e('div',{className:'my-10 border-t border-white/10'}),
-        e(Calculator,null)
-      );
-    }
-
-    function mount(){
-      const root = document.getElementById('root');
-      if(!root){ return; }
-      try{ ReactDOM.render(e(App), root); }
-      catch(err){ root.innerHTML = '<p class="text-white/70">Error cargando la demo.</p>'; console.error(err); }
-    }
-    if(document.readyState==='complete' || document.readyState==='interactive'){ setTimeout(mount,0); }
-    else { window.addEventListener('DOMContentLoaded', mount); }
-  })();
-  </script>
-</body>
+      // Mount app
+      document.addEventListener("DOMContentLoaded", () => {
+        const root = ReactDOM.createRoot(document.getElementById("root"));
+        root.render(React.createElement(App));
+      });
+    </script>
+  </body>
 </html>
