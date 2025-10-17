@@ -2,6 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="utf-8" />
+<<<<<<< HEAD
   < name="viewport" content="width=device-width, initial-scale=1" />
   <title>Smart Ink — Demo Inteligente</title>
   <link rel="icon" href="favicon.ico" type="image/x-icon">
@@ -13,6 +14,50 @@
   <script crossorigin src="https://unpkg.com/react@17/umd/react.production.min.js"></script>
   <script crossorigin src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js"></script>
   <script src="https://unpkg.com/recharts/umd/Recharts.min.js"></script>
+=======
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Smart Ink - Demo Inteligente</title>
+  <link rel="icon" href="favicon.ico" type="image/x-icon" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            navy: '#0A192F',
+            gold: '#C9A227',
+            radar: '#00FF94'
+          }
+        }
+      }
+    };
+  </script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script crossorigin src="https://unpkg.com/recharts/umd/Recharts.min.js"></script>
+  <style>
+    .hud-layer {
+      pointer-events: none;
+    }
+    @keyframes cardFadeIn {
+      0% {
+        opacity: 0;
+        transform: translateY(12px) scale(0.95);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+    .invoice-card {
+      animation: cardFadeIn 0.4s ease forwards;
+    }
+    .tab-button {
+      transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+    }
+  </style>
+>>>>>>> 89f864a147f4500040684b0093b4a854b0557a4f
 </head>
 <body class="min-h-screen bg-navy text-white selection:bg-white/10 selection:text-white">
   <div class="hud-layer fixed inset-0 bg-[radial-gradient(ellipse_at_top,rgba(29,174,255,0.08),transparent_55%),radial-gradient(ellipse_at_bottom,rgba(0,255,148,0.06),transparent_55%)]"></div>
@@ -20,6 +65,7 @@
 
   <header class="relative z-10">
     <div class="mx-auto max-w-6xl px-6 py-6 flex items-center justify-between">
+<<<<<<< HEAD
       <div class="flex items-center gap-3">
         <div class="h-9 w-9 rounded-xl bg-white/10 grid place-content-center border border-white/10 overflow-hidden">
           <img src="logo.png" alt="Smart Ink" class="h-9 w-9 object-contain" />
@@ -31,162 +77,582 @@
   </header>
 
   <main id="root" class="relative z-10 mx-auto max-w-6xl px-6 py-8"></main>
+=======
+      <a href="index.html" class="flex items-center gap-3">
+        <div class="h-9 w-9 rounded-xl bg-white/10 grid place-content-center border border-white/10">
+          <img src="logo.png" alt="Smart Ink" class="h-10 w-10 object-contain" />
+        </div>
+        <span class="font-semibold tracking-wide">Smart Ink</span>
+      </a>
+      <nav class="hidden md:flex items-center gap-6 text-sm text-white/80">
+        <a href="index.html#servicios" class="hover:text-white">Servicios</a>
+        <a href="index.html#precio" class="hover:text-white">Precio</a>
+        <a href="index.html#contacto" class="hover:text-white">Contacto</a>
+      </nav>
+      <a href="https://wa.me/526572392954" class="inline-flex items-center gap-2 rounded-2xl bg-gold px-4 py-2 text-sm font-medium text-navy hover:brightness-110 transition">
+        Contáctanos <i data-lucide="arrow-right" class="h-4 w-4"></i>
+      </a>
+    </div>
+  </header>
+
+  <main class="relative z-10">
+    <section class="mx-auto max-w-6xl px-6 pt-16 pb-20">
+      <div class="mb-12">
+        <h1 class="text-4xl sm:text-5xl font-semibold">Demo Inteligente</h1>
+        <p class="mt-4 max-w-2xl text-white/80">Explora cómo Smart Ink automatiza el procesamiento de facturas y calcula el impacto directo en tus finanzas en segundos.</p>
+      </div>
+
+      <div class="rounded-3xl border border-white/10 bg-white/5 backdrop-blur-md">
+        <div class="flex flex-col border-b border-white/10 sm:flex-row">
+          <button id="tab-auto" class="tab-button w-full sm:w-1/2 px-6 py-4 text-left text-sm font-medium border-b sm:border-b-0 sm:border-r border-white/10 bg-white/5" data-tab="auto">
+            Presentación automática
+          </button>
+          <button id="tab-calculator" class="tab-button w-full sm:w-1/2 px-6 py-4 text-left text-sm font-medium border-white/10" data-tab="calculator">
+            Calculadora interactiva
+          </button>
+        </div>
+        <div class="p-6 sm:p-10">
+          <div id="demo-root"></div>
+        </div>
+      </div>
+    </section>
+  </main>
+>>>>>>> 89f864a147f4500040684b0093b4a854b0557a4f
 
   <footer class="relative z-10 border-t border-white/10">
     <div class="mx-auto max-w-6xl px-6 py-10 text-sm text-white/60 flex items-center justify-between">
       <span>© <span id="year"></span> Smart Ink</span>
+<<<<<<< HEAD
+=======
+      <a href="index.html" class="hover:text-white/90 transition">Volver al inicio</a>
+>>>>>>> 89f864a147f4500040684b0093b4a854b0557a4f
     </div>
   </footer>
 
   <script>
-  (function(){
-    const e = React.createElement;
-    const {useState, useEffect, useRef} = React;
-    const { ResponsiveContainer, BarChart, Bar, CartesianGrid, XAxis, YAxis, Tooltip, LineChart, Line, Legend } = Recharts;
-    const fmtMoney = (n) => n.toLocaleString('es-MX', {maximumFractionDigits:0});
-    const clamp = (v, min, max) => Math.max(min, Math.min(max, v));
+    (function() {
+      const { useState, useMemo, useEffect, useRef } = React;
+      const {
+        ResponsiveContainer,
+        BarChart,
+        Bar,
+        XAxis,
+        YAxis,
+        Tooltip,
+        CartesianGrid,
+        LineChart,
+        Line,
+        Legend
+      } = Recharts;
 
-    function KPI({label, value, suffix='', highlight=false}){
-      return e('div',{className:'rounded-2xl border border-white/10 bg-white/5 p-5 text-center'},
-        e('div',{className:`text-2xl font-semibold ${highlight?'text-gold':''}`}, `${value}${suffix}`),
-        e('div',{className:'text-xs text-white/70 mt-1'}, label)
-      );
-    }
+      const formatCurrency = (value) => {
+        return new Intl.NumberFormat('es-MX', {
+          style: 'currency',
+          currency: 'MXN',
+          maximumFractionDigits: 0
+        }).format(value);
+      };
 
-    function AutoDemo(){
-      const days = ['Lun','Mar','Mié','Jue','Vie','Sáb','Dom'];
-      const [data, setData] = useState(days.map(d => ({dia:d, count:0})));
-      const [total, setTotal] = useState(0);
-      const [valor, setValor] = useState(0);
-      const [iva, setIva] = useState(0);
-      const target = 72;
-      const timerRef = useRef(null);
+      const AutoDemo = () => {
+        const invoiceValue = 3200;
+        const ivaRate = 0.16;
+        const animationInterval = 200;
+        const targetData = useMemo(() => [
+          { day: 'Lun', target: 12 },
+          { day: 'Mar', target: 14 },
+          { day: 'Mié', target: 18 },
+          { day: 'Jue', target: 16 },
+          { day: 'Vie', target: 20 },
+          { day: 'Sáb', target: 10 },
+          { day: 'Dom', target: 8 }
+        ], []);
 
-      useEffect(() => {
-        let processed = 0;
-        timerRef.current = setInterval(() => {
-          processed++;
-          const dayIndex = Math.floor(Math.random()*days.length);
-          const invoiceValue = 1500 + Math.random()*4500;
-          setData(prev => prev.map((row, i) => i===dayIndex ? {...row, count: row.count + 1} : row));
-          setTotal(p => p + 1);
-          setValor(p => p + invoiceValue);
-          setIva(p => p + invoiceValue*0.16);
-          if(processed >= target){ clearInterval(timerRef.current); }
-        }, 140);
-        return () => clearInterval(timerRef.current);
-      }, []);
+        const totalInvoicesTarget = useMemo(
+          () => targetData.reduce((acc, item) => acc + item.target, 0),
+          [targetData]
+        );
 
-      return e('section', {className:'mb-14'},
-        e('div',{className:'text-center mb-6'},
-          e('h2',{className:'text-3xl font-semibold'},'Presentación automática'),
-          e('p',{className:'text-white/70'},'Facturas “entrando” y transformándose en indicadores y gráficas.')
-        ),
-        e('div',{className:'grid grid-cols-1 md:grid-cols-3 gap-4 mb-6'},
-          e(KPI,{label:'Facturas procesadas', value: fmtMoney(total), highlight:true}),
-          e(KPI,{label:'Valor total (MXN)', value: '$'+fmtMoney(valor)}),
-          e(KPI,{label:'IVA total (16%)', value: '$'+fmtMoney(iva)}),
-        ),
-        e('div',{className:'mb-6 grid grid-cols-6 sm:grid-cols-12 gap-2'},
-          Array.from({length: Math.min(total, 24)}).map((_,i) =>
-            e('div',{key:i, className:'h-8 rounded-md bg-white/10 border border-white/10 animate-pulse'})
-          )
-        ),
-        e('div',{style:{width:'100%', height:320}, className:'rounded-2xl border border-white/10 bg-white/5 p-2'},
-          e(ResponsiveContainer,null,
-            e(BarChart,{data},
-              e(CartesianGrid,{strokeDasharray:'3 3', stroke:'#ffffff20'}),
-              e(XAxis,{dataKey:'dia', stroke:'#ffffff90'}),
-              e(YAxis,{stroke:'#ffffff90'}),
-              e(Tooltip,null),
-              e(Bar,{dataKey:'count', fill:'#C9A227', radius:[6,6,0,0]})
+        const [invoicesData, setInvoicesData] = useState(
+          targetData.map(({ day }) => ({ day, count: 0 }))
+        );
+        const [processedCount, setProcessedCount] = useState(0);
+        const [animationQueue, setAnimationQueue] = useState([]);
+        const [isAnimating, setIsAnimating] = useState(false);
+        const intervalRef = useRef(null);
+
+        const totalValue = processedCount * invoiceValue;
+        const ivaEstimado = totalValue * ivaRate;
+
+        const startAnimation = () => {
+          if (isAnimating) return;
+          resetDemo();
+          const queue = targetData.flatMap(({ day, target }) => Array(target).fill(day));
+          setAnimationQueue(queue);
+        };
+
+        const resetDemo = () => {
+          setInvoicesData(targetData.map(({ day }) => ({ day, count: 0 })));
+          setProcessedCount(0);
+          setAnimationQueue([]);
+          setIsAnimating(false);
+          if (intervalRef.current) {
+            clearInterval(intervalRef.current);
+            intervalRef.current = null;
+          }
+        };
+
+        useEffect(() => {
+          if (animationQueue.length === 0) return;
+          setIsAnimating(true);
+          let index = 0;
+          intervalRef.current = setInterval(() => {
+            setInvoicesData((prev) => {
+              const next = prev.map((item) =>
+                item.day === animationQueue[index]
+                  ? { ...item, count: item.count + 1 }
+                  : item
+              );
+              return next;
+            });
+            setProcessedCount((prev) => prev + 1);
+            index += 1;
+            if (index >= animationQueue.length) {
+              clearInterval(intervalRef.current);
+              intervalRef.current = null;
+              setIsAnimating(false);
+            }
+          }, animationInterval);
+        }, [animationQueue, animationInterval]);
+
+        useEffect(() => () => {
+          if (intervalRef.current) clearInterval(intervalRef.current);
+        }, []);
+
+        const invoiceCards = useMemo(
+          () => Array.from({ length: processedCount }, (_, i) => i),
+          [processedCount]
+        );
+
+        return React.createElement(
+          'div',
+          { className: 'space-y-10' },
+          React.createElement(
+            'div',
+            { className: 'flex flex-col gap-6 lg:flex-row' },
+            React.createElement(
+              'div',
+              { className: 'flex-1 space-y-4' },
+              React.createElement(
+                'div',
+                { className: 'text-sm uppercase tracking-wide text-white/60' },
+                'Facturas ingresando'
+              ),
+              React.createElement(
+                'div',
+                { className: 'grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-5 gap-3' },
+                invoiceCards.map((key) =>
+                  React.createElement(
+                    'div',
+                    {
+                      key,
+                      className: 'invoice-card rounded-xl border border-white/10 bg-white/10 p-3 shadow-lg shadow-black/20'
+                    },
+                    React.createElement('div', { className: 'h-10 rounded-md border border-white/10 bg-white/10' })
+                  )
+                )
+              ),
+              processedCount === 0 &&
+                React.createElement(
+                  'p',
+                  { className: 'text-sm text-white/60' },
+                  'Presiona "Iniciar demo" para comenzar la automatización.'
+                )
+            ),
+            React.createElement(
+              'div',
+              { className: 'flex-1 rounded-2xl border border-white/10 bg-white/5 p-6' },
+              React.createElement(
+                'h3',
+                { className: 'text-sm uppercase tracking-wide text-white/60 mb-4' },
+                'Facturas procesadas por día'
+              ),
+              React.createElement(
+                'div',
+                { className: 'h-64' },
+                React.createElement(
+                  ResponsiveContainer,
+                  { width: '100%', height: '100%' },
+                  React.createElement(
+                    BarChart,
+                    { data: invoicesData, barSize: 24 },
+                    React.createElement(CartesianGrid, { strokeDasharray: '3 3', stroke: 'rgba(255,255,255,0.1)' }),
+                    React.createElement(XAxis, {
+                      dataKey: 'day',
+                      stroke: '#ffffff',
+                      tickLine: false,
+                      axisLine: { stroke: 'rgba(255,255,255,0.3)' }
+                    }),
+                    React.createElement(YAxis, {
+                      allowDecimals: false,
+                      stroke: '#ffffff',
+                      tickLine: false,
+                      axisLine: { stroke: 'rgba(255,255,255,0.3)' }
+                    }),
+                    React.createElement(Tooltip, {
+                      cursor: { fill: 'rgba(255,255,255,0.05)' },
+                      contentStyle: { backgroundColor: '#0A192F', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.1)', color: '#fff' }
+                    }),
+                    React.createElement(Bar, { dataKey: 'count', fill: '#C9A227', radius: [6, 6, 0, 0] })
+                  )
+                )
+              )
+            )
+          ),
+          React.createElement(
+            'div',
+            { className: 'grid grid-cols-1 sm:grid-cols-3 gap-4' },
+            [
+              {
+                label: 'Facturas totales',
+                value: processedCount
+              },
+              {
+                label: 'Valor total estimado',
+                value: formatCurrency(totalValue)
+              },
+              {
+                label: 'IVA estimado (16%)',
+                value: formatCurrency(ivaEstimado)
+              }
+            ].map(({ label, value }) =>
+              React.createElement(
+                'div',
+                {
+                  key: label,
+                  className: 'rounded-2xl border border-white/10 bg-white/5 p-4'
+                },
+                React.createElement(
+                  'div',
+                  { className: 'text-xs uppercase tracking-wide text-white/60' },
+                  label
+                ),
+                React.createElement(
+                  'div',
+                  { className: 'mt-2 text-2xl font-semibold text-white' },
+                  value
+                )
+              )
+            )
+          ),
+          React.createElement(
+            'div',
+            { className: 'flex flex-col sm:flex-row gap-3' },
+            React.createElement(
+              'button',
+              {
+                className: 'inline-flex items-center justify-center gap-2 rounded-2xl bg-gold px-5 py-3 text-sm font-medium text-navy hover:brightness-110 transition disabled:opacity-50',
+                onClick: startAnimation,
+                disabled: isAnimating || processedCount === totalInvoicesTarget
+              },
+              'Iniciar demo'
+            ),
+            React.createElement(
+              'button',
+              {
+                className: 'inline-flex items-center justify-center gap-2 rounded-2xl border border-white/10 bg-white/5 px-5 py-3 text-sm font-medium text-white hover:bg-white/10 transition',
+                onClick: resetDemo
+              },
+              'Reiniciar demo'
             )
           )
-        )
-      );
-    }
+        );
+      };
 
-    function Calculator(){
-      const [ingresos, setIngresos] = useState(50000);
-      const [gastos, setGastos] = useState(25000);
-      const [facturas, setFacturas] = useState(200);
+      const Calculator = () => {
+        const ivaRate = 0.16;
+        const avgValue = 3200;
+        const costFactorBase = 4500;
+        const [inputs, setInputs] = useState({
+          ingresos: 60000,
+          gastos: 18000,
+          facturas: 80
+        });
 
-      const ahorro = (facturas*45) + (ingresos*0.03) - (gastos*0.015);
-      const roi = clamp((ahorro / Math.max(1,gastos))*100, -100, 300);
-      const dias = clamp(Math.round(90 - (roi/2)), 10, 120);
+        const handleChange = (key) => (event) => {
+          const value = Number(event.target.value);
+          setInputs((prev) => ({ ...prev, [key]: value }));
+        };
 
-      const baseline = [1,2,3,4,5,6].map(x => ({x, base: Math.max(0, roi*0.5*(x/6))}));
-      const projected = [1,2,3,4,5,6].map(x => ({x, smart: Math.max(0, roi*(x/6))}));
-      const merged = baseline.map((b,i) => ({x:b.x, base:b.base, smart: projected[i].smart}));
+        const metrics = useMemo(() => {
+          const { ingresos, gastos, facturas } = inputs;
+          const projectedValue = facturas * avgValue;
+          const ahorro = projectedValue * ivaRate - (costFactorBase + gastos * 0.15);
+          const roi = gastos === 0 ? 0 : Math.max(0, (ahorro / gastos) * 100);
+          const recoveryDays = Math.max(5, Math.round(45 - (ahorro / (ingresos || 1)) * 8));
+          return {
+            projectedValue,
+            ahorro: Math.max(0, ahorro),
+            roi,
+            recoveryDays
+          };
+        }, [inputs]);
 
-      return e('section', {id:'calc', className:'mb-8'},
-        e('div',{className:'text-center mb-6'},
-          e('h2',{className:'text-3xl font-semibold'},'Calculadora interactiva'),
-          e('p',{className:'text-white/70'},'Ajusta tus números para ver impacto en ahorro, ROI y recuperación.')
-        ),
-        e('div',{className:'grid grid-cols-1 md:grid-cols-3 gap-6 mb-6'},
-          e('div',null,
-            e('label',{className:'text-sm text-white/70'},'Ingresos mensuales (MXN)'),
-            e('input',{type:'range', min:10000, max:100000, step:1000, value:ingresos,
-              onChange:(ev)=>setIngresos(+ev.target.value), className:'w-full accent-gold'}),
-            e('div',{className:'text-right text-sm text-white/70'},'$'+fmtMoney(ingresos))
+        const chartData = useMemo(() => {
+          const baselineFactor = 0.55;
+          const smartFactor = 0.95;
+          const days = ['Día 1', 'Día 2', 'Día 3', 'Día 4', 'Día 5', 'Día 6', 'Día 7'];
+          const basePerDay = Math.round((inputs.facturas / days.length) * baselineFactor);
+          const smartPerDay = Math.round((inputs.facturas / days.length) * smartFactor);
+          let accumulatedSavings = 0;
+          return days.map((day, index) => {
+            const base = basePerDay + Math.round(index * 1.2);
+            const smart = smartPerDay + Math.round(index * 2.5);
+            const dailySaving = Math.max(0, (smart - base) * avgValue * ivaRate * 0.35);
+            accumulatedSavings += dailySaving;
+            return {
+              day,
+              baseline: base,
+              smart,
+              ahorro: Math.round(accumulatedSavings)
+            };
+          });
+        }, [inputs.facturas]);
+
+        return React.createElement(
+          'div',
+          { className: 'space-y-10' },
+          React.createElement(
+            'div',
+            { className: 'grid grid-cols-1 lg:grid-cols-3 gap-6' },
+            [
+              {
+                label: 'Ingresos mensuales',
+                key: 'ingresos',
+                min: 20000,
+                max: 180000,
+                step: 5000
+              },
+              {
+                label: 'Gastos operativos',
+                key: 'gastos',
+                min: 5000,
+                max: 80000,
+                step: 2500
+              },
+              {
+                label: 'Facturas al mes',
+                key: 'facturas',
+                min: 10,
+                max: 250,
+                step: 5
+              }
+            ].map(({ label, key, min, max, step }) =>
+              React.createElement(
+                'div',
+                { key, className: 'rounded-2xl border border-white/10 bg-white/5 p-5 space-y-4' },
+                React.createElement(
+                  'div',
+                  { className: 'flex items-center justify-between text-sm text-white/70' },
+                  React.createElement('span', null, label),
+                  React.createElement('span', { className: 'font-semibold text-white' }, inputs[key])
+                ),
+                React.createElement('input', {
+                  type: 'range',
+                  min,
+                  max,
+                  step,
+                  value: inputs[key],
+                  onChange: handleChange(key),
+                  className: 'w-full accent-gold'
+                })
+              )
+            )
           ),
-          e('div',null,
-            e('label',{className:'text-sm text-white/70'},'Gastos mensuales (MXN)'),
-            e('input',{type:'range', min:5000, max:90000, step:1000, value:gastos,
-              onChange:(ev)=>setGastos(+ev.target.value), className:'w-full accent-gold'}),
-            e('div',{className:'text-right text-sm text-white/70'},'$'+fmtMoney(gastos))
+          React.createElement(
+            'div',
+            { className: 'grid grid-cols-1 md:grid-cols-3 gap-4' },
+            [
+              {
+                label: 'Ahorro estimado',
+                value: formatCurrency(metrics.ahorro)
+              },
+              {
+                label: 'ROI estimado',
+                value: metrics.roi.toFixed(1) + '%'
+              },
+              {
+                label: 'Días para recuperar inversión',
+                value: metrics.recoveryDays + ' días'
+              }
+            ].map(({ label, value }) =>
+              React.createElement(
+                'div',
+                { key: label, className: 'rounded-2xl border border-white/10 bg-white/5 p-5' },
+                React.createElement(
+                  'div',
+                  { className: 'text-xs uppercase tracking-wide text-white/60' },
+                  label
+                ),
+                React.createElement(
+                  'div',
+                  { className: 'mt-3 text-2xl font-semibold text-white' },
+                  value
+                )
+              )
+            )
           ),
-          e('div',null,
-            e('label',{className:'text-sm text-white/70'},'Facturas procesadas / mes'),
-            e('input',{type:'range', min:10, max:1000, step:10, value:facturas,
-              onChange:(ev)=>setFacturas(+ev.target.value), className:'w-full accent-gold'}),
-            e('div',{className:'text-right text-sm text-white/70'},fmtMoney(facturas)+' facturas')
-          )
-        ),
-        e('div',{className:'grid grid-cols-1 md:grid-cols-3 gap-4 mb-6'},
-          e(KPI,{label:'Ahorro estimado', value:'$'+fmtMoney(ahorro), highlight:true}),
-          e(KPI,{label:'ROI estimado', value:roi.toFixed(1), suffix:'%'}),
-          e(KPI,{label:'Recuperación', value:String(dias), suffix:' días'}),
-        ),
-        e('div',{style:{width:'100%', height:320}, className:'rounded-2xl border border-white/10 bg-white/5 p-2'},
-          e(ResponsiveContainer,null,
-            e(LineChart,{data: merged},
-              e(CartesianGrid,{strokeDasharray:'3 3', stroke:'#ffffff20'}),
-              e(XAxis,{dataKey:'x', stroke:'#ffffff90'}),
-              e(YAxis,{stroke:'#ffffff90'}),
-              e(Tooltip,null),
-              e(Legend,{wrapperStyle:{color:'#fff'}}),
-              e(Line,{type:'monotone', dataKey:'base', name:'Antes', stroke:'#888888', strokeWidth:2}),
-              e(Line,{type:'monotone', dataKey:'smart', name:'Con Smart Ink', stroke:'#C9A227', strokeWidth:2})
+          React.createElement(
+            'div',
+            { className: 'rounded-2xl border border-white/10 bg-white/5 p-6' },
+            React.createElement(
+              'h3',
+              { className: 'text-sm uppercase tracking-wide text-white/60 mb-4' },
+              'Proyección de impacto Smart Ink'
+            ),
+            React.createElement(
+              'div',
+              { className: 'h-72' },
+              React.createElement(
+                ResponsiveContainer,
+                { width: '100%', height: '100%' },
+                React.createElement(
+                  LineChart,
+                  { data: chartData },
+                  React.createElement(CartesianGrid, { strokeDasharray: '3 3', stroke: 'rgba(255,255,255,0.1)' }),
+                  React.createElement(XAxis, {
+                    dataKey: 'day',
+                    stroke: '#ffffff',
+                    tickLine: false,
+                    axisLine: { stroke: 'rgba(255,255,255,0.3)' }
+                  }),
+                  React.createElement(YAxis, {
+                    yAxisId: 'left',
+                    allowDecimals: false,
+                    stroke: '#ffffff',
+                    tickLine: false,
+                    axisLine: { stroke: 'rgba(255,255,255,0.3)' }
+                  }),
+                  React.createElement(YAxis, {
+                    yAxisId: 'right',
+                    orientation: 'right',
+                    stroke: '#ffffff',
+                    tickLine: false,
+                    axisLine: { stroke: 'rgba(255,255,255,0.3)' },
+                    tickFormatter: (value) => formatCurrency(value)
+                  }),
+                  React.createElement(Tooltip, {
+                    cursor: { stroke: 'rgba(255,255,255,0.2)' },
+                    contentStyle: {
+                      backgroundColor: '#0A192F',
+                      borderRadius: '12px',
+                      border: '1px solid rgba(255,255,255,0.1)',
+                      color: '#fff'
+                    }
+                  }),
+                  React.createElement(Legend, {
+                    verticalAlign: 'top',
+                    height: 36,
+                    wrapperStyle: { color: '#fff' }
+                  }),
+                  React.createElement(Line, {
+                    yAxisId: 'left',
+                    type: 'monotone',
+                    dataKey: 'baseline',
+                    stroke: 'rgba(255,255,255,0.5)',
+                    strokeWidth: 2,
+                    dot: false,
+                    name: 'Antes de Smart Ink'
+                  }),
+                  React.createElement(Line, {
+                    yAxisId: 'left',
+                    type: 'monotone',
+                    dataKey: 'smart',
+                    stroke: '#C9A227',
+                    strokeWidth: 3,
+                    dot: { stroke: '#C9A227', strokeWidth: 2 },
+                    activeDot: { r: 6 },
+                    name: 'Con Smart Ink'
+                  }),
+                  React.createElement(Line, {
+                    yAxisId: 'right',
+                    type: 'monotone',
+                    dataKey: 'ahorro',
+                    stroke: '#00FF94',
+                    strokeWidth: 2,
+                    strokeDasharray: '4 4',
+                    dot: false,
+                    name: 'Ahorro acumulado'
+                  })
+                )
+              )
             )
           )
-        ),
-        e('div',{className:'mt-4 text-white/70 text-sm text-center'},'La gráfica compara ROI (Antes vs Con Smart Ink) para 6 periodos.')
-      );
-    }
+        );
+      };
 
-    function App(){
-      useEffect(()=>{
-        const y=document.getElementById('year'); if(y) y.textContent=new Date().getFullYear();
-      },[]);
+      const DemoApp = () => {
+        const [activeTab, setActiveTab] = useState('auto');
 
-      return e('div',{},
-        e(AutoDemo,null),
-        e('div',{className:'my-10 border-t border-white/10'}),
-        e(Calculator,null)
-      );
-    }
+        useEffect(() => {
+          const autoButton = document.getElementById('tab-auto');
+          const calculatorButton = document.getElementById('tab-calculator');
 
-    function mount(){
-      const root = document.getElementById('root');
-      if(!root){ return; }
-      try{ ReactDOM.render(e(App), root); }
-      catch(err){ root.innerHTML = '<p class="text-white/70">Error cargando la demo.</p>'; console.error(err); }
-    }
-    if(document.readyState==='complete' || document.readyState==='interactive'){ setTimeout(mount,0); }
-    else { window.addEventListener('DOMContentLoaded', mount); }
-  })();
+          const updateStyles = () => {
+            if (!autoButton || !calculatorButton) return;
+            if (activeTab === 'auto') {
+              autoButton.classList.add('bg-white/10', 'border-white/20', 'text-white');
+              calculatorButton.classList.remove('bg-white/10', 'border-white/20', 'text-white');
+              calculatorButton.classList.add('text-white/70');
+            } else {
+              calculatorButton.classList.add('bg-white/10', 'border-white/20', 'text-white');
+              autoButton.classList.remove('bg-white/10', 'border-white/20', 'text-white');
+              autoButton.classList.add('text-white/70');
+            }
+            autoButton.classList.toggle('text-white/70', activeTab !== 'auto');
+            calculatorButton.classList.toggle('text-white/70', activeTab !== 'calculator');
+          };
+
+          updateStyles();
+        }, [activeTab]);
+
+        useEffect(() => {
+          const autoButton = document.getElementById('tab-auto');
+          const calculatorButton = document.getElementById('tab-calculator');
+          if (!autoButton || !calculatorButton) return;
+
+          const handleTabClick = (event) => {
+            const tab = event.currentTarget.getAttribute('data-tab');
+            setActiveTab(tab === 'calculator' ? 'calculator' : 'auto');
+          };
+
+          autoButton.addEventListener('click', handleTabClick);
+          calculatorButton.addEventListener('click', handleTabClick);
+
+          return () => {
+            autoButton.removeEventListener('click', handleTabClick);
+            calculatorButton.removeEventListener('click', handleTabClick);
+          };
+        }, []);
+
+        return activeTab === 'auto'
+          ? React.createElement(AutoDemo, null)
+          : React.createElement(Calculator, null);
+      };
+
+      const init = () => {
+        const container = document.getElementById('demo-root');
+        if (!container) return;
+        const root = ReactDOM.createRoot(container);
+        root.render(React.createElement(DemoApp));
+      };
+
+      window.addEventListener('DOMContentLoaded', () => {
+        if (window.lucide) window.lucide.createIcons();
+        const yearEl = document.getElementById('year');
+        if (yearEl) yearEl.textContent = new Date().getFullYear();
+        init();
+      });
+    })();
   </script>
 </body>
 </html>
