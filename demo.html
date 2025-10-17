@@ -1,791 +1,192 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Smart Ink – Demo Inteligente</title>
-    <link rel="icon" type="image/png" href="favicon.ico" />
-    <style>
-      :root {
-        color-scheme: dark;
-        --navy: #0a192f;
-        --navy-soft: rgba(10, 25, 47, 0.82);
-        --gold: #c9a227;
-        --green: #00ff94;
-        --text-strong: rgba(255, 255, 255, 0.92);
-        --text-muted: rgba(255, 255, 255, 0.72);
-      }
+<head>
+  <meta charset="utf-8" />
+  < name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Smart Ink — Demo Inteligente</title>
+  <link rel="icon" href="favicon.ico" type="image/x-icon">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = { theme: { extend: { colors: { navy:'#0A192F', gold:'#C9A227', radar:'#00FF94' } } } };
+  </script>
+  <style>.hud-layer{pointer-events:none} body{background-color:#0A192F;color:#fff}</style>
+  <script crossorigin src="https://unpkg.com/react@17/umd/react.production.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/recharts/umd/Recharts.min.js"></script>
+</head>
+<body class="min-h-screen bg-navy text-white selection:bg-white/10 selection:text-white">
+  <div class="hud-layer fixed inset-0 bg-[radial-gradient(ellipse_at_top,rgba(29,174,255,0.08),transparent_55%),radial-gradient(ellipse_at_bottom,rgba(0,255,148,0.06),transparent_55%)]"></div>
+  <div class="hud-layer fixed inset-0 [background-image:linear-gradient(rgba(255,255,255,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.05)_1px,transparent_1px)] [background-size:40px_40px] opacity-30"></div>
 
-      * {
-        box-sizing: border-box;
-      }
-
-      body {
-        margin: 0;
-        font-family: "Inter", "Segoe UI", -apple-system, BlinkMacSystemFont, sans-serif;
-        background: radial-gradient(circle at top right, rgba(0, 255, 148, 0.12), transparent 52%),
-          var(--navy);
-        color: var(--text-strong);
-        min-height: 100vh;
-        position: relative;
-        overflow-x: hidden;
-      }
-
-      a {
-        color: inherit;
-        text-decoration: none;
-      }
-
-      .grid-overlay::before {
-        content: "";
-        position: absolute;
-        inset: 0;
-        background-image: linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
-          linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
-        background-size: 42px 42px;
-        pointer-events: none;
-        z-index: 0;
-      }
-
-      header {
-        position: relative;
-        z-index: 2;
-        backdrop-filter: blur(10px);
-        background: var(--navy-soft);
-        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-      }
-
-      .header-inner {
-        max-width: 1100px;
-        margin: 0 auto;
-        padding: 22px 24px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 20px;
-      }
-
-      .header-brand {
-        display: flex;
-        align-items: center;
-        gap: 16px;
-      }
-
-      .header-brand img {
-        width: 56px;
-        height: 56px;
-        border-radius: 18px;
-        border: 1px solid rgba(201, 162, 39, 0.45);
-        background: rgba(201, 162, 39, 0.1);
-        padding: 6px;
-      }
-
-      .header-label {
-        display: flex;
-        flex-direction: column;
-      }
-
-      .header-label span:first-child {
-        text-transform: uppercase;
-        letter-spacing: 0.3em;
-        font-size: 0.65rem;
-        color: var(--gold);
-      }
-
-      .header-label span:last-child {
-        font-size: 1.1rem;
-        font-weight: 600;
-      }
-
-      .btn-primary {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        padding: 10px 22px;
-        border-radius: 999px;
-        font-weight: 600;
-        font-size: 0.95rem;
-        background: var(--gold);
-        color: var(--navy);
-        border: 1px solid rgba(201, 162, 39, 0.5);
-        box-shadow: 0 12px 30px rgba(201, 162, 39, 0.32);
-        transition: transform 0.25s ease, box-shadow 0.25s ease;
-      }
-
-      .btn-primary:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 16px 38px rgba(201, 162, 39, 0.4);
-      }
-
-      main {
-        position: relative;
-        z-index: 1;
-        padding: 48px 20px 80px;
-      }
-
-      .content-wrapper {
-        max-width: 1100px;
-        margin: 0 auto;
-      }
-
-      .tabs {
-        display: flex;
-        gap: 12px;
-        padding: 6px;
-        border-radius: 999px;
-        background: rgba(255, 255, 255, 0.06);
-        border: 1px solid rgba(255, 255, 255, 0.08);
-        max-width: 520px;
-        margin: 0 auto 36px;
-      }
-
-      .tab-button {
-        flex: 1;
-        border: none;
-        border-radius: 999px;
-        padding: 12px 18px;
-        background: transparent;
-        color: var(--text-muted);
-        font-size: 0.95rem;
-        font-weight: 600;
-        cursor: pointer;
-        transition: background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
-      }
-
-      .tab-button.active {
-        background: var(--gold);
-        color: var(--navy);
-        box-shadow: 0 8px 26px rgba(201, 162, 39, 0.38);
-      }
-
-      .panel {
-        display: none;
-      }
-
-      .panel.active {
-        display: grid;
-        gap: 22px;
-      }
-
-      .card {
-        background: rgba(255, 255, 255, 0.06);
-        border: 1px solid rgba(255, 255, 255, 0.08);
-        border-radius: 28px;
-        padding: 24px;
-        box-shadow: 0 18px 38px rgba(0, 0, 0, 0.28);
-      }
-
-      .card h2 {
-        margin-top: 0;
-        margin-bottom: 16px;
-        font-size: 1.2rem;
-        font-weight: 600;
-      }
-
-      .progress-wrapper {
-        display: flex;
-        flex-direction: column;
-        gap: 16px;
-      }
-
-      .progress-bar {
-        position: relative;
-        height: 12px;
-        border-radius: 999px;
-        background: rgba(255, 255, 255, 0.08);
-        overflow: hidden;
-      }
-
-      .progress-bar span {
-        position: absolute;
-        inset: 0;
-        border-radius: inherit;
-        background: linear-gradient(90deg, var(--gold), #ffed9f);
-        width: 0%;
-        transition: width 0.4s ease;
-      }
-
-      .actions {
-        display: flex;
-        gap: 12px;
-        flex-wrap: wrap;
-      }
-
-      .btn-secondary {
-        border-radius: 999px;
-        padding: 10px 22px;
-        font-weight: 600;
-        background: transparent;
-        border: 1px solid rgba(255, 255, 255, 0.32);
-        color: var(--text-strong);
-        cursor: pointer;
-        transition: border 0.2s ease, color 0.2s ease;
-      }
-
-      .btn-secondary:hover {
-        border-color: var(--gold);
-        color: var(--gold);
-      }
-
-      .status-line {
-        display: flex;
-        justify-content: space-between;
-        font-size: 0.9rem;
-        color: var(--text-muted);
-      }
-
-      .chart-area {
-        display: none;
-        gap: 18px;
-      }
-
-      .chart-area.visible {
-        display: block;
-      }
-
-      .chart-area h3 {
-        font-size: 1.05rem;
-        margin: 12px 0 18px;
-      }
-
-      .bar-chart {
-        display: grid;
-        grid-template-columns: repeat(7, minmax(0, 1fr));
-        gap: 14px;
-        align-items: end;
-        height: 220px;
-        padding: 16px 20px 26px;
-        background: rgba(10, 25, 47, 0.82);
-        border-radius: 22px;
-        border: 1px solid rgba(255, 255, 255, 0.06);
-        position: relative;
-      }
-
-      .bar-chart::after {
-        content: "Facturas procesadas";
-        position: absolute;
-        left: 20px;
-        top: 12px;
-        font-size: 0.78rem;
-        text-transform: uppercase;
-        letter-spacing: 0.12em;
-        color: var(--text-muted);
-      }
-
-      .bar {
-        background: linear-gradient(180deg, rgba(255, 236, 179, 0.85), var(--gold));
-        border-radius: 14px 14px 6px 6px;
-        position: relative;
-        min-height: 18px;
-        transition: height 0.6s ease;
-      }
-
-      .bar span {
-        position: absolute;
-        bottom: 100%;
-        left: 50%;
-        transform: translate(-50%, -12px);
-        font-size: 0.8rem;
-        color: var(--text-muted);
-      }
-
-      .bar-label {
-        margin-top: 12px;
-        text-align: center;
-        font-size: 0.75rem;
-        color: var(--text-muted);
-      }
-
-      .calculator-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-        gap: 20px;
-      }
-
-      .slider-group {
-        display: grid;
-        gap: 12px;
-      }
-
-      .slider-group label {
-        font-size: 0.95rem;
-        color: var(--text-muted);
-      }
-
-      input[type="range"] {
-        -webkit-appearance: none;
-        appearance: none;
-        height: 6px;
-        background: rgba(255, 255, 255, 0.14);
-        border-radius: 4px;
-        outline: none;
-      }
-
-      input[type="range"]::-webkit-slider-thumb {
-        -webkit-appearance: none;
-        width: 18px;
-        height: 18px;
-        border-radius: 50%;
-        background: var(--gold);
-        box-shadow: 0 0 0 4px rgba(201, 162, 39, 0.22);
-        cursor: pointer;
-      }
-
-      input[type="range"]::-moz-range-thumb {
-        width: 18px;
-        height: 18px;
-        border-radius: 50%;
-        background: var(--gold);
-        border: none;
-        box-shadow: 0 0 0 4px rgba(201, 162, 39, 0.22);
-        cursor: pointer;
-      }
-
-      .value-display {
-        display: flex;
-        justify-content: space-between;
-        font-size: 0.88rem;
-        color: var(--text-muted);
-      }
-
-      .kpi-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-        gap: 16px;
-      }
-
-      .kpi-card {
-        border-radius: 22px;
-        padding: 20px;
-        background: rgba(10, 25, 47, 0.9);
-        border: 1px solid rgba(255, 255, 255, 0.08);
-        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.32);
-      }
-
-      .kpi-card span {
-        display: block;
-      }
-
-      .kpi-card .label {
-        font-size: 0.82rem;
-        color: var(--text-muted);
-        text-transform: uppercase;
-        letter-spacing: 0.14em;
-      }
-
-      .kpi-card .value {
-        margin-top: 10px;
-        font-size: 1.5rem;
-        font-weight: 600;
-        color: var(--gold);
-      }
-
-      .line-chart {
-        position: relative;
-        background: rgba(10, 25, 47, 0.9);
-        border-radius: 22px;
-        border: 1px solid rgba(255, 255, 255, 0.06);
-        padding: 18px 22px 24px;
-      }
-
-      .line-chart h3 {
-        margin-top: 0;
-        margin-bottom: 12px;
-      }
-
-      .line-chart svg {
-        width: 100%;
-        height: 220px;
-      }
-
-      .line-chart .axis {
-        stroke: rgba(255, 255, 255, 0.12);
-        stroke-width: 1;
-      }
-
-      .line-chart .grid-line {
-        stroke: rgba(255, 255, 255, 0.08);
-        stroke-dasharray: 4;
-      }
-
-      .line-chart .roi-line {
-        fill: none;
-        stroke: var(--gold);
-        stroke-width: 3;
-      }
-
-      .line-chart .roi-point {
-        fill: #ffed9f;
-        stroke: var(--gold);
-        stroke-width: 2;
-      }
-
-      .axis-label {
-        font-size: 0.72rem;
-        fill: var(--text-muted);
-      }
-
-      footer {
-        text-align: center;
-        padding: 24px 0 40px;
-        color: var(--text-muted);
-        font-size: 0.82rem;
-      }
-
-      @media (max-width: 640px) {
-        .header-inner {
-          flex-direction: column;
-          align-items: flex-start;
-        }
-
-        .tabs {
-          flex-direction: column;
-          border-radius: 26px;
-        }
-
-        .tab-button {
-          border-radius: 18px;
-        }
-      }
-    </style>
-  </head>
-  <body>
-    <div class="grid-overlay"></div>
-    <header>
-      <div class="header-inner">
-        <a href="index.html" class="header-brand">
-          <img src="logo.png" alt="Smart Ink" />
-          <div class="header-label">
-            <span>Smart Ink</span>
-            <span>Demo Inteligente</span>
-          </div>
-        </a>
-        <a href="index.html" class="btn-primary">Volver al inicio</a>
+  <header class="relative z-10">
+    <div class="mx-auto max-w-6xl px-6 py-6 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="h-9 w-9 rounded-xl bg-white/10 grid place-content-center border border-white/10 overflow-hidden">
+          <img src="logo.png" alt="Smart Ink" class="h-9 w-9 object-contain" />
+        </div>
+        <span class="font-semibold tracking-wide">Smart Ink</span>
       </div>
-    </header>
+      <a href="index.html" class="inline-flex items-center gap-2 rounded-2xl bg-gold px-4 py-2 text-sm font-medium text-navy hover:brightness-110 transition">Volver al inicio</a>
+    </div>
+  </header>
 
-    <main>
-      <div class="content-wrapper">
-        <nav class="tabs" aria-label="Modos de demostración">
-          <button class="tab-button active" data-tab="auto">Presentación automática</button>
-          <button class="tab-button" data-tab="calc">Calculadora interactiva</button>
-        </nav>
+  <main id="root" class="relative z-10 mx-auto max-w-6xl px-6 py-8"></main>
 
-        <section class="panel active" data-panel="auto">
-          <div class="card">
-            <h2>Simulación del proceso Smart Ink</h2>
-            <div class="progress-wrapper">
-              <div class="status-line">
-                <span id="autoStatus">Procesando documentos…</span>
-                <span id="autoProgress">0%</span>
-              </div>
-              <div class="progress-bar" aria-hidden="true">
-                <span id="progressFill"></span>
-              </div>
-              <div class="actions">
-                <button id="startDemo" class="btn-primary" type="button">Iniciar demo</button>
-                <button id="resetDemo" class="btn-secondary" type="button">Reiniciar demo</button>
-              </div>
-            </div>
-          </div>
+  <footer class="relative z-10 border-t border-white/10">
+    <div class="mx-auto max-w-6xl px-6 py-10 text-sm text-white/60 flex items-center justify-between">
+      <span>© <span id="year"></span> Smart Ink</span>
+    </div>
+  </footer>
 
-          <div class="card chart-area" id="autoChartArea" aria-live="polite">
-            <h3>Resultados generados 🚀</h3>
-            <div class="bar-chart" id="barChart" role="img" aria-label="Bar chart de facturas procesadas por día"></div>
-            <div class="bar-labels" id="barLabels" style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 14px; margin-top: 10px;">
-              <!-- labels inserted dynamically -->
-            </div>
-          </div>
-        </section>
+  <script>
+  (function(){
+    const e = React.createElement;
+    const {useState, useEffect, useRef} = React;
+    const { ResponsiveContainer, BarChart, Bar, CartesianGrid, XAxis, YAxis, Tooltip, LineChart, Line, Legend } = Recharts;
+    const fmtMoney = (n) => n.toLocaleString('es-MX', {maximumFractionDigits:0});
+    const clamp = (v, min, max) => Math.max(min, Math.min(max, v));
 
-        <section class="panel" data-panel="calc">
-          <div class="card">
-            <h2>Calculadora de impacto Smart Ink</h2>
-            <div class="calculator-grid">
-              <div class="slider-group">
-                <label for="ingresos">Ingresos proyectados (MXN)</label>
-                <input id="ingresos" type="range" min="1000" max="100000" step="500" value="35000" />
-                <div class="value-display">
-                  <span>Mín: 1,000</span>
-                  <span id="ingresosValor">35,000 MXN</span>
-                </div>
-              </div>
-              <div class="slider-group">
-                <label for="gastos">Gastos operativos (MXN)</label>
-                <input id="gastos" type="range" min="1000" max="100000" step="500" value="18000" />
-                <div class="value-display">
-                  <span>Mín: 1,000</span>
-                  <span id="gastosValor">18,000 MXN</span>
-                </div>
-              </div>
-              <div class="slider-group">
-                <label for="facturas">Facturas procesadas (mensual)</label>
-                <input id="facturas" type="range" min="10" max="1000" step="5" value="320" />
-                <div class="value-display">
-                  <span>Mín: 10</span>
-                  <span id="facturasValor">320</span>
-                </div>
-              </div>
-            </div>
-          </div>
+    function KPI({label, value, suffix='', highlight=false}){
+      return e('div',{className:'rounded-2xl border border-white/10 bg-white/5 p-5 text-center'},
+        e('div',{className:`text-2xl font-semibold ${highlight?'text-gold':''}`}, `${value}${suffix}`),
+        e('div',{className:'text-xs text-white/70 mt-1'}, label)
+      );
+    }
 
-          <div class="kpi-grid" id="kpiGrid">
-            <div class="kpi-card">
-              <span class="label">Ahorro potencial</span>
-              <span class="value" id="ahorroValor">—</span>
-              <span>💰</span>
-            </div>
-            <div class="kpi-card">
-              <span class="label">ROI estimado</span>
-              <span class="value" id="roiValor">—</span>
-              <span>📈</span>
-            </div>
-            <div class="kpi-card">
-              <span class="label">Recuperación</span>
-              <span class="value" id="diasValor">—</span>
-              <span>⏱</span>
-            </div>
-          </div>
+    function AutoDemo(){
+      const days = ['Lun','Mar','Mié','Jue','Vie','Sáb','Dom'];
+      const [data, setData] = useState(days.map(d => ({dia:d, count:0})));
+      const [total, setTotal] = useState(0);
+      const [valor, setValor] = useState(0);
+      const [iva, setIva] = useState(0);
+      const target = 72;
+      const timerRef = useRef(null);
 
-          <div class="line-chart" aria-hidden="false">
-            <h3>ROI proyectado en 5 hitos</h3>
-            <svg id="roiChart" viewBox="0 0 320 220" role="img" aria-label="Gráfica de línea del ROI proyectado">
-              <line class="axis" x1="32" y1="190" x2="300" y2="190"></line>
-              <line class="axis" x1="32" y1="30" x2="32" y2="190"></line>
-              <g id="roiGrid"></g>
-              <path id="roiPath" class="roi-line" d="" ></path>
-              <g id="roiPoints"></g>
-              <g id="roiXAxisLabels"></g>
-              <g id="roiYAxisLabels"></g>
-            </svg>
-          </div>
-        </section>
-      </div>
-    </main>
+      useEffect(() => {
+        let processed = 0;
+        timerRef.current = setInterval(() => {
+          processed++;
+          const dayIndex = Math.floor(Math.random()*days.length);
+          const invoiceValue = 1500 + Math.random()*4500;
+          setData(prev => prev.map((row, i) => i===dayIndex ? {...row, count: row.count + 1} : row));
+          setTotal(p => p + 1);
+          setValor(p => p + invoiceValue);
+          setIva(p => p + invoiceValue*0.16);
+          if(processed >= target){ clearInterval(timerRef.current); }
+        }, 140);
+        return () => clearInterval(timerRef.current);
+      }, []);
 
-    <footer>
-      Simulación conceptual para demostrar el potencial de Smart Ink. Datos ficticios con fines ilustrativos.
-    </footer>
+      return e('section', {className:'mb-14'},
+        e('div',{className:'text-center mb-6'},
+          e('h2',{className:'text-3xl font-semibold'},'Presentación automática'),
+          e('p',{className:'text-white/70'},'Facturas “entrando” y transformándose en indicadores y gráficas.')
+        ),
+        e('div',{className:'grid grid-cols-1 md:grid-cols-3 gap-4 mb-6'},
+          e(KPI,{label:'Facturas procesadas', value: fmtMoney(total), highlight:true}),
+          e(KPI,{label:'Valor total (MXN)', value: '$'+fmtMoney(valor)}),
+          e(KPI,{label:'IVA total (16%)', value: '$'+fmtMoney(iva)}),
+        ),
+        e('div',{className:'mb-6 grid grid-cols-6 sm:grid-cols-12 gap-2'},
+          Array.from({length: Math.min(total, 24)}).map((_,i) =>
+            e('div',{key:i, className:'h-8 rounded-md bg-white/10 border border-white/10 animate-pulse'})
+          )
+        ),
+        e('div',{style:{width:'100%', height:320}, className:'rounded-2xl border border-white/10 bg-white/5 p-2'},
+          e(ResponsiveContainer,null,
+            e(BarChart,{data},
+              e(CartesianGrid,{strokeDasharray:'3 3', stroke:'#ffffff20'}),
+              e(XAxis,{dataKey:'dia', stroke:'#ffffff90'}),
+              e(YAxis,{stroke:'#ffffff90'}),
+              e(Tooltip,null),
+              e(Bar,{dataKey:'count', fill:'#C9A227', radius:[6,6,0,0]})
+            )
+          )
+        )
+      );
+    }
 
-    <script>
-      const tabButtons = document.querySelectorAll('.tab-button');
-      const panels = document.querySelectorAll('.panel');
+    function Calculator(){
+      const [ingresos, setIngresos] = useState(50000);
+      const [gastos, setGastos] = useState(25000);
+      const [facturas, setFacturas] = useState(200);
 
-      tabButtons.forEach((button) => {
-        button.addEventListener('click', () => {
-          const target = button.dataset.tab;
-          tabButtons.forEach((btn) => btn.classList.toggle('active', btn === button));
-          panels.forEach((panel) => panel.classList.toggle('active', panel.dataset.panel === target));
-        });
-      });
+      const ahorro = (facturas*45) + (ingresos*0.03) - (gastos*0.015);
+      const roi = clamp((ahorro / Math.max(1,gastos))*100, -100, 300);
+      const dias = clamp(Math.round(90 - (roi/2)), 10, 120);
 
-      // Auto demo logic
-      const startDemoBtn = document.getElementById('startDemo');
-      const resetDemoBtn = document.getElementById('resetDemo');
-      const progressFill = document.getElementById('progressFill');
-      const autoStatus = document.getElementById('autoStatus');
-      const autoProgress = document.getElementById('autoProgress');
-      const autoChartArea = document.getElementById('autoChartArea');
-      const barChart = document.getElementById('barChart');
-      const barLabels = document.getElementById('barLabels');
+      const baseline = [1,2,3,4,5,6].map(x => ({x, base: Math.max(0, roi*0.5*(x/6))}));
+      const projected = [1,2,3,4,5,6].map(x => ({x, smart: Math.max(0, roi*(x/6))}));
+      const merged = baseline.map((b,i) => ({x:b.x, base:b.base, smart: projected[i].smart}));
 
-      let progressInterval = null;
-      let currentProgress = 0;
+      return e('section', {id:'calc', className:'mb-8'},
+        e('div',{className:'text-center mb-6'},
+          e('h2',{className:'text-3xl font-semibold'},'Calculadora interactiva'),
+          e('p',{className:'text-white/70'},'Ajusta tus números para ver impacto en ahorro, ROI y recuperación.')
+        ),
+        e('div',{className:'grid grid-cols-1 md:grid-cols-3 gap-6 mb-6'},
+          e('div',null,
+            e('label',{className:'text-sm text-white/70'},'Ingresos mensuales (MXN)'),
+            e('input',{type:'range', min:10000, max:100000, step:1000, value:ingresos,
+              onChange:(ev)=>setIngresos(+ev.target.value), className:'w-full accent-gold'}),
+            e('div',{className:'text-right text-sm text-white/70'},'$'+fmtMoney(ingresos))
+          ),
+          e('div',null,
+            e('label',{className:'text-sm text-white/70'},'Gastos mensuales (MXN)'),
+            e('input',{type:'range', min:5000, max:90000, step:1000, value:gastos,
+              onChange:(ev)=>setGastos(+ev.target.value), className:'w-full accent-gold'}),
+            e('div',{className:'text-right text-sm text-white/70'},'$'+fmtMoney(gastos))
+          ),
+          e('div',null,
+            e('label',{className:'text-sm text-white/70'},'Facturas procesadas / mes'),
+            e('input',{type:'range', min:10, max:1000, step:10, value:facturas,
+              onChange:(ev)=>setFacturas(+ev.target.value), className:'w-full accent-gold'}),
+            e('div',{className:'text-right text-sm text-white/70'},fmtMoney(facturas)+' facturas')
+          )
+        ),
+        e('div',{className:'grid grid-cols-1 md:grid-cols-3 gap-4 mb-6'},
+          e(KPI,{label:'Ahorro estimado', value:'$'+fmtMoney(ahorro), highlight:true}),
+          e(KPI,{label:'ROI estimado', value:roi.toFixed(1), suffix:'%'}),
+          e(KPI,{label:'Recuperación', value:String(dias), suffix:' días'}),
+        ),
+        e('div',{style:{width:'100%', height:320}, className:'rounded-2xl border border-white/10 bg-white/5 p-2'},
+          e(ResponsiveContainer,null,
+            e(LineChart,{data: merged},
+              e(CartesianGrid,{strokeDasharray:'3 3', stroke:'#ffffff20'}),
+              e(XAxis,{dataKey:'x', stroke:'#ffffff90'}),
+              e(YAxis,{stroke:'#ffffff90'}),
+              e(Tooltip,null),
+              e(Legend,{wrapperStyle:{color:'#fff'}}),
+              e(Line,{type:'monotone', dataKey:'base', name:'Antes', stroke:'#888888', strokeWidth:2}),
+              e(Line,{type:'monotone', dataKey:'smart', name:'Con Smart Ink', stroke:'#C9A227', strokeWidth:2})
+            )
+          )
+        ),
+        e('div',{className:'mt-4 text-white/70 text-sm text-center'},'La gráfica compara ROI (Antes vs Con Smart Ink) para 6 periodos.')
+      );
+    }
 
-      function resetAutoDemo() {
-        clearInterval(progressInterval);
-        currentProgress = 0;
-        progressFill.style.width = '0%';
-        autoStatus.textContent = 'Procesando documentos…';
-        autoProgress.textContent = '0%';
-        autoChartArea.classList.remove('visible');
-        barChart.innerHTML = '';
-        barLabels.innerHTML = '';
-      }
+    function App(){
+      useEffect(()=>{
+        const y=document.getElementById('year'); if(y) y.textContent=new Date().getFullYear();
+      },[]);
 
-      function renderBarChart(data) {
-        const max = Math.max(...data.map((item) => item.facturas));
-        barChart.innerHTML = '';
-        barLabels.innerHTML = '';
-        data.forEach((item) => {
-          const bar = document.createElement('div');
-          bar.className = 'bar';
-          const heightPercent = (item.facturas / max) * 100;
-          bar.style.height = `${Math.max(heightPercent, 8)}%`;
-          const valueLabel = document.createElement('span');
-          valueLabel.textContent = item.facturas;
-          bar.appendChild(valueLabel);
-          barChart.appendChild(bar);
+      return e('div',{},
+        e(AutoDemo,null),
+        e('div',{className:'my-10 border-t border-white/10'}),
+        e(Calculator,null)
+      );
+    }
 
-          const label = document.createElement('div');
-          label.className = 'bar-label';
-          label.textContent = item.dia;
-          barLabels.appendChild(label);
-        });
-      }
-
-      function startAutoDemo() {
-        resetAutoDemo();
-        autoStatus.textContent = 'Automatizando XML → KPIs → Dashboard';
-        progressInterval = setInterval(() => {
-          currentProgress += 4;
-          if (currentProgress >= 100) {
-            currentProgress = 100;
-            clearInterval(progressInterval);
-            autoStatus.textContent = 'Procesamiento completado';
-            autoChartArea.classList.add('visible');
-            const dataset = Array.from({ length: 7 }, (_, index) => ({
-              dia: `Día ${index + 1}`,
-              facturas: Math.floor(50 + Math.random() * 50),
-            }));
-            renderBarChart(dataset);
-          }
-          progressFill.style.width = `${currentProgress}%`;
-          autoProgress.textContent = `${currentProgress}%`;
-        }, 180);
-      }
-
-      startDemoBtn.addEventListener('click', () => {
-        if (progressInterval) {
-          clearInterval(progressInterval);
-        }
-        startAutoDemo();
-      });
-
-      resetDemoBtn.addEventListener('click', () => {
-        resetAutoDemo();
-        autoStatus.textContent = 'Procesando documentos…';
-      });
-
-      // ROI calculator
-      const ingresosInput = document.getElementById('ingresos');
-      const gastosInput = document.getElementById('gastos');
-      const facturasInput = document.getElementById('facturas');
-      const ingresosValor = document.getElementById('ingresosValor');
-      const gastosValor = document.getElementById('gastosValor');
-      const facturasValor = document.getElementById('facturasValor');
-      const ahorroValor = document.getElementById('ahorroValor');
-      const roiValor = document.getElementById('roiValor');
-      const diasValor = document.getElementById('diasValor');
-      const roiPath = document.getElementById('roiPath');
-      const roiPoints = document.getElementById('roiPoints');
-      const roiXAxisLabels = document.getElementById('roiXAxisLabels');
-      const roiYAxisLabels = document.getElementById('roiYAxisLabels');
-      const roiGrid = document.getElementById('roiGrid');
-
-      function formatCurrency(value) {
-        return new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN', maximumFractionDigits: 0 }).format(value);
-      }
-
-      function formatPercent(value) {
-        return `${value.toFixed(1)}%`;
-      }
-
-      function updateSliderLabels() {
-        ingresosValor.textContent = formatCurrency(Number(ingresosInput.value));
-        gastosValor.textContent = formatCurrency(Number(gastosInput.value));
-        facturasValor.textContent = Number(facturasInput.value).toLocaleString('es-MX');
-      }
-
-      function calculateMetrics() {
-        const ingresos = Number(ingresosInput.value);
-        const gastos = Number(gastosInput.value);
-        const facturas = Number(facturasInput.value);
-
-        const ahorro = ingresos * 0.05 - gastos * 0.02 + facturas * 5;
-        const roi = gastos === 0 ? 0 : (ahorro / gastos) * 100;
-        const dias = Math.max(10, Math.round(90 - roi / 2));
-
-        ahorroValor.textContent = formatCurrency(ahorro);
-        roiValor.textContent = formatPercent(roi);
-        diasValor.textContent = `${dias.toLocaleString('es-MX')} días`;
-
-        renderRoiChart(roi);
-      }
-
-      function renderRoiChart(baseRoi) {
-        const points = Array.from({ length: 5 }, (_, index) => {
-          const growthFactor = 0.88 + index * 0.07;
-          return Math.max(baseRoi * growthFactor, 0);
-        });
-
-        const maxRoi = Math.max(...points, 1);
-        const minRoi = 0;
-        const chartHeight = 160;
-        const chartWidth = 240;
-        const originX = 32;
-        const originY = 190;
-        const stepX = chartWidth / (points.length - 1);
-
-        roiGrid.innerHTML = '';
-        roiYAxisLabels.innerHTML = '';
-        const ySteps = 4;
-        for (let i = 0; i <= ySteps; i++) {
-          const value = minRoi + ((maxRoi - minRoi) / ySteps) * i;
-          const y = originY - (chartHeight * (value - minRoi)) / (maxRoi - minRoi || 1);
-          const gridLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-          gridLine.setAttribute('class', 'grid-line');
-          gridLine.setAttribute('x1', originX);
-          gridLine.setAttribute('x2', originX + chartWidth);
-          gridLine.setAttribute('y1', y);
-          gridLine.setAttribute('y2', y);
-          roiGrid.appendChild(gridLine);
-
-          const label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-          label.setAttribute('class', 'axis-label');
-          label.setAttribute('x', originX - 12);
-          label.setAttribute('y', y + 4);
-          label.textContent = `${value.toFixed(0)}%`;
-          roiYAxisLabels.appendChild(label);
-        }
-
-        roiXAxisLabels.innerHTML = '';
-        const xLabels = ['Inicio', 'Semana 2', 'Semana 4', 'Semana 6', 'Semana 8'];
-        xLabels.forEach((label, index) => {
-          const x = originX + stepX * index;
-          const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-          text.setAttribute('class', 'axis-label');
-          text.setAttribute('x', x);
-          text.setAttribute('y', originY + 18);
-          text.setAttribute('text-anchor', 'middle');
-          text.textContent = label;
-          roiXAxisLabels.appendChild(text);
-        });
-
-        const pathPoints = points
-          .map((value, index) => {
-            const x = originX + stepX * index;
-            const y = originY - (chartHeight * (value - minRoi)) / (maxRoi - minRoi || 1);
-            return `${x},${y}`;
-          })
-          .join(' ');
-
-        roiPath.setAttribute('d', `M ${pathPoints}`);
-
-        roiPoints.innerHTML = '';
-        points.forEach((value, index) => {
-          const x = originX + stepX * index;
-          const y = originY - (chartHeight * (value - minRoi)) / (maxRoi - minRoi || 1);
-          const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-          circle.setAttribute('class', 'roi-point');
-          circle.setAttribute('cx', x);
-          circle.setAttribute('cy', y);
-          circle.setAttribute('r', 5);
-          circle.setAttribute('aria-label', `Hito ${index + 1}: ${value.toFixed(1)}% ROI`);
-          roiPoints.appendChild(circle);
-        });
-      }
-
-      [ingresosInput, gastosInput, facturasInput].forEach((input) => {
-        input.addEventListener('input', () => {
-          updateSliderLabels();
-          calculateMetrics();
-        });
-      });
-
-      // Initialize calculator on load
-      updateSliderLabels();
-      calculateMetrics();
-    </script>
-  </body>
+    function mount(){
+      const root = document.getElementById('root');
+      if(!root){ return; }
+      try{ ReactDOM.render(e(App), root); }
+      catch(err){ root.innerHTML = '<p class="text-white/70">Error cargando la demo.</p>'; console.error(err); }
+    }
+    if(document.readyState==='complete' || document.readyState==='interactive'){ setTimeout(mount,0); }
+    else { window.addEventListener('DOMContentLoaded', mount); }
+  })();
+  </script>
+</body>
 </html>
