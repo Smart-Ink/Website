@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Smart Ink – Demo Inteligente</title>
+    <link rel="icon" type="image/png" href="favicon.ico" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              navy: '#0A192F',
+              gold: '#C9A227',
+              radar: '#00FF94',
+            },
+            boxShadow: {
+              glow: '0 0 30px rgba(0, 255, 148, 0.2)',
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      body {
+        background: radial-gradient(circle at top right, rgba(0, 255, 148, 0.08), transparent 55%),
+          #0A192F;
+        color: rgba(255, 255, 255, 0.9);
+      }
+
+      .grid-overlay::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background-image: linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+        background-size: 40px 40px;
+        pointer-events: none;
+      }
+    </style>
+    <script crossorigin src="https://unpkg.com/react@17/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
+    <script crossorigin src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+    <script crossorigin src="https://unpkg.com/recharts/umd/Recharts.min.js"></script>
+  </head>
+  <body class="min-h-screen font-sans relative">
+    <div class="grid-overlay absolute inset-0 opacity-70"></div>
+    <div id="root" class="relative"></div>
+
+    <script type="text/babel">
+      const { useState, useMemo, useEffect } = React;
+      const {
+        ResponsiveContainer,
+        BarChart,
+        Bar,
+        CartesianGrid,
+        XAxis,
+        YAxis,
+        Tooltip,
+        LineChart,
+        Line,
+        Legend,
+      } = Recharts;
+
+      const Header = () => (
+        <header className="relative z-10 border-b border-white/10 bg-navy/90 backdrop-blur">
+          <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-5">
+            <a href="index.html" className="flex items-center space-x-3">
+              <img src="logo.png" alt="Smart Ink" className="h-12 w-12 rounded-full border border-gold/50" />
+              <div className="text-left">
+                <p className="text-sm uppercase tracking-[0.3em] text-gold">Smart Ink</p>
+                <p className="text-lg font-semibold text-white">Demo Inteligente</p>
+              </div>
+            </a>
+            <a
+              href="index.html"
+              className="rounded-2xl border border-gold/50 bg-gold px-6 py-2 text-sm font-semibold text-navy shadow-glow transition hover:-translate-y-0.5 hover:shadow-lg hover:shadow-gold/30"
+            >
+              Volver al inicio
+            </a>
+          </div>
+        </header>
+      );
+
+      const Tabs = ({ activeTab, onChange }) => (
+        <div className="relative z-10 mx-auto mt-8 flex max-w-4xl rounded-2xl border border-white/10 bg-white/5 p-1">
+          {[
+            { id: 'auto', label: 'Presentación automática' },
+            { id: 'calc', label: 'Calculadora interactiva' },
+          ].map((tab) => (
+            <button
+              key={tab.id}
+              onClick={() => onChange(tab.id)}
+              className={`flex-1 rounded-2xl px-6 py-3 text-sm font-semibold transition ${
+                activeTab === tab.id
+                  ? 'bg-gold text-navy shadow-glow'
+                  : 'text-white/70 hover:text-white'
+              }`}
+            >
+              {tab.label}
+            </button>
+          ))}
+        </div>
+      );
+
+      const ProgressSection = ({ progress, status }) => (
+        <div className="rounded-3xl border border-white/10 bg-white/5 p-6 shadow-lg shadow-black/20">
+          <div className="flex items-center justify-between text-sm text-white/70">
+            <span>{status}</span>
+            <span>{progress}%</span>
+          </div>
+          <div className="mt-3 h-3 rounded-full bg-white/10">
+            <div
+              className="h-full rounded-full bg-gold transition-all duration-500"
+              style={{ width: `${progress}%` }}
+            ></div>
+          </div>
+        </div>
+      );
+
+      const AutoDemo = () => {
+        const [progress, setProgress] = useState(0);
+        const [started, setStarted] = useState(false);
+        const [completed, setCompleted] = useState(false);
+        const [data, setData] = useState([]);
+
+        const handleStart = () => {
+          setStarted(true);
+          setCompleted(false);
+          setProgress(0);
+        };
+
+        const handleReset = () => {
+          setStarted(false);
+          setCompleted(false);
+          setProgress(0);
+          setData([]);
+        };
+
+        useEffect(() => {
+          if (!started) return;
+
+          const targetData = Array.from({ length: 7 }, (_, idx) => ({
+            dia: `Día ${idx + 1}`,
+            facturas: Math.floor(50 + Math.random() * 50),
+          }));
+
+          const interval = setInterval(() => {
+            setProgress((prev) => {
+              const next = Math.min(prev + 4, 100);
+              if (next === 100) {
+                clearInterval(interval);
+                setTimeout(() => {
+                  setCompleted(true);
+                  setData(targetData);
+                }, 500);
+              }
+              return next;
+            });
+          }, 150);
+
+          return () => clearInterval(interval);
+        }, [started]);
+
+        return (
+          <div className="space-y-8">
+            <div className="flex flex-wrap items-center gap-3">
+              <button
+                onClick={handleStart}
+                className="rounded-2xl bg-gold px-5 py-2 text-sm font-semibold text-navy shadow-glow transition hover:-translate-y-0.5"
+              >
+                Iniciar demo
+              </button>
+              <button
+                onClick={handleReset}
+                className="rounded-2xl border border-white/30 px-5 py-2 text-sm font-semibold text-white/80 transition hover:border-gold/60 hover:text-white"
+              >
+                Reiniciar demo
+              </button>
+              {!started && (
+                <p className="text-sm text-white/60">
+                  Visualiza cómo Smart Ink transforma documentos en insights accionables.
+                </p>
+              )}
+            </div>
+
+            <ProgressSection
+              progress={progress}
+              status={
+                !started
+                  ? 'Listo para procesar documentos.'
+                  : !completed
+                  ? 'Procesando documentos…'
+                  : 'Resultados generados 🚀'
+              }
+            />
+
+            {completed && data.length > 0 && (
+              <div className="rounded-3xl border border-white/10 bg-white/5 p-6 shadow-lg shadow-black/20">
+                <div className="mb-6 flex items-center justify-between">
+                  <h3 className="text-lg font-semibold text-white">Resultados generados 🚀</h3>
+                  <span className="text-sm text-white/60">KPIs diarios simulados</span>
+                </div>
+                <div className="h-72 w-full">
+                  <ResponsiveContainer>
+                    <BarChart data={data}>
+                      <CartesianGrid stroke="rgba(255,255,255,0.1)" vertical={false} />
+                      <XAxis dataKey="dia" stroke="rgba(255,255,255,0.6)" tickLine={false} axisLine={false} />
+                      <YAxis stroke="rgba(255,255,255,0.6)" tickLine={false} axisLine={false} />
+                      <Tooltip
+                        cursor={{ fill: 'rgba(201,162,39,0.1)' }}
+                        contentStyle={{ background: '#0A192F', borderRadius: '0.75rem', border: '1px solid rgba(201,162,39,0.4)', color: '#fff' }}
+                      />
+                      <Bar dataKey="facturas" fill="#C9A227" radius={[12, 12, 0, 0]} />
+                    </BarChart>
+                  </ResponsiveContainer>
+                </div>
+              </div>
+            )}
+          </div>
+        );
+      };
+
+      const formatCurrency = (value) =>
+        new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN', maximumFractionDigits: 0 }).format(value);
+
+      const formatPercent = (value) => `${value.toFixed(1)}%`;
+
+      const Calculator = () => {
+        const [ingresos, setIngresos] = useState(50000);
+        const [gastos, setGastos] = useState(20000);
+        const [facturas, setFacturas] = useState(250);
+
+        const { ahorro, roi, dias } = useMemo(() => {
+          const ahorroCalc = ingresos * 0.05 - gastos * 0.02 + facturas * 5;
+          const roiCalc = gastos > 0 ? (ahorroCalc / gastos) * 100 : 0;
+          const diasCalc = Math.max(10, Math.round(90 - roiCalc / 2));
+          return {
+            ahorro: Math.max(0, ahorroCalc),
+            roi: Math.max(0, roiCalc),
+            dias: diasCalc,
+          };
+        }, [ingresos, gastos, facturas]);
+
+        const roiTrend = useMemo(() => {
+          const base = Math.max(roi * 0.85, 5);
+          return Array.from({ length: 5 }, (_, idx) => ({
+            etapa: `Semana ${idx + 1}`,
+            valor: +(base + idx * (roi - base) / 4).toFixed(2),
+          }));
+        }, [roi]);
+
+        const sliderClass = 'w-full accent-gold';
+
+        const inputs = [
+          {
+            label: 'Ingresos',
+            value: ingresos,
+            min: 1000,
+            max: 100000,
+            step: 1000,
+            onChange: setIngresos,
+            formatter: formatCurrency,
+          },
+          {
+            label: 'Gastos',
+            value: gastos,
+            min: 1000,
+            max: 100000,
+            step: 1000,
+            onChange: setGastos,
+            formatter: formatCurrency,
+          },
+          {
+            label: 'Facturas',
+            value: facturas,
+            min: 10,
+            max: 1000,
+            step: 10,
+            onChange: setFacturas,
+            formatter: (val) => `${val} documentos`,
+          },
+        ];
+
+        const kpis = [
+          {
+            label: 'Ahorro potencial',
+            value: formatCurrency(ahorro),
+            icon: '💰',
+            description: 'Optimización de costos estimada con Smart Ink.',
+          },
+          {
+            label: 'ROI estimado',
+            value: formatPercent(roi),
+            icon: '📈',
+            description: 'Rentabilidad proyectada del proceso automatizado.',
+          },
+          {
+            label: 'Recuperación',
+            value: `${dias} días`,
+            icon: '⏱',
+            description: 'Tiempo estimado para recuperar la inversión.',
+          },
+        ];
+
+        return (
+          <div className="space-y-10">
+            <div className="grid gap-6 md:grid-cols-3">
+              {inputs.map((input) => (
+                <div key={input.label} className="rounded-3xl border border-white/10 bg-white/5 p-5">
+                  <div className="flex items-center justify-between text-sm text-white/70">
+                    <span>{input.label}</span>
+                    <span className="font-semibold text-white">{input.formatter(input.value)}</span>
+                  </div>
+                  <input
+                    type="range"
+                    min={input.min}
+                    max={input.max}
+                    step={input.step}
+                    value={input.value}
+                    onChange={(e) => input.onChange(Number(e.target.value))}
+                    className={`${sliderClass} mt-4`}
+                  />
+                </div>
+              ))}
+            </div>
+
+            <div className="grid gap-6 md:grid-cols-3">
+              {kpis.map((kpi) => (
+                <div key={kpi.label} className="rounded-3xl border border-gold/20 bg-navy/60 p-6 shadow-glow">
+                  <div className="text-3xl">{kpi.icon}</div>
+                  <h4 className="mt-3 text-sm uppercase tracking-[0.3em] text-gold">{kpi.label}</h4>
+                  <p className="mt-2 text-2xl font-semibold text-white">{kpi.value}</p>
+                  <p className="mt-2 text-sm text-white/60">{kpi.description}</p>
+                </div>
+              ))}
+            </div>
+
+            <div className="rounded-3xl border border-white/10 bg-white/5 p-6 shadow-lg shadow-black/20">
+              <div className="mb-6 flex items-center justify-between">
+                <h3 className="text-lg font-semibold text-white">Proyección de ROI</h3>
+                <span className="text-sm text-white/60">Crecimiento semanal simulado</span>
+              </div>
+              <div className="h-72 w-full">
+                <ResponsiveContainer>
+                  <LineChart data={roiTrend}>
+                    <CartesianGrid stroke="rgba(255,255,255,0.1)" vertical={false} />
+                    <XAxis dataKey="etapa" stroke="rgba(255,255,255,0.6)" tickLine={false} axisLine={false} />
+                    <YAxis stroke="rgba(255,255,255,0.6)" tickLine={false} axisLine={false} />
+                    <Tooltip
+                      cursor={{ stroke: 'rgba(201,162,39,0.4)' }}
+                      contentStyle={{ background: '#0A192F', borderRadius: '0.75rem', border: '1px solid rgba(201,162,39,0.4)', color: '#fff' }}
+                    />
+                    <Line type="monotone" dataKey="valor" stroke="#C9A227" strokeWidth={3} dot={{ r: 4, strokeWidth: 2, stroke: '#fff', fill: '#C9A227' }} />
+                  </LineChart>
+                </ResponsiveContainer>
+              </div>
+            </div>
+          </div>
+        );
+      };
+
+      const App = () => {
+        const [activeTab, setActiveTab] = useState('auto');
+
+        return (
+          <div className="relative z-10">
+            <Header />
+            <main className="mx-auto max-w-6xl px-6 pb-20 pt-12">
+              <div className="max-w-3xl">
+                <h1 className="text-3xl font-semibold text-white sm:text-4xl">Experimenta Smart Ink en acción</h1>
+                <p className="mt-3 text-base text-white/70">
+                  Esta simulación interactiva demuestra cómo Smart Ink automatiza el procesamiento de documentos y proyecta resultados tangibles.
+                </p>
+              </div>
+
+              <Tabs activeTab={activeTab} onChange={setActiveTab} />
+
+              <section className="mt-10">
+                {activeTab === 'auto' ? <AutoDemo /> : <Calculator />}
+              </section>
+            </main>
+          </div>
+        );
+      };
+
+      ReactDOM.render(<App />, document.getElementById('root'));
+    </script>
+  </body>
+</html>
