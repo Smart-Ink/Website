@@ -1,797 +1,171 @@
-diff --git a/demo.html b/demo.html
-new file mode 100644
-index 0000000000000000000000000000000000000000..12973182cbe456df60db1ebe55473b3319174556
---- /dev/null
-+++ b/demo.html
-@@ -0,0 +1,791 @@
-+<!DOCTYPE html>
-+<html lang="es">
-+  <head>
-+    <meta charset="UTF-8" />
-+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-+    <title>Smart Ink – Demo Inteligente</title>
-+    <link rel="icon" type="image/png" href="favicon.ico" />
-+    <style>
-+      :root {
-+        color-scheme: dark;
-+        --navy: #0a192f;
-+        --navy-soft: rgba(10, 25, 47, 0.82);
-+        --gold: #c9a227;
-+        --green: #00ff94;
-+        --text-strong: rgba(255, 255, 255, 0.92);
-+        --text-muted: rgba(255, 255, 255, 0.72);
-+      }
-+
-+      * {
-+        box-sizing: border-box;
-+      }
-+
-+      body {
-+        margin: 0;
-+        font-family: "Inter", "Segoe UI", -apple-system, BlinkMacSystemFont, sans-serif;
-+        background: radial-gradient(circle at top right, rgba(0, 255, 148, 0.12), transparent 52%),
-+          var(--navy);
-+        color: var(--text-strong);
-+        min-height: 100vh;
-+        position: relative;
-+        overflow-x: hidden;
-+      }
-+
-+      a {
-+        color: inherit;
-+        text-decoration: none;
-+      }
-+
-+      .grid-overlay::before {
-+        content: "";
-+        position: absolute;
-+        inset: 0;
-+        background-image: linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
-+          linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
-+        background-size: 42px 42px;
-+        pointer-events: none;
-+        z-index: 0;
-+      }
-+
-+      header {
-+        position: relative;
-+        z-index: 2;
-+        backdrop-filter: blur(10px);
-+        background: var(--navy-soft);
-+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-+      }
-+
-+      .header-inner {
-+        max-width: 1100px;
-+        margin: 0 auto;
-+        padding: 22px 24px;
-+        display: flex;
-+        align-items: center;
-+        justify-content: space-between;
-+        gap: 20px;
-+      }
-+
-+      .header-brand {
-+        display: flex;
-+        align-items: center;
-+        gap: 16px;
-+      }
-+
-+      .header-brand img {
-+        width: 56px;
-+        height: 56px;
-+        border-radius: 18px;
-+        border: 1px solid rgba(201, 162, 39, 0.45);
-+        background: rgba(201, 162, 39, 0.1);
-+        padding: 6px;
-+      }
-+
-+      .header-label {
-+        display: flex;
-+        flex-direction: column;
-+      }
-+
-+      .header-label span:first-child {
-+        text-transform: uppercase;
-+        letter-spacing: 0.3em;
-+        font-size: 0.65rem;
-+        color: var(--gold);
-+      }
-+
-+      .header-label span:last-child {
-+        font-size: 1.1rem;
-+        font-weight: 600;
-+      }
-+
-+      .btn-primary {
-+        display: inline-flex;
-+        align-items: center;
-+        justify-content: center;
-+        padding: 10px 22px;
-+        border-radius: 999px;
-+        font-weight: 600;
-+        font-size: 0.95rem;
-+        background: var(--gold);
-+        color: var(--navy);
-+        border: 1px solid rgba(201, 162, 39, 0.5);
-+        box-shadow: 0 12px 30px rgba(201, 162, 39, 0.32);
-+        transition: transform 0.25s ease, box-shadow 0.25s ease;
-+      }
-+
-+      .btn-primary:hover {
-+        transform: translateY(-2px);
-+        box-shadow: 0 16px 38px rgba(201, 162, 39, 0.4);
-+      }
-+
-+      main {
-+        position: relative;
-+        z-index: 1;
-+        padding: 48px 20px 80px;
-+      }
-+
-+      .content-wrapper {
-+        max-width: 1100px;
-+        margin: 0 auto;
-+      }
-+
-+      .tabs {
-+        display: flex;
-+        gap: 12px;
-+        padding: 6px;
-+        border-radius: 999px;
-+        background: rgba(255, 255, 255, 0.06);
-+        border: 1px solid rgba(255, 255, 255, 0.08);
-+        max-width: 520px;
-+        margin: 0 auto 36px;
-+      }
-+
-+      .tab-button {
-+        flex: 1;
-+        border: none;
-+        border-radius: 999px;
-+        padding: 12px 18px;
-+        background: transparent;
-+        color: var(--text-muted);
-+        font-size: 0.95rem;
-+        font-weight: 600;
-+        cursor: pointer;
-+        transition: background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
-+      }
-+
-+      .tab-button.active {
-+        background: var(--gold);
-+        color: var(--navy);
-+        box-shadow: 0 8px 26px rgba(201, 162, 39, 0.38);
-+      }
-+
-+      .panel {
-+        display: none;
-+      }
-+
-+      .panel.active {
-+        display: grid;
-+        gap: 22px;
-+      }
-+
-+      .card {
-+        background: rgba(255, 255, 255, 0.06);
-+        border: 1px solid rgba(255, 255, 255, 0.08);
-+        border-radius: 28px;
-+        padding: 24px;
-+        box-shadow: 0 18px 38px rgba(0, 0, 0, 0.28);
-+      }
-+
-+      .card h2 {
-+        margin-top: 0;
-+        margin-bottom: 16px;
-+        font-size: 1.2rem;
-+        font-weight: 600;
-+      }
-+
-+      .progress-wrapper {
-+        display: flex;
-+        flex-direction: column;
-+        gap: 16px;
-+      }
-+
-+      .progress-bar {
-+        position: relative;
-+        height: 12px;
-+        border-radius: 999px;
-+        background: rgba(255, 255, 255, 0.08);
-+        overflow: hidden;
-+      }
-+
-+      .progress-bar span {
-+        position: absolute;
-+        inset: 0;
-+        border-radius: inherit;
-+        background: linear-gradient(90deg, var(--gold), #ffed9f);
-+        width: 0%;
-+        transition: width 0.4s ease;
-+      }
-+
-+      .actions {
-+        display: flex;
-+        gap: 12px;
-+        flex-wrap: wrap;
-+      }
-+
-+      .btn-secondary {
-+        border-radius: 999px;
-+        padding: 10px 22px;
-+        font-weight: 600;
-+        background: transparent;
-+        border: 1px solid rgba(255, 255, 255, 0.32);
-+        color: var(--text-strong);
-+        cursor: pointer;
-+        transition: border 0.2s ease, color 0.2s ease;
-+      }
-+
-+      .btn-secondary:hover {
-+        border-color: var(--gold);
-+        color: var(--gold);
-+      }
-+
-+      .status-line {
-+        display: flex;
-+        justify-content: space-between;
-+        font-size: 0.9rem;
-+        color: var(--text-muted);
-+      }
-+
-+      .chart-area {
-+        display: none;
-+        gap: 18px;
-+      }
-+
-+      .chart-area.visible {
-+        display: block;
-+      }
-+
-+      .chart-area h3 {
-+        font-size: 1.05rem;
-+        margin: 12px 0 18px;
-+      }
-+
-+      .bar-chart {
-+        display: grid;
-+        grid-template-columns: repeat(7, minmax(0, 1fr));
-+        gap: 14px;
-+        align-items: end;
-+        height: 220px;
-+        padding: 16px 20px 26px;
-+        background: rgba(10, 25, 47, 0.82);
-+        border-radius: 22px;
-+        border: 1px solid rgba(255, 255, 255, 0.06);
-+        position: relative;
-+      }
-+
-+      .bar-chart::after {
-+        content: "Facturas procesadas";
-+        position: absolute;
-+        left: 20px;
-+        top: 12px;
-+        font-size: 0.78rem;
-+        text-transform: uppercase;
-+        letter-spacing: 0.12em;
-+        color: var(--text-muted);
-+      }
-+
-+      .bar {
-+        background: linear-gradient(180deg, rgba(255, 236, 179, 0.85), var(--gold));
-+        border-radius: 14px 14px 6px 6px;
-+        position: relative;
-+        min-height: 18px;
-+        transition: height 0.6s ease;
-+      }
-+
-+      .bar span {
-+        position: absolute;
-+        bottom: 100%;
-+        left: 50%;
-+        transform: translate(-50%, -12px);
-+        font-size: 0.8rem;
-+        color: var(--text-muted);
-+      }
-+
-+      .bar-label {
-+        margin-top: 12px;
-+        text-align: center;
-+        font-size: 0.75rem;
-+        color: var(--text-muted);
-+      }
-+
-+      .calculator-grid {
-+        display: grid;
-+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-+        gap: 20px;
-+      }
-+
-+      .slider-group {
-+        display: grid;
-+        gap: 12px;
-+      }
-+
-+      .slider-group label {
-+        font-size: 0.95rem;
-+        color: var(--text-muted);
-+      }
-+
-+      input[type="range"] {
-+        -webkit-appearance: none;
-+        appearance: none;
-+        height: 6px;
-+        background: rgba(255, 255, 255, 0.14);
-+        border-radius: 4px;
-+        outline: none;
-+      }
-+
-+      input[type="range"]::-webkit-slider-thumb {
-+        -webkit-appearance: none;
-+        width: 18px;
-+        height: 18px;
-+        border-radius: 50%;
-+        background: var(--gold);
-+        box-shadow: 0 0 0 4px rgba(201, 162, 39, 0.22);
-+        cursor: pointer;
-+      }
-+
-+      input[type="range"]::-moz-range-thumb {
-+        width: 18px;
-+        height: 18px;
-+        border-radius: 50%;
-+        background: var(--gold);
-+        border: none;
-+        box-shadow: 0 0 0 4px rgba(201, 162, 39, 0.22);
-+        cursor: pointer;
-+      }
-+
-+      .value-display {
-+        display: flex;
-+        justify-content: space-between;
-+        font-size: 0.88rem;
-+        color: var(--text-muted);
-+      }
-+
-+      .kpi-grid {
-+        display: grid;
-+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-+        gap: 16px;
-+      }
-+
-+      .kpi-card {
-+        border-radius: 22px;
-+        padding: 20px;
-+        background: rgba(10, 25, 47, 0.9);
-+        border: 1px solid rgba(255, 255, 255, 0.08);
-+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.32);
-+      }
-+
-+      .kpi-card span {
-+        display: block;
-+      }
-+
-+      .kpi-card .label {
-+        font-size: 0.82rem;
-+        color: var(--text-muted);
-+        text-transform: uppercase;
-+        letter-spacing: 0.14em;
-+      }
-+
-+      .kpi-card .value {
-+        margin-top: 10px;
-+        font-size: 1.5rem;
-+        font-weight: 600;
-+        color: var(--gold);
-+      }
-+
-+      .line-chart {
-+        position: relative;
-+        background: rgba(10, 25, 47, 0.9);
-+        border-radius: 22px;
-+        border: 1px solid rgba(255, 255, 255, 0.06);
-+        padding: 18px 22px 24px;
-+      }
-+
-+      .line-chart h3 {
-+        margin-top: 0;
-+        margin-bottom: 12px;
-+      }
-+
-+      .line-chart svg {
-+        width: 100%;
-+        height: 220px;
-+      }
-+
-+      .line-chart .axis {
-+        stroke: rgba(255, 255, 255, 0.12);
-+        stroke-width: 1;
-+      }
-+
-+      .line-chart .grid-line {
-+        stroke: rgba(255, 255, 255, 0.08);
-+        stroke-dasharray: 4;
-+      }
-+
-+      .line-chart .roi-line {
-+        fill: none;
-+        stroke: var(--gold);
-+        stroke-width: 3;
-+      }
-+
-+      .line-chart .roi-point {
-+        fill: #ffed9f;
-+        stroke: var(--gold);
-+        stroke-width: 2;
-+      }
-+
-+      .axis-label {
-+        font-size: 0.72rem;
-+        fill: var(--text-muted);
-+      }
-+
-+      footer {
-+        text-align: center;
-+        padding: 24px 0 40px;
-+        color: var(--text-muted);
-+        font-size: 0.82rem;
-+      }
-+
-+      @media (max-width: 640px) {
-+        .header-inner {
-+          flex-direction: column;
-+          align-items: flex-start;
-+        }
-+
-+        .tabs {
-+          flex-direction: column;
-+          border-radius: 26px;
-+        }
-+
-+        .tab-button {
-+          border-radius: 18px;
-+        }
-+      }
-+    </style>
-+  </head>
-+  <body>
-+    <div class="grid-overlay"></div>
-+    <header>
-+      <div class="header-inner">
-+        <a href="index.html" class="header-brand">
-+          <img src="logo.png" alt="Smart Ink" />
-+          <div class="header-label">
-+            <span>Smart Ink</span>
-+            <span>Demo Inteligente</span>
-+          </div>
-+        </a>
-+        <a href="index.html" class="btn-primary">Volver al inicio</a>
-+      </div>
-+    </header>
-+
-+    <main>
-+      <div class="content-wrapper">
-+        <nav class="tabs" aria-label="Modos de demostración">
-+          <button class="tab-button active" data-tab="auto">Presentación automática</button>
-+          <button class="tab-button" data-tab="calc">Calculadora interactiva</button>
-+        </nav>
-+
-+        <section class="panel active" data-panel="auto">
-+          <div class="card">
-+            <h2>Simulación del proceso Smart Ink</h2>
-+            <div class="progress-wrapper">
-+              <div class="status-line">
-+                <span id="autoStatus">Procesando documentos…</span>
-+                <span id="autoProgress">0%</span>
-+              </div>
-+              <div class="progress-bar" aria-hidden="true">
-+                <span id="progressFill"></span>
-+              </div>
-+              <div class="actions">
-+                <button id="startDemo" class="btn-primary" type="button">Iniciar demo</button>
-+                <button id="resetDemo" class="btn-secondary" type="button">Reiniciar demo</button>
-+              </div>
-+            </div>
-+          </div>
-+
-+          <div class="card chart-area" id="autoChartArea" aria-live="polite">
-+            <h3>Resultados generados 🚀</h3>
-+            <div class="bar-chart" id="barChart" role="img" aria-label="Bar chart de facturas procesadas por día"></div>
-+            <div class="bar-labels" id="barLabels" style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 14px; margin-top: 10px;">
-+              <!-- labels inserted dynamically -->
-+            </div>
-+          </div>
-+        </section>
-+
-+        <section class="panel" data-panel="calc">
-+          <div class="card">
-+            <h2>Calculadora de impacto Smart Ink</h2>
-+            <div class="calculator-grid">
-+              <div class="slider-group">
-+                <label for="ingresos">Ingresos proyectados (MXN)</label>
-+                <input id="ingresos" type="range" min="1000" max="100000" step="500" value="35000" />
-+                <div class="value-display">
-+                  <span>Mín: 1,000</span>
-+                  <span id="ingresosValor">35,000 MXN</span>
-+                </div>
-+              </div>
-+              <div class="slider-group">
-+                <label for="gastos">Gastos operativos (MXN)</label>
-+                <input id="gastos" type="range" min="1000" max="100000" step="500" value="18000" />
-+                <div class="value-display">
-+                  <span>Mín: 1,000</span>
-+                  <span id="gastosValor">18,000 MXN</span>
-+                </div>
-+              </div>
-+              <div class="slider-group">
-+                <label for="facturas">Facturas procesadas (mensual)</label>
-+                <input id="facturas" type="range" min="10" max="1000" step="5" value="320" />
-+                <div class="value-display">
-+                  <span>Mín: 10</span>
-+                  <span id="facturasValor">320</span>
-+                </div>
-+              </div>
-+            </div>
-+          </div>
-+
-+          <div class="kpi-grid" id="kpiGrid">
-+            <div class="kpi-card">
-+              <span class="label">Ahorro potencial</span>
-+              <span class="value" id="ahorroValor">—</span>
-+              <span>💰</span>
-+            </div>
-+            <div class="kpi-card">
-+              <span class="label">ROI estimado</span>
-+              <span class="value" id="roiValor">—</span>
-+              <span>📈</span>
-+            </div>
-+            <div class="kpi-card">
-+              <span class="label">Recuperación</span>
-+              <span class="value" id="diasValor">—</span>
-+              <span>⏱</span>
-+            </div>
-+          </div>
-+
-+          <div class="line-chart" aria-hidden="false">
-+            <h3>ROI proyectado en 5 hitos</h3>
-+            <svg id="roiChart" viewBox="0 0 320 220" role="img" aria-label="Gráfica de línea del ROI proyectado">
-+              <line class="axis" x1="32" y1="190" x2="300" y2="190"></line>
-+              <line class="axis" x1="32" y1="30" x2="32" y2="190"></line>
-+              <g id="roiGrid"></g>
-+              <path id="roiPath" class="roi-line" d="" ></path>
-+              <g id="roiPoints"></g>
-+              <g id="roiXAxisLabels"></g>
-+              <g id="roiYAxisLabels"></g>
-+            </svg>
-+          </div>
-+        </section>
-+      </div>
-+    </main>
-+
-+    <footer>
-+      Simulación conceptual para demostrar el potencial de Smart Ink. Datos ficticios con fines ilustrativos.
-+    </footer>
-+
-+    <script>
-+      const tabButtons = document.querySelectorAll('.tab-button');
-+      const panels = document.querySelectorAll('.panel');
-+
-+      tabButtons.forEach((button) => {
-+        button.addEventListener('click', () => {
-+          const target = button.dataset.tab;
-+          tabButtons.forEach((btn) => btn.classList.toggle('active', btn === button));
-+          panels.forEach((panel) => panel.classList.toggle('active', panel.dataset.panel === target));
-+        });
-+      });
-+
-+      // Auto demo logic
-+      const startDemoBtn = document.getElementById('startDemo');
-+      const resetDemoBtn = document.getElementById('resetDemo');
-+      const progressFill = document.getElementById('progressFill');
-+      const autoStatus = document.getElementById('autoStatus');
-+      const autoProgress = document.getElementById('autoProgress');
-+      const autoChartArea = document.getElementById('autoChartArea');
-+      const barChart = document.getElementById('barChart');
-+      const barLabels = document.getElementById('barLabels');
-+
-+      let progressInterval = null;
-+      let currentProgress = 0;
-+
-+      function resetAutoDemo() {
-+        clearInterval(progressInterval);
-+        currentProgress = 0;
-+        progressFill.style.width = '0%';
-+        autoStatus.textContent = 'Procesando documentos…';
-+        autoProgress.textContent = '0%';
-+        autoChartArea.classList.remove('visible');
-+        barChart.innerHTML = '';
-+        barLabels.innerHTML = '';
-+      }
-+
-+      function renderBarChart(data) {
-+        const max = Math.max(...data.map((item) => item.facturas));
-+        barChart.innerHTML = '';
-+        barLabels.innerHTML = '';
-+        data.forEach((item) => {
-+          const bar = document.createElement('div');
-+          bar.className = 'bar';
-+          const heightPercent = (item.facturas / max) * 100;
-+          bar.style.height = `${Math.max(heightPercent, 8)}%`;
-+          const valueLabel = document.createElement('span');
-+          valueLabel.textContent = item.facturas;
-+          bar.appendChild(valueLabel);
-+          barChart.appendChild(bar);
-+
-+          const label = document.createElement('div');
-+          label.className = 'bar-label';
-+          label.textContent = item.dia;
-+          barLabels.appendChild(label);
-+        });
-+      }
-+
-+      function startAutoDemo() {
-+        resetAutoDemo();
-+        autoStatus.textContent = 'Automatizando XML → KPIs → Dashboard';
-+        progressInterval = setInterval(() => {
-+          currentProgress += 4;
-+          if (currentProgress >= 100) {
-+            currentProgress = 100;
-+            clearInterval(progressInterval);
-+            autoStatus.textContent = 'Procesamiento completado';
-+            autoChartArea.classList.add('visible');
-+            const dataset = Array.from({ length: 7 }, (_, index) => ({
-+              dia: `Día ${index + 1}`,
-+              facturas: Math.floor(50 + Math.random() * 50),
-+            }));
-+            renderBarChart(dataset);
-+          }
-+          progressFill.style.width = `${currentProgress}%`;
-+          autoProgress.textContent = `${currentProgress}%`;
-+        }, 180);
-+      }
-+
-+      startDemoBtn.addEventListener('click', () => {
-+        if (progressInterval) {
-+          clearInterval(progressInterval);
-+        }
-+        startAutoDemo();
-+      });
-+
-+      resetDemoBtn.addEventListener('click', () => {
-+        resetAutoDemo();
-+        autoStatus.textContent = 'Procesando documentos…';
-+      });
-+
-+      // ROI calculator
-+      const ingresosInput = document.getElementById('ingresos');
-+      const gastosInput = document.getElementById('gastos');
-+      const facturasInput = document.getElementById('facturas');
-+      const ingresosValor = document.getElementById('ingresosValor');
-+      const gastosValor = document.getElementById('gastosValor');
-+      const facturasValor = document.getElementById('facturasValor');
-+      const ahorroValor = document.getElementById('ahorroValor');
-+      const roiValor = document.getElementById('roiValor');
-+      const diasValor = document.getElementById('diasValor');
-+      const roiPath = document.getElementById('roiPath');
-+      const roiPoints = document.getElementById('roiPoints');
-+      const roiXAxisLabels = document.getElementById('roiXAxisLabels');
-+      const roiYAxisLabels = document.getElementById('roiYAxisLabels');
-+      const roiGrid = document.getElementById('roiGrid');
-+
-+      function formatCurrency(value) {
-+        return new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN', maximumFractionDigits: 0 }).format(value);
-+      }
-+
-+      function formatPercent(value) {
-+        return `${value.toFixed(1)}%`;
-+      }
-+
-+      function updateSliderLabels() {
-+        ingresosValor.textContent = formatCurrency(Number(ingresosInput.value));
-+        gastosValor.textContent = formatCurrency(Number(gastosInput.value));
-+        facturasValor.textContent = Number(facturasInput.value).toLocaleString('es-MX');
-+      }
-+
-+      function calculateMetrics() {
-+        const ingresos = Number(ingresosInput.value);
-+        const gastos = Number(gastosInput.value);
-+        const facturas = Number(facturasInput.value);
-+
-+        const ahorro = ingresos * 0.05 - gastos * 0.02 + facturas * 5;
-+        const roi = gastos === 0 ? 0 : (ahorro / gastos) * 100;
-+        const dias = Math.max(10, Math.round(90 - roi / 2));
-+
-+        ahorroValor.textContent = formatCurrency(ahorro);
-+        roiValor.textContent = formatPercent(roi);
-+        diasValor.textContent = `${dias.toLocaleString('es-MX')} días`;
-+
-+        renderRoiChart(roi);
-+      }
-+
-+      function renderRoiChart(baseRoi) {
-+        const points = Array.from({ length: 5 }, (_, index) => {
-+          const growthFactor = 0.88 + index * 0.07;
-+          return Math.max(baseRoi * growthFactor, 0);
-+        });
-+
-+        const maxRoi = Math.max(...points, 1);
-+        const minRoi = 0;
-+        const chartHeight = 160;
-+        const chartWidth = 240;
-+        const originX = 32;
-+        const originY = 190;
-+        const stepX = chartWidth / (points.length - 1);
-+
-+        roiGrid.innerHTML = '';
-+        roiYAxisLabels.innerHTML = '';
-+        const ySteps = 4;
-+        for (let i = 0; i <= ySteps; i++) {
-+          const value = minRoi + ((maxRoi - minRoi) / ySteps) * i;
-+          const y = originY - (chartHeight * (value - minRoi)) / (maxRoi - minRoi || 1);
-+          const gridLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-+          gridLine.setAttribute('class', 'grid-line');
-+          gridLine.setAttribute('x1', originX);
-+          gridLine.setAttribute('x2', originX + chartWidth);
-+          gridLine.setAttribute('y1', y);
-+          gridLine.setAttribute('y2', y);
-+          roiGrid.appendChild(gridLine);
-+
-+          const label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-+          label.setAttribute('class', 'axis-label');
-+          label.setAttribute('x', originX - 12);
-+          label.setAttribute('y', y + 4);
-+          label.textContent = `${value.toFixed(0)}%`;
-+          roiYAxisLabels.appendChild(label);
-+        }
-+
-+        roiXAxisLabels.innerHTML = '';
-+        const xLabels = ['Inicio', 'Semana 2', 'Semana 4', 'Semana 6', 'Semana 8'];
-+        xLabels.forEach((label, index) => {
-+          const x = originX + stepX * index;
-+          const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-+          text.setAttribute('class', 'axis-label');
-+          text.setAttribute('x', x);
-+          text.setAttribute('y', originY + 18);
-+          text.setAttribute('text-anchor', 'middle');
-+          text.textContent = label;
-+          roiXAxisLabels.appendChild(text);
-+        });
-+
-+        const pathPoints = points
-+          .map((value, index) => {
-+            const x = originX + stepX * index;
-+            const y = originY - (chartHeight * (value - minRoi)) / (maxRoi - minRoi || 1);
-+            return `${x},${y}`;
-+          })
-+          .join(' ');
-+
-+        roiPath.setAttribute('d', `M ${pathPoints}`);
-+
-+        roiPoints.innerHTML = '';
-+        points.forEach((value, index) => {
-+          const x = originX + stepX * index;
-+          const y = originY - (chartHeight * (value - minRoi)) / (maxRoi - minRoi || 1);
-+          const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-+          circle.setAttribute('class', 'roi-point');
-+          circle.setAttribute('cx', x);
-+          circle.setAttribute('cy', y);
-+          circle.setAttribute('r', 5);
-+          circle.setAttribute('aria-label', `Hito ${index + 1}: ${value.toFixed(1)}% ROI`);
-+          roiPoints.appendChild(circle);
-+        });
-+      }
-+
-+      [ingresosInput, gastosInput, facturasInput].forEach((input) => {
-+        input.addEventListener('input', () => {
-+          updateSliderLabels();
-+          calculateMetrics();
-+        });
-+      });
-+
-+      // Initialize calculator on load
-+      updateSliderLabels();
-+      calculateMetrics();
-+    </script>
-+  </body>
-+</html>
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Demo Inteligente — Smart Ink</title>
+  <link rel="icon" href="favicon.ico" type="image/x-icon">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>tailwind.config={theme:{extend:{colors:{navy:'#0A192F',gold:'#C9A227',radar:'#00FF94'}}}};</script>
+  <style>.hud-layer{pointer-events:none}</style>
+</head>
+<body class="min-h-screen bg-navy text-white selection:bg-white/10 selection:text-white">
+  <div class="hud-layer fixed inset-0 bg-[radial-gradient(ellipse_at_top,rgba(29,174,255,0.08),transparent_55%),radial-gradient(ellipse_at_bottom,rgba(0,255,148,0.06),transparent_55%)]"></div>
+  <div class="hud-layer fixed inset-0 [background-image:linear-gradient(rgba(255,255,255,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.05)_1px,transparent_1px)] [background-size:40px_40px] opacity-30"></div>
+
+  <header class="relative z-10">
+    <div class="mx-auto max-w-6xl px-6 py-6 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="h-9 w-9 rounded-xl bg-white/10 grid place-content-center border border-white/10">
+          <img src="logo.png" alt="Smart Ink" class="h-10 w-10 object-contain" />
+        </div>
+        <span class="font-semibold tracking-wide">Smart Ink</span>
+      </div>
+      <a href="index.html" class="inline-flex items-center gap-2 rounded-2xl bg-gold px-4 py-2 text-sm font-medium text-navy hover:brightness-110 transition">
+        Volver al inicio <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class='h-4 w-4'><path d='M19 12H5M12 19l-7-7 7-7'/></svg>
+      </a>
+    </div>
+  </header>
+
+  <main id="root" class="relative z-10 mx-auto max-w-6xl px-6 py-10 text-center">
+    <noscript><p class="text-white/70">Cargando Demo Inteligente... (habilita JavaScript)</p></noscript>
+  </main>
+
+  <footer class="relative z-10 border-t border-white/10">
+    <div class="mx-auto max-w-6xl px-6 py-10 text-sm text-white/60 flex items-center justify-between">
+      <span>© <span id="year"></span> Smart Ink</span>
+    </div>
+  </footer>
+
+  <script type="text/javascript">
+    window.onload = function() {
+      const scriptReact = document.createElement('script');
+      const scriptDOM = document.createElement('script');
+      const scriptRecharts = document.createElement('script');
+
+      scriptReact.src = 'https://esm.sh/react@17.0.2/umd/react.development.js';
+      scriptDOM.src = 'https://esm.sh/react-dom@17.0.2/umd/react-dom.development.js';
+      scriptRecharts.src = 'https://unpkg.com/recharts/umd/Recharts.min.js';
+
+      document.body.appendChild(scriptReact);
+      document.body.appendChild(scriptDOM);
+      document.body.appendChild(scriptRecharts);
+
+      scriptRecharts.onload = function() {
+        const { useState, useEffect } = React;
+        const { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } = Recharts;
+
+        function App(){
+          const [tab,setTab]=useState('auto');
+          const [progress,setProgress]=useState(0);
+          const [autoDone,setAutoDone]=useState(false);
+          const [data,setData]=useState([]);
+          const [inputs,setInputs]=useState({ingresos:50000,gastos:20000,facturas:100});
+
+          useEffect(()=>{
+            const y=document.getElementById('year'); if(y) y.textContent=new Date().getFullYear();
+          },[]);
+
+          const startDemo=()=>{
+            setProgress(0);setAutoDone(false);
+            const interval=setInterval(()=>{
+              setProgress(p=>{
+                if(p>=100){clearInterval(interval);setAutoDone(true);return 100;}
+                return p+2;
+              });
+            },80);
+            setData([...Array(7)].map((_,i)=>({dia:`Día ${i+1}`,facturas:Math.round(50+Math.random()*50)})));
+          };
+
+          const calcROI=()=>{
+            const ahorro=(inputs.ingresos*0.05)-(inputs.gastos*0.02)+inputs.facturas*5;
+            const roi=(ahorro/inputs.gastos)*100;
+            const dias=Math.max(10,Math.round(90-(roi/2)));
+            return {ahorro,roi,dias};
+          };
+
+          const roi=calcROI();
+
+          return React.createElement('div',{},
+            React.createElement('div',{className:'flex justify-center gap-6 mb-8'},
+              React.createElement('button',{onClick:()=>setTab('auto'),className:`px-6 py-2 rounded-2xl ${tab==='auto'?'bg-gold text-navy':'bg-white/5 border border-white/10 text-white/80 hover:bg-white/10'}`},'Presentación automática'),
+              React.createElement('button',{onClick:()=>setTab('interact'),className:`px-6 py-2 rounded-2xl ${tab==='interact'?'bg-gold text-navy':'bg-white/5 border border-white/10 text-white/80 hover:bg-white/10'}`},'Calculadora interactiva')
+            ),
+            tab==='auto' ?
+              (!autoDone ?
+                React.createElement('div',{},
+                  React.createElement('h2',{className:'text-2xl font-semibold mb-4'},'Procesando documentos...'),
+                  React.createElement('div',{className:'w-full bg-white/10 rounded-full h-4 overflow-hidden'},
+                    React.createElement('div',{className:'bg-gold h-4',style:{width:`${progress}%`,transition:'width 0.2s'}})
+                  ),
+                  React.createElement('button',{onClick:startDemo,className:'mt-6 inline-flex items-center gap-2 rounded-2xl bg-gold px-6 py-3 text-sm font-medium text-navy hover:brightness-110 transition'},'Iniciar demo')
+                ) :
+                React.createElement('div',{},
+                  React.createElement('h2',{className:'text-2xl font-semibold mb-6'},'Resultados generados 🚀'),
+                  React.createElement('div',{style:{width:'100%',height:300}},
+                    React.createElement(ResponsiveContainer,null,
+                      React.createElement(BarChart,{data:data},
+                        React.createElement(CartesianGrid,{strokeDasharray:'3 3',stroke:'#ffffff20'}),
+                        React.createElement(XAxis,{dataKey:'dia',stroke:'#ffffff80'}),
+                        React.createElement(YAxis,{stroke:'#ffffff80'}),
+                        React.createElement(Tooltip,null),
+                        React.createElement(Bar,{dataKey:'facturas',fill:'#C9A227'})
+                      )
+                    )
+                  ),
+                  React.createElement('button',{onClick:startDemo,className:'mt-6 inline-flex items-center gap-2 rounded-2xl bg-gold px-6 py-3 text-sm font-medium text-navy hover:brightness-110 transition'},'Reiniciar demo')
+                )
+              )
+            :
+              React.createElement('div',{},
+                React.createElement('h2',{className:'text-2xl font-semibold mb-6'},'Calculadora de eficiencia'),
+                React.createElement('div',{className:'grid grid-cols-1 md:grid-cols-3 gap-6 mb-8'},
+                  Object.keys(inputs).map(k=>
+                    React.createElement('div',{key:k,className:'text-left'},
+                      React.createElement('label',{className:'text-sm text-white/70 capitalize'},k),
+                      React.createElement('input',{type:'range',min:1000,max:100000,step:1000,value:inputs[k],onChange:e=>setInputs({...inputs,[k]:+e.target.value}),className:'w-full accent-gold'}),
+                      React.createElement('div',{className:'text-white/80'},`${inputs[k].toLocaleString('es-MX')} MXN`)
+                    )
+                  )
+                ),
+                React.createElement('div',{className:'flex flex-col md:flex-row justify-center gap-8 mb-8'},
+                  React.createElement('div',{className:'rounded-2xl bg-white/5 p-4 border border-white/10'},
+                    React.createElement('div',{className:'text-lg text-gold font-semibold'},`${roi.ahorro.toFixed(0)} MXN`),
+                    React.createElement('div',{className:'text-sm text-white/70'},'Ahorro potencial')
+                  ),
+                  React.createElement('div',{className:'rounded-2xl bg-white/5 p-4 border border-white/10'},
+                    React.createElement('div',{className:'text-lg text-gold font-semibold'},`${roi.roi.toFixed(1)}%`),
+                    React.createElement('div',{className:'text-sm text-white/70'},'ROI estimado')
+                  ),
+                  React.createElement('div',{className:'rounded-2xl bg-white/5 p-4 border border-white/10'},
+                    React.createElement('div',{className:'text-lg text-gold font-semibold'},`${roi.dias} días`),
+                    React.createElement('div',{className:'text-sm text-white/70'},'Recuperación')
+                  )
+                ),
+                React.createElement('div',{style:{width:'100%',height:300}},
+                  React.createElement(ResponsiveContainer,null,
+                    React.createElement(LineChart,{data:[
+                      {x:1,roi:roi.roi*0.6},
+                      {x:2,roi:roi.roi*0.75},
+                      {x:3,roi:roi.roi*0.9},
+                      {x:4,roi:roi.roi},
+                      {x:5,roi:roi.roi*1.05}
+                    ]},
+                      React.createElement(CartesianGrid,{strokeDasharray:'3 3',stroke:'#ffffff20'}),
+                      React.createElement(XAxis,{dataKey:'x',stroke:'#ffffff80'}),
+                      React.createElement(YAxis,{stroke:'#ffffff80'}),
+                      React.createElement(Tooltip,null),
+                      React.createElement(Line,{type:'monotone',dataKey:'roi',stroke:'#C9A227',strokeWidth:2})
+                    )
+                  )
+                )
+              )
+          );
+        }
+
+        ReactDOM.render(React.createElement(App),document.getElementById('root'));
+      };
+    };
+  </script>
+</body>
+</html>
