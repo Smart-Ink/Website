@@ -1,247 +1,181 @@
 <!DOCTYPE html>
 <html lang="es">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Smart Ink – Inteligencia Empresarial</title>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Smart Ink – Inteligencia Empresarial</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      background-color: #0A192F;
+      color: #EAEAEA;
+      font-family: 'Inter', sans-serif;
+      overflow-x: hidden;
+    }
 
-    <!-- Tailwind -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- React / ReactDOM -->
-    <script src="https://unpkg.com/react@17/umd/react.development.js"></script>
-    <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
-    <!-- Framer Motion -->
-    <script src="https://unpkg.com/framer-motion@10.12.16/dist/framer-motion.umd.js"></script>
+    /* Radar grid background */
+    .radar-bg {
+      position: absolute;
+      width: 200%;
+      height: 200%;
+      background:
+        radial-gradient(circle at center, rgba(201,162,39,0.05) 0%, transparent 70%),
+        repeating-linear-gradient(0deg, rgba(201,162,39,0.05), rgba(201,162,39,0.05) 1px, transparent 2px, transparent 40px),
+        repeating-linear-gradient(90deg, rgba(201,162,39,0.05), rgba(201,162,39,0.05) 1px, transparent 2px, transparent 40px);
+      animation: rotate 80s linear infinite;
+      transform-origin: center;
+    }
 
-    <style>
-      body {
-        background-color: #0A192F;
-        color: #EAEAEA;
-        font-family: 'Inter', sans-serif;
-        overflow-x: hidden;
-      }
+    @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 
-      .radar-bg {
-        position: absolute;
-        width: 200%;
-        height: 200%;
-        background:
-          radial-gradient(circle at center, rgba(201,162,39,0.05) 0%, transparent 70%),
-          repeating-linear-gradient(0deg, rgba(201,162,39,0.05), rgba(201,162,39,0.05) 1px, transparent 2px, transparent 40px),
-          repeating-linear-gradient(90deg, rgba(201,162,39,0.05), rgba(201,162,39,0.05) 1px, transparent 2px, transparent 40px);
-        animation: rotate 80s linear infinite;
-        transform-origin: center;
-      }
+    .fade-in { animation: fadeIn 1s ease-in-out; }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-      @keyframes rotate {
-        from { transform: rotate(0deg); }
-        to { transform: rotate(360deg); }
-      }
+    .modal-bg {
+      background-color: rgba(0, 0, 0, 0.7);
+    }
+  </style>
+</head>
 
-      .modal-bg {
-        background-color: rgba(0, 0, 0, 0.7);
-      }
-    </style>
-  </head>
+<body>
+  <!-- Header -->
+  <header class="fixed top-0 w-full bg-[#0A192F]/60 backdrop-blur-md z-50">
+    <div class="max-w-6xl mx-auto flex justify-between items-center px-6 py-4">
+      <h1 class="text-[#C9A227] text-xl font-semibold tracking-wide">SMART INK</h1>
+      <nav class="space-x-6 text-sm uppercase tracking-wider">
+        <a href="#inicio" class="hover:text-[#C9A227]">Inicio</a>
+        <a href="#soluciones" class="hover:text-[#C9A227]">Soluciones</a>
+        <a href="#soporte" class="hover:text-[#C9A227]">Soporte</a>
+        <a href="#comprar" class="text-[#C9A227] font-semibold">Comprar</a>
+      </nav>
+    </div>
+  </header>
 
-  <body>
-    <div id="root"></div>
+  <!-- Hero -->
+  <section id="inicio" class="relative h-screen flex items-center justify-center text-center overflow-hidden">
+    <div class="radar-bg"></div>
+    <div class="relative z-10 max-w-3xl px-6 fade-in">
+      <h2 class="text-4xl md:text-6xl font-bold mb-6 text-white">Activa tu información.</h2>
+      <p class="text-lg md:text-xl mb-8 text-gray-300">
+        Convierte tus datos en control, planeación y decisiones inteligentes.
+      </p>
+      <a href="#comprar"
+         class="bg-[#C9A227] text-[#0A192F] font-semibold rounded-2xl px-8 py-4 shadow-lg inline-block hover:scale-105 transition">
+         Comprar ahora
+      </a>
+      <p class="mt-4 text-sm text-gray-400">Disponible en minutos, sin citas ni configuraciones.</p>
+    </div>
+  </section>
 
-    <script type="text/babel">
-      const { motion, AnimatePresence } = window["framer-motion"];
+  <!-- Features -->
+  <section id="soluciones" class="py-24 bg-[#0A192F] relative z-10 text-center">
+    <div class="max-w-6xl mx-auto px-6 grid md:grid-cols-3 gap-8">
+      <div class="bg-[#10213F] rounded-2xl p-8 shadow-lg border border-[#C9A227]/10 hover:scale-105 transition">
+        <div class="text-4xl mb-4">📊</div>
+        <h3 class="text-xl font-semibold mb-2">Automatiza tu administración</h3>
+        <p class="text-gray-400">Captura, clasifica y conecta tus datos con un solo clic.</p>
+      </div>
+      <div class="bg-[#10213F] rounded-2xl p-8 shadow-lg border border-[#C9A227]/10 hover:scale-105 transition">
+        <div class="text-4xl mb-4">⚙️</div>
+        <h3 class="text-xl font-semibold mb-2">Integración inmediata</h3>
+        <p class="text-gray-400">Compatible con Drive, Sheets y Airtable.</p>
+      </div>
+      <div class="bg-[#10213F] rounded-2xl p-8 shadow-lg border border-[#C9A227]/10 hover:scale-105 transition">
+        <div class="text-4xl mb-4">🔒</div>
+        <h3 class="text-xl font-semibold mb-2">Seguridad empresarial</h3>
+        <p class="text-gray-400">Tus datos siempre protegidos con cifrado avanzado.</p>
+      </div>
+    </div>
+  </section>
 
-      function App() {
-        const [showModal, setShowModal] = React.useState(false);
-        const [activated, setActivated] = React.useState(false);
-        const [progress, setProgress] = React.useState(0);
-        const [phase, setPhase] = React.useState("Verificando pago…");
+  <!-- Payment Section -->
+  <section id="comprar" class="py-24 bg-[#0B1E3A] text-center relative z-10">
+    <h2 class="text-3xl font-bold mb-4">Adquiere tu sistema Smart Ink</h2>
+    <p class="text-gray-400 mb-10">En menos de 3 clics podrás automatizar tu empresa.</p>
 
-        const handleFakePay = () => {
-          setShowModal(false);
-          setTimeout(() => {
-            setActivated(true);
-            simulateProgress();
-          }, 800);
-        };
+    <button id="openModal"
+            class="bg-[#C9A227] text-[#0A192F] font-semibold rounded-2xl px-8 py-4 shadow-lg hover:scale-105 transition">
+      Pagar con Mercado Pago
+    </button>
+    <p class="mt-4 text-sm text-gray-400">Tu acceso se activará automáticamente al completar el pago.</p>
 
-        const simulateProgress = () => {
-          let pct = 0;
-          const phases = [
-            "Verificando pago…",
-            "Instalando módulos inteligentes…",
-            "✅ Tu sistema Smart Ink está activo."
-          ];
-          const interval = setInterval(() => {
-            pct += 20;
-            if (pct >= 100) {
-              setProgress(100);
-              setPhase(phases[2]);
-              clearInterval(interval);
-            } else if (pct < 40) setPhase(phases[0]);
-            else if (pct < 90) setPhase(phases[1]);
-            setProgress(pct);
-          }, 600);
-        };
+    <!-- Activation Placeholder -->
+    <div id="activation" class="hidden mt-12 max-w-md mx-auto text-center">
+      <div class="w-full bg-gray-800 h-3 rounded-full mb-4">
+        <div id="progressBar" class="bg-[#C9A227] h-3 rounded-full transition-all duration-500" style="width: 0%"></div>
+      </div>
+      <p id="phaseText" class="mb-6 text-gray-300">Verificando pago…</p>
+      <button id="downloadBtn"
+              class="hidden bg-[#C9A227] text-[#0A192F] font-semibold rounded-2xl px-8 py-4 shadow-lg hover:scale-105 transition">
+        Descargar aplicación
+      </button>
+    </div>
+  </section>
 
-        return (
-          <div className="relative">
-            {/* Header */}
-            <header className="fixed top-0 w-full bg-[#0A192F]/60 backdrop-blur-md z-50">
-              <div className="max-w-6xl mx-auto flex justify-between items-center px-6 py-4">
-                <h1 className="text-[#C9A227] text-xl font-semibold tracking-wide">
-                  SMART INK
-                </h1>
-                <nav className="space-x-6 text-sm uppercase tracking-wider">
-                  <a href="#inicio" className="hover:text-[#C9A227]">Inicio</a>
-                  <a href="#soluciones" className="hover:text-[#C9A227]">Soluciones</a>
-                  <a href="#soporte" className="hover:text-[#C9A227]">Soporte</a>
-                  <a href="#comprar" className="text-[#C9A227] font-semibold">Comprar</a>
-                </nav>
-              </div>
-            </header>
+  <!-- Modal -->
+  <div id="modal" class="hidden fixed inset-0 flex items-center justify-center modal-bg z-50">
+    <div class="bg-[#0B1E3A] rounded-2xl p-8 max-w-sm w-full border border-[#C9A227]/30 shadow-2xl text-center fade-in">
+      <h3 class="text-xl font-semibold mb-4 text-[#C9A227]">Mercado Pago (Simulado)</h3>
+      <p class="text-gray-300 mb-6">Sistema Smart Ink Empresarial</p>
+      <p class="text-3xl font-bold mb-6 text-white">$999 MXN</p>
+      <button id="confirmPay"
+              class="bg-[#C9A227] text-[#0A192F] font-semibold rounded-2xl px-8 py-3 shadow-lg w-full mb-3 hover:scale-105 transition">
+        Confirmar pago
+      </button>
+      <button id="cancelPay" class="text-gray-400 hover:text-white text-sm">Cancelar</button>
+    </div>
+  </div>
 
-            {/* Hero */}
-            <section id="inicio" className="relative h-screen flex items-center justify-center text-center">
-              <div className="radar-bg"></div>
-              <div className="relative z-10 max-w-3xl px-6">
-                <motion.h2
-                  initial={{ opacity: 0, y: -20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.8 }}
-                  className="text-4xl md:text-6xl font-bold mb-6 text-white"
-                >
-                  Activa tu información.
-                </motion.h2>
-                <motion.p
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 0.5 }}
-                  className="text-lg md:text-xl mb-8 text-gray-300"
-                >
-                  Convierte tus datos en control, planeación y decisiones inteligentes.
-                </motion.p>
-                <motion.a
-                  href="#comprar"
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="bg-[#C9A227] text-[#0A192F] font-semibold rounded-2xl px-8 py-4 shadow-lg inline-block"
-                >
-                  Comprar ahora
-                </motion.a>
-                <p className="mt-4 text-sm text-gray-400">
-                  Disponible en minutos, sin citas ni configuraciones.
-                </p>
-              </div>
-            </section>
+  <!-- Footer -->
+  <footer class="border-t border-[#C9A227]/20 py-10 bg-[#0A192F] text-center text-gray-500 text-sm relative z-10">
+    <p>© 2025 Smart Ink – Inteligencia Empresarial</p>
+    <div class="mt-2 space-x-4">
+      <a href="#" class="hover:text-[#C9A227]">Aviso de Privacidad</a>
+      <a href="#" class="hover:text-[#C9A227]">Términos de Uso</a>
+      <a href="#" class="hover:text-[#C9A227]">Soporte</a>
+    </div>
+  </footer>
 
-            {/* Features */}
-            <section id="soluciones" className="py-24 bg-[#0A192F] relative z-10">
-              <div className="max-w-6xl mx-auto px-6 grid md:grid-cols-3 gap-8 text-center">
-                {[
-                  { icon: "📊", title: "Automatiza tu administración", desc: "Captura, clasifica y conecta tus datos con un solo clic." },
-                  { icon: "⚙️", title: "Integración inmediata", desc: "Compatible con Drive, Sheets y Airtable." },
-                  { icon: "🔒", title: "Seguridad empresarial", desc: "Tus datos siempre protegidos con cifrado avanzado." }
-                ].map((f, i) => (
-                  <motion.div key={i} whileHover={{ scale: 1.05 }} className="bg-[#10213F] rounded-2xl p-8 shadow-lg border border-[#C9A227]/10">
-                    <div className="text-4xl mb-4">{f.icon}</div>
-                    <h3 className="text-xl font-semibold mb-2">{f.title}</h3>
-                    <p className="text-gray-400">{f.desc}</p>
-                  </motion.div>
-                ))}
-              </div>
-            </section>
+  <script>
+    const modal = document.getElementById('modal');
+    const openModal = document.getElementById('openModal');
+    const cancelPay = document.getElementById('cancelPay');
+    const confirmPay = document.getElementById('confirmPay');
+    const activation = document.getElementById('activation');
+    const progressBar = document.getElementById('progressBar');
+    const phaseText = document.getElementById('phaseText');
+    const downloadBtn = document.getElementById('downloadBtn');
 
-            {/* Payment */}
-            <section id="comprar" className="py-24 bg-[#0B1E3A] text-center relative z-10">
-              <h2 className="text-3xl font-bold mb-4">Adquiere tu sistema Smart Ink</h2>
-              <p className="text-gray-400 mb-10">
-                En menos de 3 clics podrás automatizar tu empresa.
-              </p>
+    openModal.onclick = () => modal.classList.remove('hidden');
+    cancelPay.onclick = () => modal.classList.add('hidden');
 
-              {!activated ? (
-                <>
-                  <motion.button
-                    whileHover={{ scale: 1.05 }}
-                    onClick={() => setShowModal(true)}
-                    className="bg-[#C9A227] text-[#0A192F] font-semibold rounded-2xl px-8 py-4 shadow-lg"
-                  >
-                    Pagar con Mercado Pago
-                  </motion.button>
-                  <p className="mt-4 text-sm text-gray-400">
-                    Tu acceso se activará automáticamente al completar el pago.
-                  </p>
-                </>
-              ) : (
-                <div className="max-w-md mx-auto">
-                  <div className="w-full bg-gray-800 h-3 rounded-full mb-4">
-                    <div className="bg-[#C9A227] h-3 rounded-full transition-all duration-500" style={{ width: progress + "%" }}></div>
-                  </div>
-                  <p className="mb-6">{phase}</p>
-                  {progress >= 100 && (
-                    <motion.button
-                      whileHover={{ scale: 1.05 }}
-                      onClick={() => alert("Descarga disponible pronto.")}
-                      className="bg-[#C9A227] text-[#0A192F] font-semibold rounded-2xl px-8 py-4 shadow-lg"
-                    >
-                      Descargar aplicación
-                    </motion.button>
-                  )}
-                </div>
-              )}
-            </section>
+    confirmPay.onclick = () => {
+      modal.classList.add('hidden');
+      activation.classList.remove('hidden');
+      simulateActivation();
+    };
 
-            {/* Modal Mercado Pago */}
-            <AnimatePresence>
-              {showModal && (
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  className="fixed inset-0 flex items-center justify-center modal-bg z-50"
-                >
-                  <motion.div
-                    initial={{ scale: 0.8 }}
-                    animate={{ scale: 1 }}
-                    exit={{ scale: 0.8 }}
-                    className="bg-[#0B1E3A] rounded-2xl p-8 max-w-sm w-full border border-[#C9A227]/30 shadow-2xl text-center"
-                  >
-                    <h3 className="text-xl font-semibold mb-4 text-[#C9A227]">
-                      Mercado Pago (Simulado)
-                    </h3>
-                    <p className="text-gray-300 mb-6">Sistema Smart Ink Empresarial</p>
-                    <p className="text-3xl font-bold mb-6 text-white">$999 MXN</p>
-                    <motion.button
-                      whileHover={{ scale: 1.05 }}
-                      onClick={handleFakePay}
-                      className="bg-[#C9A227] text-[#0A192F] font-semibold rounded-2xl px-8 py-3 shadow-lg w-full mb-3"
-                    >
-                      Confirmar pago
-                    </motion.button>
-                    <button
-                      onClick={() => setShowModal(false)}
-                      className="text-gray-400 hover:text-white text-sm"
-                    >
-                      Cancelar
-                    </button>
-                  </motion.div>
-                </motion.div>
-              )}
-            </AnimatePresence>
+    function simulateActivation() {
+      let pct = 0;
+      const phases = [
+        "Verificando pago…",
+        "Instalando módulos inteligentes…",
+        "✅ Tu sistema Smart Ink está activo."
+      ];
+      const interval = setInterval(() => {
+        pct += 20;
+        progressBar.style.width = pct + "%";
+        if (pct < 40) phaseText.textContent = phases[0];
+        else if (pct < 90) phaseText.textContent = phases[1];
+        if (pct >= 100) {
+          clearInterval(interval);
+          phaseText.textContent = phases[2];
+          downloadBtn.classList.remove('hidden');
+        }
+      }, 600);
+    }
 
-            {/* Footer */}
-            <footer className="border-t border-[#C9A227]/20 py-10 bg-[#0A192F] text-center text-gray-500 text-sm relative z-10">
-              <p>© 2025 Smart Ink – Inteligencia Empresarial</p>
-              <div className="mt-2 space-x-4">
-                <a href="#" className="hover:text-[#C9A227]">Aviso de Privacidad</a>
-                <a href="#" className="hover:text-[#C9A227]">Términos de Uso</a>
-                <a href="#" className="hover:text-[#C9A227]">Soporte</a>
-              </div>
-            </footer>
-          </div>
-        );
-      }
-
-      ReactDOM.render(<App />, document.getElementById("root"));
-    </script>
-  </body>
+    downloadBtn.onclick = () => alert("Descarga disponible pronto.");
+  </script>
+</body>
 </html>
