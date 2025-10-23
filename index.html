@@ -1,122 +1,247 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="es">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Smart Ink - Soluciones simples con IA</title>
-  <link rel="icon" href="favicon.ico" type="image/x-icon">
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>tailwind.config={theme:{extend:{colors:{navy:'#0A192F',gold:'#C9A227',radar:'#00FF94'}}}};</script>
-  <script src="https://unpkg.com/lucide@latest"></script>
-  <style>.hud-layer{pointer-events:none}</style>
-</head>
-<body class="min-h-screen bg-navy text-white selection:bg-white/10 selection:text-white">
-  <div class="hud-layer fixed inset-0 bg-[radial-gradient(ellipse_at_top,rgba(29,174,255,0.08),transparent_55%),radial-gradient(ellipse_at_bottom,rgba(0,255,148,0.06),transparent_55%)]"></div>
-  <div class="hud-layer fixed inset-0 [background-image:linear-gradient(rgba(255,255,255,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.05)_1px,transparent_1px)] [background-size:40px_40px] opacity-30"></div>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Smart Ink – Inteligencia Empresarial</title>
 
-  <header class="relative z-10">
-    <div class="mx-auto max-w-6xl px-6 py-6 flex items-center justify-between">
-      <div class="flex items-center gap-3">
-        <div class="h-9 w-9 rounded-xl bg-white/10 grid place-content-center border border-white/10">
-          <img src="logo.png" alt="Smart Ink" class="h-10 w-10 object-contain" />
-        </div>
-        <span class="font-semibold tracking-wide">Smart Ink</span>
-      </div>
-      <nav class="hidden md:flex items-center gap-6 text-sm text-white/80">
-        <a href="#servicios" class="hover:text-white">Servicios</a>
-        <a href="#precio" class="hover:text-white">Precio</a>
-        <a href="#contacto" class="hover:text-white">Contacto</a>
-      </nav>
-      <a href="https://wa.me/526572392954" class="inline-flex items-center gap-2 rounded-2xl bg-gold px-4 py-2 text-sm font-medium text-navy hover:brightness-110 transition">
-        Contáctanos <i data-lucide="arrow-right" class="h-4 w-4"></i>
-      </a>
-    </div>
-  </header>
+    <!-- Tailwind -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- React / ReactDOM -->
+    <script src="https://unpkg.com/react@17/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
+    <!-- Framer Motion -->
+    <script src="https://unpkg.com/framer-motion@10.12.16/dist/framer-motion.umd.js"></script>
 
-  <section class="relative z-10">
-    <div class="mx-auto max-w-6xl px-6 pt-24 pb-20 text-center">
-      <h1 class="text-4xl sm:text-6xl/tight font-semibold">Soluciones simples con IA</h1>
-      <p class="mt-6 text-white/80 max-w-2xl mx-auto text-lg">Automatiza tareas, organiza datos y toma decisiones claras. Sin complicaciones.</p>
-      <div class="mt-8 flex items-center justify-center gap-3">
-  <a href="#servicios" class="inline-flex items-center gap-2 rounded-2xl border border-white/10 bg-white/5 px-6 py-3 text-sm hover:bg-white/10 transition">Ver servicios</a>
-  <a href="https://wa.me/526572392954" class="inline-flex items-center gap-2 rounded-2xl bg-gold px-6 py-3 text-sm font-medium text-navy hover:brightness-110 transition">Empezar</a>
-  </div>
+    <style>
+      body {
+        background-color: #0A192F;
+        color: #EAEAEA;
+        font-family: 'Inter', sans-serif;
+        overflow-x: hidden;
+      }
 
-    </div>
-  </section>
+      .radar-bg {
+        position: absolute;
+        width: 200%;
+        height: 200%;
+        background:
+          radial-gradient(circle at center, rgba(201,162,39,0.05) 0%, transparent 70%),
+          repeating-linear-gradient(0deg, rgba(201,162,39,0.05), rgba(201,162,39,0.05) 1px, transparent 2px, transparent 40px),
+          repeating-linear-gradient(90deg, rgba(201,162,39,0.05), rgba(201,162,39,0.05) 1px, transparent 2px, transparent 40px);
+        animation: rotate 80s linear infinite;
+        transform-origin: center;
+      }
 
-  <!-- CTA before services -->
-  <section class="relative z-10">
-    <div class="mx-auto max-w-6xl px-6 text-center">
-      <a href="https://wa.me/526572392954" class="inline-flex items-center gap-2 rounded-2xl bg-gold px-8 py-4 text-sm font-medium text-navy hover:brightness-110 transition">Contáctanos ahora</a>
-    </div>
-  </section>
+      @keyframes rotate {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+      }
 
-  <section id="servicios" class="relative z-10">
-    <div class="mx-auto max-w-6xl px-6 py-16">
-      <h2 class="text-2xl tracking-wide text-white/90 text-center">Servicios</h2>
-      <div class="mt-10 grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div class="rounded-2xl border border-white/10 bg-white/5 p-6 text-center">
-          <i data-lucide="file-spreadsheet" class="h-6 w-6 mx-auto"></i>
-          <h3 class="mt-3 font-medium">Automatización de documentos</h3>
-          <p class="mt-2 text-sm text-white/80">Lectura de XML/PDF y carga a hojas de cálculo.</p>
-        </div>
-        <div class="rounded-2xl border border-white/10 bg-white/5 p-6 text-center">
-          <i data-lucide="line-chart" class="h-6 w-6 mx-auto"></i>
-          <h3 class="mt-3 font-medium">KPIs y tableros</h3>
-          <p class="mt-2 text-sm text-white/80">Indicadores claros para decisiones rápidas.</p>
-        </div>
-      </div>
-    </div>
-  </section>
+      .modal-bg {
+        background-color: rgba(0, 0, 0, 0.7);
+      }
+    </style>
+  </head>
 
-  <section id="precio" class="relative z-10">
-    <div class="mx-auto max-w-6xl px-6 pb-6">
-      <div class="rounded-3xl border border-white/10 bg-white/5 p-10 text-center">
-        <div class="mt-2 text-4xl font-semibold">$4,000 MXN Mensuales</div>
-                <a href="https://wa.me/526572392954" class="mt-6 inline-flex items-center gap-2 rounded-2xl bg-gold px-6 py-3 text-sm font-medium text-navy hover:brightness-110 transition">Solicitar cotización</a>
-      </div>
-    </div>
-  </section>
+  <body>
+    <div id="root"></div>
 
-  <section id="contacto" class="relative z-10">
-    <div class="mx-auto max-w-6xl px-6 py-16">
-      <div class="rounded-3xl border border-white/10 bg-white/5 p-8">
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <div>
-            <h2 class="text-2xl tracking-wide text-white/90">Contacto</h2>
-            <p class="mt-2 text-sm text-white/80">¿Listo para empezar? Escríbenos y te respondemos hoy mismo.</p>
-            <div class="mt-5 space-y-3 text-sm">
-              <a href="mailto:smart.ink614@gmail.com" class="inline-flex items-center gap-2 hover:text-white"><i data-lucide="mail" class="h-4 w-4"></i> smart.ink614@gmail.com</a><br/>
-              <a href="https://wa.me/526572392954" target="_blank" class="inline-flex items-center gap-2 hover:text-white"><i data-lucide="message-circle" class="h-4 w-4"></i> WhatsApp</a>
-            </div>
+    <script type="text/babel">
+      const { motion, AnimatePresence } = window["framer-motion"];
+
+      function App() {
+        const [showModal, setShowModal] = React.useState(false);
+        const [activated, setActivated] = React.useState(false);
+        const [progress, setProgress] = React.useState(0);
+        const [phase, setPhase] = React.useState("Verificando pago…");
+
+        const handleFakePay = () => {
+          setShowModal(false);
+          setTimeout(() => {
+            setActivated(true);
+            simulateProgress();
+          }, 800);
+        };
+
+        const simulateProgress = () => {
+          let pct = 0;
+          const phases = [
+            "Verificando pago…",
+            "Instalando módulos inteligentes…",
+            "✅ Tu sistema Smart Ink está activo."
+          ];
+          const interval = setInterval(() => {
+            pct += 20;
+            if (pct >= 100) {
+              setProgress(100);
+              setPhase(phases[2]);
+              clearInterval(interval);
+            } else if (pct < 40) setPhase(phases[0]);
+            else if (pct < 90) setPhase(phases[1]);
+            setProgress(pct);
+          }, 600);
+        };
+
+        return (
+          <div className="relative">
+            {/* Header */}
+            <header className="fixed top-0 w-full bg-[#0A192F]/60 backdrop-blur-md z-50">
+              <div className="max-w-6xl mx-auto flex justify-between items-center px-6 py-4">
+                <h1 className="text-[#C9A227] text-xl font-semibold tracking-wide">
+                  SMART INK
+                </h1>
+                <nav className="space-x-6 text-sm uppercase tracking-wider">
+                  <a href="#inicio" className="hover:text-[#C9A227]">Inicio</a>
+                  <a href="#soluciones" className="hover:text-[#C9A227]">Soluciones</a>
+                  <a href="#soporte" className="hover:text-[#C9A227]">Soporte</a>
+                  <a href="#comprar" className="text-[#C9A227] font-semibold">Comprar</a>
+                </nav>
+              </div>
+            </header>
+
+            {/* Hero */}
+            <section id="inicio" className="relative h-screen flex items-center justify-center text-center">
+              <div className="radar-bg"></div>
+              <div className="relative z-10 max-w-3xl px-6">
+                <motion.h2
+                  initial={{ opacity: 0, y: -20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.8 }}
+                  className="text-4xl md:text-6xl font-bold mb-6 text-white"
+                >
+                  Activa tu información.
+                </motion.h2>
+                <motion.p
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.5 }}
+                  className="text-lg md:text-xl mb-8 text-gray-300"
+                >
+                  Convierte tus datos en control, planeación y decisiones inteligentes.
+                </motion.p>
+                <motion.a
+                  href="#comprar"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="bg-[#C9A227] text-[#0A192F] font-semibold rounded-2xl px-8 py-4 shadow-lg inline-block"
+                >
+                  Comprar ahora
+                </motion.a>
+                <p className="mt-4 text-sm text-gray-400">
+                  Disponible en minutos, sin citas ni configuraciones.
+                </p>
+              </div>
+            </section>
+
+            {/* Features */}
+            <section id="soluciones" className="py-24 bg-[#0A192F] relative z-10">
+              <div className="max-w-6xl mx-auto px-6 grid md:grid-cols-3 gap-8 text-center">
+                {[
+                  { icon: "📊", title: "Automatiza tu administración", desc: "Captura, clasifica y conecta tus datos con un solo clic." },
+                  { icon: "⚙️", title: "Integración inmediata", desc: "Compatible con Drive, Sheets y Airtable." },
+                  { icon: "🔒", title: "Seguridad empresarial", desc: "Tus datos siempre protegidos con cifrado avanzado." }
+                ].map((f, i) => (
+                  <motion.div key={i} whileHover={{ scale: 1.05 }} className="bg-[#10213F] rounded-2xl p-8 shadow-lg border border-[#C9A227]/10">
+                    <div className="text-4xl mb-4">{f.icon}</div>
+                    <h3 className="text-xl font-semibold mb-2">{f.title}</h3>
+                    <p className="text-gray-400">{f.desc}</p>
+                  </motion.div>
+                ))}
+              </div>
+            </section>
+
+            {/* Payment */}
+            <section id="comprar" className="py-24 bg-[#0B1E3A] text-center relative z-10">
+              <h2 className="text-3xl font-bold mb-4">Adquiere tu sistema Smart Ink</h2>
+              <p className="text-gray-400 mb-10">
+                En menos de 3 clics podrás automatizar tu empresa.
+              </p>
+
+              {!activated ? (
+                <>
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    onClick={() => setShowModal(true)}
+                    className="bg-[#C9A227] text-[#0A192F] font-semibold rounded-2xl px-8 py-4 shadow-lg"
+                  >
+                    Pagar con Mercado Pago
+                  </motion.button>
+                  <p className="mt-4 text-sm text-gray-400">
+                    Tu acceso se activará automáticamente al completar el pago.
+                  </p>
+                </>
+              ) : (
+                <div className="max-w-md mx-auto">
+                  <div className="w-full bg-gray-800 h-3 rounded-full mb-4">
+                    <div className="bg-[#C9A227] h-3 rounded-full transition-all duration-500" style={{ width: progress + "%" }}></div>
+                  </div>
+                  <p className="mb-6">{phase}</p>
+                  {progress >= 100 && (
+                    <motion.button
+                      whileHover={{ scale: 1.05 }}
+                      onClick={() => alert("Descarga disponible pronto.")}
+                      className="bg-[#C9A227] text-[#0A192F] font-semibold rounded-2xl px-8 py-4 shadow-lg"
+                    >
+                      Descargar aplicación
+                    </motion.button>
+                  )}
+                </div>
+              )}
+            </section>
+
+            {/* Modal Mercado Pago */}
+            <AnimatePresence>
+              {showModal && (
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  className="fixed inset-0 flex items-center justify-center modal-bg z-50"
+                >
+                  <motion.div
+                    initial={{ scale: 0.8 }}
+                    animate={{ scale: 1 }}
+                    exit={{ scale: 0.8 }}
+                    className="bg-[#0B1E3A] rounded-2xl p-8 max-w-sm w-full border border-[#C9A227]/30 shadow-2xl text-center"
+                  >
+                    <h3 className="text-xl font-semibold mb-4 text-[#C9A227]">
+                      Mercado Pago (Simulado)
+                    </h3>
+                    <p className="text-gray-300 mb-6">Sistema Smart Ink Empresarial</p>
+                    <p className="text-3xl font-bold mb-6 text-white">$999 MXN</p>
+                    <motion.button
+                      whileHover={{ scale: 1.05 }}
+                      onClick={handleFakePay}
+                      className="bg-[#C9A227] text-[#0A192F] font-semibold rounded-2xl px-8 py-3 shadow-lg w-full mb-3"
+                    >
+                      Confirmar pago
+                    </motion.button>
+                    <button
+                      onClick={() => setShowModal(false)}
+                      className="text-gray-400 hover:text-white text-sm"
+                    >
+                      Cancelar
+                    </button>
+                  </motion.div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            {/* Footer */}
+            <footer className="border-t border-[#C9A227]/20 py-10 bg-[#0A192F] text-center text-gray-500 text-sm relative z-10">
+              <p>© 2025 Smart Ink – Inteligencia Empresarial</p>
+              <div className="mt-2 space-x-4">
+                <a href="#" className="hover:text-[#C9A227]">Aviso de Privacidad</a>
+                <a href="#" className="hover:text-[#C9A227]">Términos de Uso</a>
+                <a href="#" className="hover:text-[#C9A227]">Soporte</a>
+              </div>
+            </footer>
           </div>
-          <div>
-            <h3 class="text-white/90 font-medium">Redes sociales</h3>
-            <ul class="mt-4 space-y-3 text-sm text-white/80">
-              <li><a href="https://www.instagram.com/smart_ink614" target="_blank" class="inline-flex items-center gap-2 hover:text-white"><i data-lucide="instagram" class="h-4 w-4"></i> Instagram</a></li>
-              <li><a href="https://www.facebook.com/smartink614" target="_blank" class="inline-flex items-center gap-2 hover:text-white"><i data-lucide="facebook" class="h-4 w-4"></i> Facebook</a></li>
-            </ul>
-          </div>
-        </div>
-      </div>
-      <div class="mt-8 text-center">
-        <a href="https://wa.me/526572392954" class="inline-flex items-center gap-2 rounded-2xl bg-gold px-8 py-4 text-sm font-medium text-navy hover:brightness-110 transition">Contáctanos ahora</a>
-      </div>
-    </div>
-  </section>
+        );
+      }
 
-  <footer class="relative z-10 border-t border-white/10">
-    <div class="mx-auto max-w-6xl px-6 py-10 text-sm text-white/60 flex items-center justify-between">
-      <span>© <span id="year"></span> Smart Ink</span>
-    </div>
-  </footer>
-
-  <script>
-    window.addEventListener('DOMContentLoaded',()=>{
-      if(window.lucide) window.lucide.createIcons();
-      const y=document.getElementById('year'); if(y) y.textContent=new Date().getFullYear();
-    });
-  </script>
-</body>
+      ReactDOM.render(<App />, document.getElementById("root"));
+    </script>
+  </body>
 </html>
