@@ -5,525 +5,449 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Smart Ink – Automatización Inteligente</title>
   <link rel="icon" href="favicon.ico" type="image/x-icon" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            navy: '#0A192F',
+            gold: '#C9A227',
+            light: '#EAEAEA',
+          },
+          fontFamily: {
+            sans: ['Inter', 'ui-sans-serif', 'system-ui'],
+          },
+        },
+      },
+    };
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <style>
-    :root {
-      --navy: #0a192f;
-      --navy-dark: #071225;
-      --gold: #c9a227;
-      --text-light: #eaeaea;
-      --text-muted: #c7d2f5;
-      --card-bg: rgba(10, 25, 47, 0.7);
-      --border-gold: rgba(201, 162, 39, 0.3);
-      --transition: 0.35s ease;
-    }
-
-    * {
-      box-sizing: border-box;
-    }
-
     html {
       scroll-behavior: smooth;
     }
-
     body {
-      margin: 0;
-      font-family: 'Segoe UI', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-      background: var(--navy);
-      color: var(--text-light);
-      line-height: 1.6;
+      font-family: 'Inter', sans-serif;
     }
-
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
-
-    button {
-      font: inherit;
-    }
-
-    .header {
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-      background: rgba(7, 18, 37, 0.65);
-      backdrop-filter: blur(16px);
-      border-bottom: 1px solid rgba(201, 162, 39, 0.15);
-    }
-
-    .header-inner {
-      max-width: 1100px;
-      margin: 0 auto;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 1rem 1.5rem;
-      font-size: 0.95rem;
-    }
-
-    .logo {
-      color: var(--gold);
-      font-weight: 700;
-      letter-spacing: 0.22rem;
-    }
-
-    .nav {
-      display: flex;
-      gap: 1.75rem;
-    }
-
-    .nav a {
+    .nav-link {
       position: relative;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
       padding-bottom: 0.25rem;
-      font-weight: 500;
-      transition: color var(--transition);
     }
-
-    .nav a::after {
+    .nav-link::after {
       content: '';
       position: absolute;
       left: 0;
       bottom: 0;
-      width: 100%;
       height: 2px;
-      background: var(--gold);
+      width: 100%;
+      background: #C9A227;
       transform: scaleX(0);
       transform-origin: left;
-      transition: transform var(--transition);
+      transition: transform 0.3s ease;
     }
-
-    .nav a:hover,
-    .nav a:focus-visible {
-      color: var(--gold);
-    }
-
-    .nav a:hover::after,
-    .nav a:focus-visible::after {
+    .nav-link:hover::after,
+    .nav-link:focus-visible::after {
       transform: scaleX(1);
     }
-
-    .hero {
-      position: relative;
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      padding: 6rem 1.5rem 4rem;
-      overflow: hidden;
-    }
-
-    .hero::before {
-      content: '';
+    .radar-wrapper {
       position: absolute;
       inset: 0;
-      background: radial-gradient(circle at center, rgba(201, 162, 39, 0.2) 0%, rgba(10, 25, 47, 0.8) 55%, rgba(10, 25, 47, 0.95) 100%);
-      pointer-events: none;
+      overflow: hidden;
     }
-
-    .radar-overlay {
+    .radar-grid {
       position: absolute;
-      inset: -230px;
-      margin: auto;
-      width: 120vmax;
-      height: 120vmax;
-      border-radius: 50%;
-      background:
-        radial-gradient(circle at center, rgba(201, 162, 39, 0.22) 0%, transparent 60%),
-        repeating-conic-gradient(from 0deg, rgba(255, 255, 255, 0.05) 0deg 10deg, transparent 10deg 20deg);
-      opacity: 0.2;
-      animation: rotate-slow 48s linear infinite;
-      pointer-events: none;
+      inset: -200px;
+      background: radial-gradient(circle at center, rgba(201, 162, 39, 0.12) 0%, rgba(10, 25, 47, 0.1) 45%, transparent 65%),
+        repeating-conic-gradient(from 0deg, rgba(255, 255, 255, 0.05) 0deg 6deg, transparent 6deg 12deg);
+      opacity: 0.18;
+      border-radius: 9999px;
+      animation: rotate-slow 45s linear infinite;
     }
-
-    .radar-overlay::after {
+    .radar-grid::after {
       content: '';
       position: absolute;
-      inset: 16%;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(201, 162, 39, 0.28) 0%, transparent 70%);
+      inset: 10%;
+      border-radius: 9999px;
+      background: radial-gradient(circle, rgba(201, 162, 39, 0.18) 0%, transparent 70%);
       filter: blur(18px);
-      animation: pulse 7s ease-in-out infinite;
+      opacity: 0.6;
+      animation: pulse 6s ease-in-out infinite;
     }
-
-    .hero-content {
-      position: relative;
-      z-index: 1;
-      max-width: 720px;
-    }
-
-    .hero h1 {
-      font-size: clamp(2.8rem, 6vw, 4.3rem);
-      line-height: 1.1;
-      margin-bottom: 1rem;
-    }
-
-    .hero p {
-      font-size: clamp(1.05rem, 2.5vw, 1.25rem);
-      margin-bottom: 2.5rem;
-      color: var(--text-muted);
-    }
-
-    .hero .subtext {
-      margin-top: 1.75rem;
-      font-size: 0.95rem;
-      color: var(--text-muted);
-    }
-
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      padding: 0.9rem 2.8rem;
-      border-radius: 999px;
-      background: var(--gold);
-      color: var(--navy);
-      font-weight: 600;
-      font-size: 1rem;
-      border: none;
-      cursor: pointer;
-      box-shadow: 0 16px 32px rgba(201, 162, 39, 0.32);
-      transition: transform var(--transition), box-shadow var(--transition);
-    }
-
-    .btn:hover,
-    .btn:focus-visible {
-      transform: scale(1.05) translateY(-1px);
-      box-shadow: 0 24px 44px rgba(201, 162, 39, 0.4);
-    }
-
-    .section {
-      padding: 5rem 1.5rem;
-    }
-
-    .section-inner {
-      max-width: 1100px;
-      margin: 0 auto;
-    }
-
-    .section-title {
-      font-size: clamp(1.9rem, 4vw, 2.6rem);
-      margin-bottom: 0.75rem;
-    }
-
-    .section-subtitle {
-      font-size: 1rem;
-      color: var(--text-muted);
-    }
-
-    .features-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 1.75rem;
-      margin-top: 3rem;
-    }
-
-    .feature-card {
-      background: var(--card-bg);
-      border: 1px solid var(--border-gold);
-      border-radius: 22px;
-      padding: 2.4rem 2rem;
-      transition: transform var(--transition), box-shadow var(--transition), border-color var(--transition);
-      position: relative;
-      overflow: hidden;
-    }
-
-    .feature-card::after {
-      content: '';
-      position: absolute;
-      inset: -45%;
-      background: radial-gradient(circle, rgba(201, 162, 39, 0.18) 0%, transparent 60%);
-      opacity: 0;
-      transition: opacity var(--transition);
-    }
-
-    .feature-card:hover,
-    .feature-card:focus-within {
-      transform: translateY(-6px) scale(1.02);
-      box-shadow: 0 18px 46px rgba(201, 162, 39, 0.28);
-      border-color: rgba(201, 162, 39, 0.55);
-    }
-
-    .feature-card:hover::after,
-    .feature-card:focus-within::after {
-      opacity: 1;
-    }
-
-    .feature-icon {
-      font-size: 2.2rem;
-      margin-bottom: 1.2rem;
-    }
-
-    .feature-title {
-      font-size: 1.25rem;
-      font-weight: 600;
-      margin-bottom: 0.75rem;
-    }
-
-    .payment-section {
-      text-align: center;
-    }
-
-    .payment-section .btn {
-      margin-top: 2rem;
-      font-size: 1.05rem;
-    }
-
-    .activation {
-      margin-top: 3.5rem;
-      background: rgba(7, 18, 37, 0.78);
-      border-radius: 20px;
-      padding: 2.5rem;
-      border: 1px solid rgba(201, 162, 39, 0.25);
-      display: none;
-    }
-
-    .activation.visible {
-      display: block;
-    }
-
-    .progress-track {
-      position: relative;
-      width: 100%;
-      height: 12px;
-      border-radius: 999px;
-      background: rgba(255, 255, 255, 0.1);
-      overflow: hidden;
-      margin-bottom: 1.75rem;
-    }
-
-    .progress-bar {
-      position: absolute;
-      inset: 0;
-      width: 0%;
-      border-radius: inherit;
-      background: linear-gradient(90deg, rgba(201, 162, 39, 0.35), var(--gold));
-      transition: width 0.6s ease;
-    }
-
-    .activation-messages {
-      display: grid;
-      gap: 0.75rem;
-      color: var(--text-muted);
-      font-size: 0.95rem;
-      text-align: left;
-    }
-
-    .activation-messages span.complete {
-      color: var(--text-light);
-      font-weight: 600;
-    }
-
-    .download-btn {
-      margin-top: 2.5rem;
-    }
-
-    .footer {
-      border-top: 1px solid rgba(201, 162, 39, 0.3);
-      background: var(--navy-dark);
-      padding: 2.5rem 1.5rem;
-      color: rgba(234, 234, 234, 0.85);
-    }
-
-    .footer-inner {
-      max-width: 1100px;
-      margin: 0 auto;
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 1.5rem;
-      font-size: 0.9rem;
-    }
-
-    .footer-links,
-    .footer-social {
-      display: flex;
-      gap: 1rem;
-      flex-wrap: wrap;
-    }
-
-    .footer-links a,
-    .footer-social a {
-      color: rgba(234, 234, 234, 0.75);
-      transition: color var(--transition);
-    }
-
-    .footer-links a:hover,
-    .footer-social a:hover,
-    .footer-links a:focus-visible,
-    .footer-social a:focus-visible {
-      color: var(--gold);
-    }
-
     @keyframes rotate-slow {
-      from { transform: rotate(0deg); }
-      to { transform: rotate(360deg); }
+      from {
+        transform: rotate(0deg);
+      }
+      to {
+        transform: rotate(360deg);
+      }
     }
-
     @keyframes pulse {
-      0%, 100% { opacity: 0.45; }
-      50% { opacity: 0.9; }
-    }
-
-    @media (max-width: 720px) {
-      .header-inner {
-        flex-direction: column;
-        gap: 0.75rem;
-        text-align: center;
+      0%,
+      100% {
+        opacity: 0.35;
       }
-
-      .nav {
-        gap: 1.25rem;
-      }
-
-      .hero {
-        padding-top: 8rem;
-      }
-
-      .feature-card {
-        padding: 2rem 1.75rem;
+      50% {
+        opacity: 0.75;
       }
     }
   </style>
 </head>
-<body>
-  <header class="header">
-    <div class="header-inner">
-      <div class="logo">SMART INK</div>
-      <nav class="nav" aria-label="Principal">
-        <a href="#inicio">Inicio</a>
-        <a href="#soluciones">Soluciones</a>
-        <a href="#soporte">Soporte</a>
-        <a href="#comprar">Comprar</a>
-      </nav>
-    </div>
-  </header>
+<body class="bg-[#0A192F] text-[#EAEAEA] min-h-screen">
+  <div id="root"></div>
 
-  <main>
-    <section class="hero" id="inicio">
-      <div class="radar-overlay" aria-hidden="true"></div>
-      <div class="hero-content">
-        <h1>Activa tu información.</h1>
-        <p>Convierte tus datos en control, planeación y decisiones inteligentes.</p>
-        <button class="btn" onclick="document.getElementById('comprar').scrollIntoView({ behavior: 'smooth' });">Comprar ahora</button>
-        <div class="subtext">Disponible en minutos, sin citas ni configuraciones.</div>
-      </div>
-    </section>
+  <script crossorigin src="https://unpkg.com/react@17/umd/react.development.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/framer-motion@5.5.5/dist/framer-motion.umd.js"></script>
+  <script crossorigin src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script type="text/babel">
+    const { useMemo, useState, useEffect } = React;
+    const { motion, AnimatePresence } = window.framerMotion;
 
-    <section class="section" id="soluciones">
-      <div class="section-inner">
-        <h2 class="section-title">Soluciones inteligentes para tu empresa</h2>
-        <p class="section-subtitle">Procesa, automatiza y controla cada decisión con tecnología Smart Ink.</p>
-        <div class="features-grid">
-          <article class="feature-card" tabindex="0">
-            <div class="feature-icon" aria-hidden="true">📊</div>
-            <h3 class="feature-title">Automatiza tu administración</h3>
-            <p>Procesa reportes, órdenes y facturas en segundos con flujos guiados.</p>
-          </article>
-          <article class="feature-card" tabindex="0">
-            <div class="feature-icon" aria-hidden="true">⚙️</div>
-            <h3 class="feature-title">Integración inmediata</h3>
-            <p>Conecta tus fuentes de datos y activa plantillas operativas al instante.</p>
-          </article>
-          <article class="feature-card" tabindex="0">
-            <div class="feature-icon" aria-hidden="true">🔒</div>
-            <h3 class="feature-title">Seguridad empresarial</h3>
-            <p>Cifrado extremo a extremo, auditoría continua y control de accesos.</p>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <section class="section payment-section" id="comprar">
-      <div class="section-inner">
-        <h2 class="section-title">Adquiere tu sistema Smart Ink</h2>
-        <p class="section-subtitle">En menos de 3 clics podrás automatizar tu empresa.</p>
-        <!-- [PAGO_MERCADOPAGO_PLACEHOLDER] -->
-        <button class="btn" id="paymentButton">Pagar con Mercado Pago</button>
-        <p class="section-subtitle" style="margin-top: 1.75rem;">Tu acceso se activará automáticamente al completar el pago.</p>
-
-        <div class="activation" id="activation">
-          <div class="progress-track" aria-hidden="true">
-            <div class="progress-bar" id="progressBar"></div>
-          </div>
-          <div class="activation-messages" id="activationMessages" role="status" aria-live="polite"></div>
-          <!-- [DESCARGA_AUTO_PLACEHOLDER] -->
-          <button class="btn download-btn" id="downloadButton" style="display: none;">Descargar aplicación</button>
-        </div>
-      </div>
-    </section>
-
-    <section class="section" id="soporte">
-      <div class="section-inner">
-        <h2 class="section-title">Soporte Smart Ink a tu medida</h2>
-        <p class="section-subtitle">Accede a tutoriales, base de conocimientos y asistencia especializada cuando la necesites.</p>
-      </div>
-    </section>
-  </main>
-
-  <footer class="footer">
-    <div class="footer-inner">
-      <div>© 2025 Smart Ink – Inteligencia Empresarial.</div>
-      <div class="footer-links">
-        <a href="#">Aviso de Privacidad</a>
-        <a href="#">Términos de Uso</a>
-        <a href="#soporte">Soporte</a>
-      </div>
-      <div class="footer-social">
-        <a href="#" aria-label="LinkedIn">LinkedIn</a>
-        <a href="#" aria-label="Instagram">Instagram</a>
-        <a href="#" aria-label="Facebook">Facebook</a>
-      </div>
-    </div>
-  </footer>
-
-  <script>
-    const paymentButton = document.getElementById('paymentButton');
-    const activationContainer = document.getElementById('activation');
-    const progressBar = document.getElementById('progressBar');
-    const activationMessages = document.getElementById('activationMessages');
-    const downloadButton = document.getElementById('downloadButton');
-
-    const activationSteps = [
-      'Verificando pago…',
-      'Instalando módulos inteligentes…',
-      '✅ Tu sistema Smart Ink está activo.'
+    const features = [
+      {
+        icon: '📊',
+        title: 'Automatiza tu administración',
+        description: 'Procesa reportes, órdenes y facturas en segundos con flujos guiados.',
+      },
+      {
+        icon: '⚙️',
+        title: 'Integración inmediata',
+        description: 'Conecta tus fuentes de datos y activa plantillas operativas al instante.',
+      },
+      {
+        icon: '🔒',
+        title: 'Seguridad empresarial',
+        description: 'Cifrado extremo a extremo, auditoría continua y control de accesos.',
+      },
     ];
 
-    function startActivationSequence() {
-      activationContainer.classList.add('visible');
-      activationMessages.innerHTML = '';
-      downloadButton.style.display = 'none';
-      progressBar.style.width = '0%';
+    function App() {
+      const activationMessages = useMemo(
+        () => [
+          'Verificando pago…',
+          'Instalando módulos inteligentes…',
+          '✅ Tu sistema Smart Ink está activo.',
+        ],
+        []
+      );
 
-      activationSteps.forEach((message, index) => {
-        setTimeout(() => {
-          const step = document.createElement('span');
-          step.textContent = message;
-          if (index === activationSteps.length - 1) {
-            step.classList.add('complete');
-          }
-          activationMessages.appendChild(step);
+      const [activationTrigger, setActivationTrigger] = useState(0);
+      const [messages, setMessages] = useState([]);
+      const [showActivation, setShowActivation] = useState(false);
 
-          const progressPercentage = ((index + 1) / activationSteps.length) * 100;
-          progressBar.style.width = progressPercentage + '%';
+      useEffect(() => {
+        if (!activationTrigger) return;
 
-          if (index === activationSteps.length - 1) {
-            setTimeout(() => {
-              downloadButton.style.display = 'inline-flex';
-            }, 700);
-          }
-        }, index * 2300);
-      });
+        setShowActivation(true);
+        setMessages([]);
+
+        const timeouts = activationMessages.map((message, index) =>
+          setTimeout(() => {
+            setMessages((prev) => {
+              if (prev.includes(message)) return prev;
+              return [...prev, message];
+            });
+          }, index * 2200)
+        );
+
+        return () => {
+          timeouts.forEach(clearTimeout);
+        };
+      }, [activationTrigger, activationMessages]);
+
+      const handlePayment = () => {
+        alert('🪙 Pago en desarrollo — integración con Mercado Pago próximamente.');
+        setActivationTrigger((prev) => prev + 1);
+      };
+
+      const handleDownload = () => {
+        alert('Descarga disponible pronto.');
+      };
+
+      const scrollToPayment = () => {
+        document.getElementById('payment')?.scrollIntoView({ behavior: 'smooth' });
+      };
+
+      const progress = activationMessages.length ? (messages.length / activationMessages.length) * 100 : 0;
+
+      return (
+        <div className="bg-[#0A192F] text-[#EAEAEA]">
+          <header className="sticky top-0 z-50 backdrop-blur bg-[#0A192F]/55 border-b border-white/5">
+            <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+              <motion.span initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="text-lg font-semibold tracking-[0.25em] text-gold">
+                SMART INK
+              </motion.span>
+              <nav className="hidden md:flex items-center gap-8 text-sm font-medium text-[#EAEAEA]/80">
+                {[
+                  { label: 'Inicio', href: '#inicio' },
+                  { label: 'Soluciones', href: '#soluciones' },
+                  { label: 'Soporte', href: '#soporte' },
+                  { label: 'Comprar', href: '#payment' },
+                ].map((link) => (
+                  <motion.a
+                    key={link.href}
+                    href={link.href}
+                    className="nav-link hover:text-[#EAEAEA] focus-visible:outline-none"
+                    whileHover={{ y: -2 }}
+                    whileFocus={{ y: -2 }}
+                    transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+                  >
+                    {link.label}
+                  </motion.a>
+                ))}
+              </nav>
+            </div>
+          </header>
+
+          <main id="inicio" className="relative">
+            <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+              <div className="radar-wrapper">
+                <div className="radar-grid"></div>
+              </div>
+              <div className="absolute inset-0 bg-gradient-to-b from-[#0A192F]/60 via-[#0A192F]/80 to-[#0A192F]"></div>
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.9 }}
+                className="relative z-10 max-w-3xl mx-auto text-center px-6"
+              >
+                <motion.h1
+                  className="text-4xl sm:text-5xl lg:text-6xl font-bold text-[#EAEAEA]"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 1.1, delay: 0.1 }}
+                >
+                  Activa tu información.
+                </motion.h1>
+                <motion.p
+                  className="mt-6 text-lg sm:text-xl text-[#EAEAEA]/80"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 1.1, delay: 0.25 }}
+                >
+                  Convierte tus datos en control, planeación y decisiones inteligentes.
+                </motion.p>
+                <motion.div
+                  className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 1.1, delay: 0.4 }}
+                >
+                  <motion.button
+                    onClick={scrollToPayment}
+                    className="bg-[#C9A227] text-[#0A192F] font-semibold rounded-2xl px-8 py-3 shadow-lg hover:scale-105 transition"
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.98 }}
+                  >
+                    Comprar ahora
+                  </motion.button>
+                </motion.div>
+                <motion.p
+                  className="mt-6 text-sm text-[#EAEAEA]/70"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 1.1, delay: 0.55 }}
+                >
+                  Disponible en minutos, sin citas ni configuraciones.
+                </motion.p>
+              </motion.div>
+            </section>
+
+            <section id="soluciones" className="relative py-20">
+              <div className="max-w-6xl mx-auto px-6">
+                <motion.h2
+                  className="text-3xl font-semibold text-center"
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.6 }}
+                >
+                  Construido para tu operación
+                </motion.h2>
+                <motion.p
+                  className="mt-4 text-center text-[#EAEAEA]/70 max-w-2xl mx-auto"
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.6, delay: 0.1 }}
+                >
+                  Diseñado para líderes que necesitan resultados hoy: automatiza, controla y escala sin fricción.
+                </motion.p>
+                <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">
+                  {features.map((feature, index) => (
+                    <motion.div
+                      key={feature.title}
+                      className="rounded-3xl border border-white/10 bg-white/5 p-8 backdrop-blur-sm shadow-lg"
+                      whileHover={{
+                        scale: 1.03,
+                        boxShadow: '0 20px 45px rgba(201, 162, 39, 0.25)',
+                        transition: { type: 'spring', stiffness: 260, damping: 20 },
+                      }}
+                      initial={{ opacity: 0, y: 20 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.5, delay: index * 0.1 }}
+                    >
+                      <div className="text-4xl">{feature.icon}</div>
+                      <h3 className="mt-6 text-xl font-semibold text-[#EAEAEA]">{feature.title}</h3>
+                      <p className="mt-3 text-sm text-[#EAEAEA]/70">{feature.description}</p>
+                    </motion.div>
+                  ))}
+                </div>
+              </div>
+            </section>
+
+            <section id="payment" className="relative py-20">
+              <div className="max-w-4xl mx-auto px-6 text-center">
+                <motion.h2
+                  className="text-3xl font-semibold"
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.6 }}
+                >
+                  Adquiere tu sistema Smart Ink
+                </motion.h2>
+                <motion.p
+                  className="mt-4 text-[#EAEAEA]/70"
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.6, delay: 0.1 }}
+                >
+                  En menos de 3 clics podrás automatizar tu empresa.
+                </motion.p>
+                <div
+                  aria-hidden="true"
+                  className="hidden"
+                  dangerouslySetInnerHTML={{ __html: '<!-- [PAGO_MERCADOPAGO_PLACEHOLDER] -->' }}
+                />
+                <motion.button
+                  onClick={handlePayment}
+                  className="mt-10 bg-[#C9A227] text-[#0A192F] font-semibold rounded-2xl px-8 py-3 shadow-lg hover:scale-105 transition"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.98 }}
+                >
+                  Pagar con Mercado Pago
+                </motion.button>
+                <p className="mt-6 text-sm text-[#EAEAEA]/70">
+                  Tu acceso se activará automáticamente al completar el pago.
+                </p>
+              </div>
+            </section>
+
+            <AnimatePresence>
+              {showActivation && (
+                <motion.section
+                  key="activation"
+                  initial={{ opacity: 0, y: 30 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 30 }}
+                  transition={{ duration: 0.6 }}
+                  className="relative py-16"
+                >
+                  <div className="max-w-3xl mx-auto px-6">
+                    <div
+                      aria-hidden="true"
+                      className="hidden"
+                      dangerouslySetInnerHTML={{ __html: '<!-- [DESCARGA_AUTO_PLACEHOLDER] -->' }}
+                    />
+                    <div className="rounded-3xl border border-white/10 bg-white/5 backdrop-blur-sm p-10 shadow-lg">
+                      <h3 className="text-2xl font-semibold text-center">Activando Smart Ink para tu equipo…</h3>
+                      <div className="mt-8">
+                        <div className="w-full h-3 rounded-full bg-white/10 overflow-hidden">
+                          <motion.div
+                            className="h-full bg-[#C9A227]"
+                            initial={{ width: '0%' }}
+                            animate={{ width: `${progress}%` }}
+                            transition={{ ease: 'easeInOut', duration: 0.6 }}
+                          />
+                        </div>
+                        <ul className="mt-6 space-y-3 text-sm text-[#EAEAEA]/80">
+                          {activationMessages.map((message, index) => (
+                            <motion.li
+                              key={message}
+                              className={messages.includes(message) ? 'text-[#EAEAEA]' : 'text-[#EAEAEA]/50'}
+                              initial={{ opacity: 0, x: -10 }}
+                              animate={{ opacity: messages.includes(message) ? 1 : 0.2, x: messages.includes(message) ? 0 : -10 }}
+                              transition={{ duration: 0.4, delay: index * 0.1 }}
+                            >
+                              {message}
+                            </motion.li>
+                          ))}
+                        </ul>
+                      </div>
+                      {messages.length === activationMessages.length && (
+                        <motion.button
+                          onClick={handleDownload}
+                          className="mt-10 w-full sm:w-auto mx-auto bg-[#C9A227] text-[#0A192F] font-semibold rounded-2xl px-8 py-3 shadow-lg hover:scale-105 transition flex justify-center"
+                          initial={{ opacity: 0, y: 10 }}
+                          animate={{ opacity: 1, y: 0 }}
+                        >
+                          Descargar aplicación
+                        </motion.button>
+                      )}
+                    </div>
+                  </div>
+                </motion.section>
+              )}
+            </AnimatePresence>
+
+            <section id="soporte" className="relative py-20">
+              <div className="max-w-6xl mx-auto px-6 grid gap-10 md:grid-cols-2">
+                <div>
+                  <h3 className="text-2xl font-semibold">Soporte estratégico</h3>
+                  <p className="mt-4 text-sm text-[#EAEAEA]/70">
+                    Acompañamiento continuo, canal directo 24/7 y analistas expertos listos para tus proyectos clave.
+                  </p>
+                  <p className="mt-3 text-sm text-[#EAEAEA]/70">
+                    Guías de auto-implementación, monitoreo de KPIs y recomendaciones en tiempo real para mantener tu operación optimizada.
+                  </p>
+                </div>
+                <div className="rounded-3xl border border-white/10 bg-white/5 p-8 backdrop-blur-sm shadow-lg space-y-4">
+                  <div>
+                    <h4 className="text-sm font-semibold text-[#EAEAEA]/80">Soporte prioritario</h4>
+                    <p className="text-sm text-[#EAEAEA]/60">Canal especializado con tiempo de respuesta promedio de 12 minutos.</p>
+                  </div>
+                  <div>
+                    <h4 className="text-sm font-semibold text-[#EAEAEA]/80">Base de conocimiento</h4>
+                    <p className="text-sm text-[#EAEAEA]/60">Documentación actualizada, guías de solución rápida y videos paso a paso.</p>
+                  </div>
+                  <div>
+                    <h4 className="text-sm font-semibold text-[#EAEAEA]/80">Equipo de expertos</h4>
+                    <p className="text-sm text-[#EAEAEA]/60">Ingenieros de automatización y analistas de datos acompañándote en cada iteración.</p>
+                  </div>
+                </div>
+              </div>
+            </section>
+          </main>
+
+          <footer className="border-t border-[#C9A227]/40 bg-[#051024]">
+            <div className="max-w-6xl mx-auto px-6 py-12 grid gap-6 md:grid-cols-3 text-sm text-[#EAEAEA]/70">
+              <div>© 2025 Smart Ink – Inteligencia Empresarial.</div>
+              <div className="flex flex-col sm:flex-row gap-2 sm:gap-4">
+                <a href="#" className="hover:text-[#EAEAEA] transition">Aviso de Privacidad</a>
+                <a href="#" className="hover:text-[#EAEAEA] transition">Términos de Uso</a>
+                <a href="#soporte" className="hover:text-[#EAEAEA] transition">Soporte</a>
+              </div>
+              <div className="flex items-center gap-4">
+                <a href="#" className="hover:text-[#EAEAEA] transition">LinkedIn</a>
+                <a href="#" className="hover:text-[#EAEAEA] transition">Instagram</a>
+                <a href="#" className="hover:text-[#EAEAEA] transition">Facebook</a>
+              </div>
+            </div>
+          </footer>
+        </div>
+      );
     }
 
-    paymentButton.addEventListener('click', () => {
-      alert('🪙 Pago en desarrollo — integración con Mercado Pago próximamente.'); // [PAGO_MERCADOPAGO_PLACEHOLDER]
-      startActivationSequence();
-    });
-
-    downloadButton.addEventListener('click', () => {
-      alert('Descarga disponible pronto.'); // [DESCARGA_AUTO_PLACEHOLDER]
-    });
+    ReactDOM.render(<App />, document.getElementById('root'));
   </script>
 </body>
 </html>
