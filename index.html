@@ -45,7 +45,7 @@
       <nav class="space-x-6 text-sm uppercase tracking-wider">
         <a href="#inicio" class="hover:text-[#C9A227]">Inicio</a>
         <a href="#soluciones" class="hover:text-[#C9A227]">Soluciones</a>
-        <a href="#soporte" class="hover:text-[#C9A227]">Soporte</a>
+        <a href="#footer" class="hover:text-[#C9A227]">Soporte</a>
         <a href="#comprar" class="text-[#C9A227] font-semibold">Comprar</a>
       </nav>
     </div>
@@ -95,8 +95,42 @@
 
   <div class="max-w-6xl mx-auto px-6 grid md:grid-cols-3 gap-8 text-left">
 
+<style>
+  /* 🌙 Overview card subtle style */
+.overview-card {
+  background: linear-gradient(145deg, #0D1C36 0%, #0A192F 100%);
+  border: 1px solid rgba(201, 162, 39, 0.08);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  transition: all 0.4s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.overview-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(201, 162, 39, 0.25);
+  box-shadow: 0 0 15px rgba(201, 162, 39, 0.15);
+}
+
+.overview-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 200%;
+  height: 100%;
+  background: linear-gradient(120deg, transparent, rgba(201,162,39,0.08), transparent);
+  transition: all 0.8s ease;
+}
+
+.overview-card:hover::before {
+  left: 100%;
+}
+
+</style>
+
     <!-- 1️⃣ Nuestros Servicios -->
-    <div class="bg-[#10213F] rounded-3xl p-8 shadow-lg border border-[#C9A227]/10 hover:scale-[1.02] transition">
+    <div class="overview-card bg-[#10213F] rounded-3xl p-8 shadow-lg border border-[#C9A227]/10 hover:scale-[1.02] transition">
       <div class="text-4xl mb-4">⚙️</div>
       <h3 class="text-xl font-semibold mb-2 text-white">Nuestros Servicios</h3>
       <p class="text-gray-400 mb-6">
@@ -109,7 +143,7 @@
     </div>
 
     <!-- 2️⃣ Sobre Nosotros -->
-    <div class="bg-[#10213F] rounded-3xl p-8 shadow-lg border border-[#C9A227]/10 hover:scale-[1.02] transition">
+    <div class="overview-card bg-[#10213F] rounded-3xl p-8 shadow-lg border border-[#C9A227]/10 hover:scale-[1.02] transition">
       <div class="text-4xl mb-4">🏢</div>
       <h3 class="text-xl font-semibold mb-2 text-white">Sobre Smart Ink</h3>
       <p class="text-gray-400 mb-6">
@@ -122,7 +156,7 @@
     </div>
 
     <!-- 3️⃣ Demo Inteligente possible demo of financial indicators for 3 months, add mail, etc-->
-    <div class="bg-[#10213F] rounded-3xl p-8 shadow-lg border border-[#C9A227]/10 hover:scale-[1.02] transition">
+    <div class="overview-card bg-[#10213F] rounded-3xl p-8 shadow-lg border border-[#C9A227]/10 hover:scale-[1.02] transition">
       <div class="text-4xl mb-4">🎥</div>
       <h3 class="text-xl font-semibold mb-2 text-white">Demo Inteligente</h3>
       <p class="text-gray-400 mb-6">
@@ -144,6 +178,45 @@
   <div class="max-w-6xl mx-auto px-6 grid md:grid-cols-3 gap-10 text-left items-stretch">
 
 <style>
+  .hover-glow {
+    transition: all 0.4s ease;
+  }
+
+  .hover-glow:hover {
+    box-shadow: 0 0 20px rgba(201, 162, 39, 0.25),
+                0 0 60px rgba(201, 162, 39, 0.15);
+    transform: translateY(-4px);
+  }
+
+  /* 🌟 Shimmer effect on footer social icons */
+.footer-icon {
+  position: relative;
+  display: inline-block;
+  color: #C9A227;
+  overflow: hidden;
+  transition: transform 0.3s ease;
+}
+
+.footer-icon::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(120deg, transparent, rgba(255,255,255,0.3), transparent);
+  transition: all 0.6s ease;
+}
+
+.footer-icon:hover {
+  transform: scale(1.1);
+}
+
+.footer-icon:hover::after {
+  left: 100%;
+}
+
+
   .smart-card {
     display: flex;
     flex-direction: column;
@@ -160,7 +233,7 @@
 </style>
 
   <!-- 1️⃣ Facturas -->
-  <div class="smart-card bg-[#10213F] rounded-3xl p-10 shadow-xl border border-[#C9A227]/20 hover:scale-[1.02] transition">
+  <div class="smart-card bg-[#10213F] rounded-3xl p-10 shadow-xl border border-[#C9A227]/20 hover:scale-[1.02] transition hover-glow">
     <div class="flex-grow">
       <div class="text-5xl mb-4">🧾</div>
       <h3 class="text-2xl font-semibold mb-2">Automatización de Facturas y Comprobantes</h3>
@@ -184,7 +257,7 @@
   </div>
 
   <!-- 2️⃣ Indicadores -->
-  <div class="smart-card bg-[#10213F] rounded-3xl p-10 shadow-xl border border-[#C9A227]/20 hover:scale-[1.02] transition">
+  <div class="smart-card bg-[#10213F] rounded-3xl p-10 shadow-xl border border-[#C9A227]/20 hover:scale-[1.02] transition hover-glow">
     <div class="flex-grow">
       <div class="text-5xl mb-4">💹</div>
       <h3 class="text-2xl font-semibold mb-2">Indicadores Financieros y Económicos</h3>
@@ -208,7 +281,7 @@
   </div>
 
   <!-- 3️⃣ NOM -->
-  <div class="smart-card bg-[#10213F] rounded-3xl p-10 shadow-xl border border-[#C9A227]/20 hover:scale-[1.02] transition">
+  <div class="smart-card bg-[#10213F] rounded-3xl p-10 shadow-xl border border-[#C9A227]/20 hover:scale-[1.02] transition hover-glow">
     <div class="flex-grow">
       <div class="text-5xl mb-4">⚖️</div>
       <h3 class="text-2xl font-semibold mb-2">Automatización NOM y Cumplimiento</h3>
@@ -275,14 +348,39 @@
   </div>
 
   <!-- Footer pending social icons-->
-  <footer class="border-t border-[#C9A227]/20 py-10 bg-[#0A192F] text-center text-gray-500 text-sm relative z-10">
-    <p>© 2025 Smart Ink – Inteligencia Empresarial</p>
+  <footer id="footer" class="border-t border-[#C9A227]/20 py-10 bg-[#0A192F] text-center text-gray-400 text-sm relative z-10">
+    <p class="text-[#EAEAEA]">© 2025 Smart Ink – Inteligencia Empresarial</p>
+  
+    <!-- Footer Links -->
     <div class="mt-2 space-x-4">
       <a href="#" class="hover:text-[#C9A227]">Aviso de Privacidad</a>
       <a href="#" class="hover:text-[#C9A227]">Términos de Uso</a>
       <a href="#" class="hover:text-[#C9A227]">Soporte</a>
     </div>
+  
+    <!-- Social Icons -->
+    <div class="flex justify-center mt-6 space-x-6 text-[#C9A227]">
+      <!-- Instagram -->
+      <a href="https://www.instagram.com/smart_ink614?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank" class="footer-icon" aria-label="Instagram">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="w-6 h-6" viewBox="0 0 24 24">
+          <path d="M12 2.2c3.2 0 3.6 0 4.9.1 1.2.1 1.9.3 2.4.6.6.3 1 .7 1.4 1.4.3.5.5 1.2.6 2.4.1 1.3.1 1.7.1 4.9s0 3.6-.1 4.9c-.1 1.2-.3 1.9-.6 2.4-.3.6-.7 1-1.4 1.4-.5.3-1.2.5-2.4.6-1.3.1-1.7.1-4.9.1s-3.6 0-4.9-.1c-1.2-.1-1.9-.3-2.4-.6-.6-.3-1-.7-1.4-1.4-.3-.5-.5-1.2-.6-2.4C2.2 15.6 2.2 15.2 2.2 12s0-3.6.1-4.9c.1-1.2.3-1.9.6-2.4.3-.6.7-1 1.4-1.4.5-.3 1.2-.5 2.4-.6C8.4 2.2 8.8 2.2 12 2.2zm0 1.8c-3.1 0-3.5 0-4.7.1-1 .1-1.5.2-1.9.4-.5.3-.8.6-1 .9-.2.4-.3.9-.4 1.9-.1 1.2-.1 1.6-.1 4.7s0 3.5.1 4.7c.1 1 .2 1.5.4 1.9.3.5.6.8.9 1 .4.2.9.3 1.9.4 1.2.1 1.6.1 4.7.1s3.5 0 4.7-.1c1-.1 1.5-.2 1.9-.4.5-.3.8-.6 1-.9.2-.4.3-.9.4-1.9.1-1.2.1-1.6.1-4.7s0-3.5-.1-4.7c-.1-1-.2-1.5-.4-1.9-.3-.5-.6-.8-.9-1-.4-.2-.9-.3-1.9-.4-1.2-.1-1.6-.1-4.7-.1zm0 3.5a5.5 5.5 0 1 1 0 11 5.5 5.5 0 0 1 0-11zm0 1.8a3.7 3.7 0 1 0 0 7.4 3.7 3.7 0 0 0 0-7.4zm5.8-2.3a1.3 1.3 0 1 1 0 2.6 1.3 1.3 0 0 1 0-2.6z"/>
+        </svg>
+      </a>
+      <!-- Facebook -->
+      <a href="https://www.facebook.com/share/1BadeDfRgd/" target="_blank" class="footer-icon" aria-label="Facebook">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="w-6 h-6" viewBox="0 0 24 24">
+          <path d="M22.675 0H1.325A1.32 1.32 0 0 0 0 1.325v21.351C0 23.406.594 24 1.325 24h11.49V14.708h-3.13v-3.62h3.13V8.41c0-3.1 1.894-4.788 4.66-4.788 1.325 0 2.464.1 2.797.143v3.24h-1.918c-1.505 0-1.797.717-1.797 1.766v2.316h3.59l-.468 3.62h-3.122V24h6.12A1.32 1.32 0 0 0 24 22.675V1.325A1.32 1.32 0 0 0 22.675 0z"/>
+        </svg>
+      </a>
+      <!-- LinkedIn --
+      <a href="https://linkedin.com" target="_blank" class="hover:opacity-80" aria-label="LinkedIn">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="w-6 h-6" viewBox="0 0 24 24">
+          <path d="M22.23 0H1.77C.79 0 0 .8 0 1.78v20.44C0 23.2.79 24 1.77 24h20.46c.98 0 1.77-.8 1.77-1.78V1.78C24 .8 23.21 0 22.23 0zM7.12 20.45H3.56V9h3.56v11.45zM5.34 7.63c-1.14 0-2.06-.93-2.06-2.06S4.2 3.5 5.34 3.5 7.4 4.43 7.4 5.56 6.48 7.63 5.34 7.63zM20.45 20.45h-3.55v-5.59c0-1.33-.02-3.03-1.85-3.03-1.86 0-2.14 1.45-2.14 2.94v5.68h-3.56V9h3.42v1.56h.05c.48-.9 1.65-1.85 3.4-1.85 3.63 0 4.3 2.39 4.3 5.49v6.25z"/>
+        </svg>
+      </a-->
+    </div>
   </footer>
+  
 
   <script>
     const modal = document.getElementById('modal');
