@@ -193,209 +193,75 @@
 
 
   <!-- Services / Solutions Soluciones Inteligentes Smart Ink -->
-<section id="soluciones" class="py-24 bg-[#0A192F] relative z-10 text-center">
-  <h2 class="text-3xl font-bold mb-16 text-white">Soluciones Inteligentes Smart Ink</h2>
-  <div class="max-w-6xl mx-auto px-6 grid md:grid-cols-3 gap-10 text-left items-stretch">
+<!-- Smart Ink HCM Main Product Section -->
+<section id="soluciones" class="py-28 bg-[#0A192F] relative text-center overflow-hidden">
 
 <style>
-  .hover-glow {
-    transition: all 0.4s ease;
-  }
 
-  .hover-glow:hover {
-    box-shadow: 0 0 20px rgba(201, 162, 39, 0.25),
-                0 0 60px rgba(201, 162, 39, 0.15);
-    transform: translateY(-4px);
-  }
-
-  /* 🌟 Shimmer effect on footer social icons */
-.footer-icon {
-  position: relative;
-  display: inline-block;
-  color: #C9A227;
-  overflow: hidden;
-  transition: transform 0.3s ease;
+/* 🌌 Gradient glassy card for HCM */
+.smart-card-hcm {
+  background: linear-gradient(145deg, rgba(13,25,47,0.9) 0%, rgba(10,25,47,0.85) 100%);
+  backdrop-filter: blur(12px);
+  transition: all 0.5s ease;
 }
 
-.footer-icon::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(120deg, transparent, rgba(255,255,255,0.3), transparent);
-  transition: all 0.6s ease;
-}
-
-.footer-icon:hover {
-  transform: scale(1.1);
-}
-
-.footer-icon:hover::after {
-  left: 100%;
+.smart-card-hcm:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 0 40px rgba(201,162,39,0.2);
 }
 
 
-  .smart-card {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    height: 100%;
-    min-height: 640px; /* Same vertical space */
-    line-height: 1.6;
-  }
-  @media (max-width: 1024px) {
-    .smart-card {
-      min-height: auto;
-    }
-  }
-
-  /* 🌈 Gradient depth for main service cards */
-.smart-card {
-  position: relative;
-  background: linear-gradient(145deg, #0C1A33 0%, #0A192F 100%);
-  border: 1px solid rgba(201,162,39,0.15);
-  box-shadow: 0 8px 24px rgba(0,0,0,0.25);
-  transition: all 0.4s ease;
-  overflow: hidden;
-}
-
-.smart-card:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 12px 32px rgba(201,162,39,0.15);
-  border-color: rgba(201,162,39,0.3);
-}
-
-/* ✨ Optional unique gradient accents */
-.smart-card:nth-child(1) {
-  background: linear-gradient(135deg, #10213F 0%, #0A192F 100%);
-}
-.smart-card:nth-child(2) {
-  background: linear-gradient(135deg, #14294C 0%, #0A192F 100%);
-}
-.smart-card:nth-child(3) {
-  background: linear-gradient(135deg, #1B315A 0%, #0A192F 100%);
-}
-
-/* Soft overlay shimmer on hover */
-.smart-card::before {
-  content: "";
-  position: absolute;
-  top: 0; left: -150%;
-  width: 200%; height: 100%;
-  background: linear-gradient(120deg, transparent, rgba(201,162,39,0.08), transparent);
-  transition: all 0.8s ease;
-}
-.smart-card:hover::before {
-  left: 100%;
-}
 </style>
 
-  <!-- 1️⃣ Facturas -->
-  <div class="smart-card bg-[#10213F] rounded-3xl p-10 shadow-xl border border-[#C9A227]/20 hover:scale-[1.02] transition hover-glow">
-    <div class="flex-grow">
-      <div class="text-5xl mb-4">🧾</div>
-      <h3 class="text-2xl font-semibold mb-2">Automatización de Facturas y Comprobantes</h3>
-      <p class="italic text-[#C9A227] mb-4">“Convierte documentos en decisiones.”</p>
-      <p class="text-gray-300 mb-6">
-        Captura automáticamente tus facturas XML, PDF o comprobantes de transferencia. 
-        Extrae datos fiscales, proveedores, montos y conceptos para generar reportes automáticos y tomar decisiones más rápidas.
-      </p>
-      <ul class="text-gray-400 mb-8 list-disc list-inside space-y-1 text-[15px]">
-        <li>📥 Lectura automática desde Google Drive.</li>
-        <li>📊 Exportación a Google Sheets y Airtable.</li>
-        <li>⚙️ Integración directa con tu contabilidad.</li>
-        <li>🔍 Control de IVA, CFDI y deducibles.</li>
-      </ul>
+  <!-- soft glow background -->
+  <div class="absolute inset-0 bg-gradient-to-br from-[#10213F] via-[#0A192F] to-[#0E2244] opacity-90"></div>
+
+  <div class="relative z-10 max-w-6xl mx-auto px-6">
+    <h2 class="text-4xl md:text-6xl font-bold text-white mb-10">Smart Ink HCM</h2>
+    <p class="text-xl text-[#C9A227] italic mb-16">“Gestiona, automatiza y entiende a tu equipo con inteligencia.”</p>
+
+    <!-- Main card -->
+    <div class="smart-card-hcm rounded-[2rem] p-14 text-left text-white mx-auto shadow-2xl border border-[#C9A227]/20 max-w-5xl backdrop-blur-md relative overflow-hidden">
+      
+      <!-- Decorative gradient glow -->
+      <div class="absolute inset-0 bg-gradient-to-tr from-[#C9A227]/10 via-transparent to-[#C9A227]/10 opacity-60"></div>
+
+      <!-- Content -->
+      <div class="relative z-10 grid md:grid-cols-2 gap-12 items-center">
+        
+        <!-- Text -->
+        <div>
+          <h3 class="text-3xl font-semibold mb-4">Human Capital Management Inteligente</h3>
+          <p class="text-gray-300 mb-8 leading-relaxed">
+            Administra tu capital humano con precisión. Desde el control de asistencia hasta la generación de nómina, 
+            Smart Ink HCM integra la información de cada colaborador para ofrecer trazabilidad, cumplimiento y reportes automatizados.
+          </p>
+
+          <ul class="text-gray-400 mb-10 list-disc list-inside space-y-2 text-[15px]">
+            <li>📋 Expedientes digitales y contratos firmados en línea.</li>
+            <li>🕒 Control de asistencia y gestión de horarios inteligentes.</li>
+            <li>💰 Cálculo automático de nómina con deducciones, préstamos y aportaciones.</li>
+            <li>📊 Reportes analíticos de rotación, desempeño y costos laborales.</li>
+            <li>🤖 Integración con IA para generación de reportes y métricas de clima laboral.</li>
+          </ul>
+
+          <a href="#comprar" class="bg-[#C9A227] text-[#0A192F] font-semibold rounded-2xl px-8 py-4 shadow-lg inline-block hover:scale-105 transition">
+            Descubrir HCM
+          </a>
+        </div>
+
+        <!-- Visual -->
+        <div class="flex justify-center items-center relative">
+          <div class="absolute -inset-10 bg-gradient-to-br from-[#C9A227]/10 to-transparent rounded-3xl blur-3xl opacity-50"></div>
+          <img src="https://i.ibb.co/NZMCbwv/dashboard-smartink.png" 
+               alt="Smart Ink HCM Dashboard" 
+               class="relative z-10 w-full rounded-3xl border border-[#C9A227]/20 shadow-2xl opacity-95 hover:scale-[1.02] transition duration-700" />
+        </div>
+      </div>
     </div>
-    <div class="pt-4 flex justify-start">
-      <a href="#comprar" class="bg-[#C9A227] text-[#0A192F] font-semibold rounded-2xl px-6 py-3 shadow-lg hover:scale-105 transition">
-        Probar ahora
-      </a>
-    </div>
   </div>
-
-  <!-- 2️⃣ Indicadores --
-  <div class="smart-card bg-[#10213F] rounded-3xl p-10 shadow-xl border border-[#C9A227]/20 hover:scale-[1.02] transition hover-glow">
-    <div class="flex-grow">
-      <div class="text-5xl mb-4">💹</div>
-      <h3 class="text-2xl font-semibold mb-2">Indicadores Financieros y Económicos</h3>
-      <p class="italic text-[#C9A227] mb-4">“Conoce hoy lo que impactará mañana.”</p>
-      <p class="text-gray-300 mb-6">
-        Conecta con la API de Banxico y obtén actualizaciones automáticas del tipo de cambio, inflación, UDIS, TIIE, CETES y más.  
-        Visualiza tus métricas en tiempo real y mejora tu planeación financiera sin esfuerzo.
-      </p>
-      <ul class="text-gray-400 mb-8 list-disc list-inside space-y-1 text-[15px]">
-        <li>💱 Tipos de cambio y tasas actualizadas a diario.</li>
-        <li>📈 Tablero de indicadores económicos clave.</li>
-        <li>📤 Envío de reportes automáticos por correo.</li>
-        <li>🧮 Integración con dashboards financieros.</li>
-      </ul>
-    </div>
-    <div class="pt-4 flex justify-start">
-      <a href="#comprar" class="bg-[#C9A227] text-[#0A192F] font-semibold rounded-2xl px-6 py-3 shadow-lg hover:scale-105 transition">
-        Más información
-      </a>
-    </div>
-  </div-->
-
-  <!-- Smart Ink HRM -->
-<div class="hover-glow smart-card bg-[#10213F] rounded-3xl p-10 shadow-xl border border-[#C9A227]/20 hover:scale-[1.02] transition">
-  <div class="flex-grow">
-    <div class="text-5xl mb-4">👥</div>
-    <h3 class="text-2xl font-semibold mb-2">Smart Ink HRM</h3>
-    <p class="italic text-[#C9A227] mb-4">“Gestiona tu equipo con inteligencia y precisión.”</p>
-    <p class="text-gray-300 mb-6">
-      Centraliza toda la información de tu personal: asistencia, nómina, contratos, deducciones y movimientos.
-      El sistema HRM de Smart Ink automatiza tareas administrativas, garantiza trazabilidad y 
-      genera reportes listos para la toma de decisiones.
-    </p>
-    <ul class="text-gray-400 mb-8 list-disc list-inside space-y-1 text-[15px]">
-      <li>🕒 Control automático de asistencia y permisos.</li>
-      <li>💰 Cálculo de nómina con descuentos y aportaciones.</li>
-      <li>📑 Expedientes digitales y contratos firmados en línea.</li>
-      <li>📊 Reportes de rotación, ausentismo y costos laborales.</li>
-    </ul>
-  </div>
-  <div class="pt-4 flex justify-start">
-    <a href="#comprar" class="bg-[#C9A227] text-[#0A192F] font-semibold rounded-2xl px-6 py-3 shadow-lg hover:scale-105 transition">
-      Ver sistema HRM
-    </a>
-  </div>
-</div>
-
-<!-- Indicadores Financieros Inteligentes -->
-<div class="hover-glow smart-card bg-[#10213F] rounded-3xl p-10 shadow-xl border border-[#C9A227]/20 hover:scale-[1.02] transition">
-  <div class="flex-grow">
-    <div class="text-5xl mb-4">📈</div>
-    <h3 class="text-2xl font-semibold mb-2">Indicadores Financieros Inteligentes</h3>
-    <p class="italic text-[#C9A227] mb-4">“Transforma datos económicos en decisiones estratégicas.”</p>
-    <p class="text-gray-300 mb-6">
-      Conecta con fuentes oficiales como Banxico y otras bases históricas para visualizar 
-      la evolución de los principales indicadores financieros de México. 
-      Combina datos diarios con series históricas para análisis y planeación a largo plazo.
-    </p>
-    <ul class="text-gray-400 mb-8 list-disc list-inside space-y-1 text-[15px]">
-      <li>📊 Indicadores diarios y registros históricos desde 1993.</li>
-      <li>💱 Tipos de cambio, tasas, UDIS, inflación y más.</li>
-      <li>📈 Dashboards automatizados con comparativas anuales.</li>
-      <li>📤 Exportación a Google Sheets, Excel y Airtable.</li>
-    </ul>
-  </div>
-  <div class="pt-4 flex justify-start">
-    <a href="#comprar" class="bg-[#C9A227] text-[#0A192F] font-semibold rounded-2xl px-6 py-3 shadow-lg hover:scale-105 transition">
-      Explorar Indicadores
-    </a>
-  </div>
-</div>
-
-
-
-
-
-</div>
 </section>
+
 
 
 
