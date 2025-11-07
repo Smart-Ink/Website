@@ -319,45 +319,7 @@
 </section>
 
 
-<section id="MLdemoplaceholder">
-  <!-- Payment Section Adquiere tu sistema Smart Ink --
-  <section id="comprar" class="py-24 bg-[#0B1E3A] text-center relative z-10">
-    <h2 class="text-3xl font-bold mb-4">Adquiere tu sistema Smart Ink</h2>
-    <p class="text-gray-400 mb-10">En menos de 3 clics podrás automatizar tu empresa.</p>
 
-    <button id="openModal"
-            class="bg-[#C9A227] text-[#0A192F] font-semibold rounded-2xl px-8 py-4 shadow-lg hover:scale-105 transition">
-      Pagar con Mercado Pago
-    </button>
-    <p class="mt-4 text-sm text-gray-400">Tu acceso se activará automáticamente al completar el pago.</p>
-
-    -- Activation Placeholder --
-    <div id="activation" class="hidden mt-12 max-w-md mx-auto text-center">
-      <div class="w-full bg-gray-800 h-3 rounded-full mb-4">
-        <div id="progressBar" class="bg-[#C9A227] h-3 rounded-full transition-all duration-500" style="width: 0%"></div>
-      </div>
-      <p id="phaseText" class="mb-6 text-gray-300">Verificando pago…</p>
-      <button id="downloadBtn"
-              class="hidden bg-[#C9A227] text-[#0A192F] font-semibold rounded-2xl px-8 py-4 shadow-lg hover:scale-105 transition">
-        Descargar aplicación
-      </button>
-    </div>
-  </section>
-
-  -- Modal ML popup--
-  <div id="modal" class="hidden fixed inset-0 flex items-center justify-center modal-bg z-50">
-    <div class="bg-[#0B1E3A] rounded-2xl p-8 max-w-sm w-full border border-[#C9A227]/30 shadow-2xl text-center fade-in">
-      <h3 class="text-xl font-semibold mb-4 text-[#C9A227]">Mercado Pago (Simulado)</h3>
-      <p class="text-gray-300 mb-6">Sistema Smart Ink Empresarial</p>
-      <p class="text-3xl font-bold mb-6 text-white">$999 MXN</p>
-      <button id="confirmPay"
-              class="bg-[#C9A227] text-[#0A192F] font-semibold rounded-2xl px-8 py-3 shadow-lg w-full mb-3 hover:scale-105 transition">
-        Confirmar pago
-      </button>
-      <button id="cancelPay" class="text-gray-400 hover:text-white text-sm">Cancelar</button>
-    </div>
-  </div-->
-  </section>
 
   <!--new ML modal-->
 <!-- 🌟 SIMPLE PAYMENT ENTRY AREA WITH GOLD PULSE -->
@@ -489,6 +451,7 @@
     }, 2500);
   });
 </script>
+<!--end new ml payment modal-->
 
 <style>
 @keyframes fadeIn { from {opacity:0; transform:scale(.97);} to {opacity:1; transform:scale(1);} }
@@ -496,7 +459,101 @@
 </style>
 
 
+<!--Beneficios-->
+<section class="py-16 px-6 bg-[#0D1C33] text-white text-center">
+  <h2 class="text-3xl font-semibold mb-8 text-[#C9A227]">Beneficios de Smart Ink</h2>
+  <div class="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+    <div class="p-6 bg-[#13233F] rounded-2xl shadow">
+      <h3 class="text-xl font-semibold mb-2 text-[#C9A227]">Automatización total</h3>
+      <p class="text-gray-300">Procesa facturas, reportes y documentos sin mover un dedo.</p>
+    </div>
+    <div class="p-6 bg-[#13233F] rounded-2xl shadow">
+      <h3 class="text-xl font-semibold mb-2 text-[#C9A227]">Acceso inmediato</h3>
+      <p class="text-gray-300">Tus datos siempre disponibles, en tiempo real.</p>
+    </div>
+    <div class="p-6 bg-[#13233F] rounded-2xl shadow">
+      <h3 class="text-xl font-semibold mb-2 text-[#C9A227]">Seguridad y respaldo</h3>
+      <p class="text-gray-300">Información cifrada y respaldada automáticamente.</p>
+    </div>
+  </div>
+</section>
+<!--end Beneficios-->
 
+<!--FAQs-->
+<section class="py-16 px-6 bg-[#0A192F] text-white">
+  <h2 class="text-3xl font-semibold mb-8 text-center text-[#C9A227]">Preguntas frecuentes</h2>
+  <div class="max-w-3xl mx-auto space-y-6 text-left">
+    <details class="bg-[#13233F] p-4 rounded-lg">
+      <summary class="font-semibold cursor-pointer">¿Qué necesito para acceder a Smart Ink?</summary>
+      <p class="mt-2 text-gray-300">Solo el correo con el que realizaste tu compra o registro. Te enviaremos un enlace de acceso.</p>
+    </details>
+    <details class="bg-[#13233F] p-4 rounded-lg">
+      <summary class="font-semibold cursor-pointer">¿Puedo cambiar mi correo o contraseña?</summary>
+      <p class="mt-2 text-gray-300">Sí, desde tu panel de usuario puedes actualizar tus datos en cualquier momento.</p>
+    </details>
+    <details class="bg-[#13233F] p-4 rounded-lg">
+      <summary class="font-semibold cursor-pointer">¿Cuánto tarda en llegar mi acceso?</summary>
+      <p class="mt-2 text-gray-300">Generalmente menos de un minuto. Si no lo ves, revisa tu carpeta de spam o promociones.</p>
+    </details>
+  </div>
+</section>
+<!--end FAQs-->
+
+
+
+
+<!--Recover Access Section-->
+<section id="acceso" class="py-16 px-6 text-center bg-[#0A192F] text-white">
+  <h2 class="text-3xl font-semibold mb-4 text-[#C9A227]">✨ Accede a Smart Ink</h2>
+  <p class="text-gray-300 mb-6 max-w-xl mx-auto">
+    Ingresa el correo con el que realizaste tu compra.  
+    Si encontramos tu acceso, te enviaremos un enlace seguro a tu correo.
+  </p>
+
+  <form id="accesoForm" class="max-w-md mx-auto">
+    <input type="email" id="email" placeholder="tu@email.com" required
+           class="w-full p-3 rounded-lg bg-[#13233F] text-white border border-[#C9A227]/40 focus:border-[#C9A227] mb-4 transition" />
+    <button type="submit"
+            class="w-full bg-[#C9A227] text-[#0A192F] font-semibold py-3 rounded-lg hover:bg-[#E0B945] transition">
+      Enviar enlace de acceso
+    </button>
+  </form>
+
+  <div id="estado" class="mt-6 text-sm text-gray-400"></div>
+</section>
+
+<script>
+  const form = document.getElementById("accesoForm");
+  const estado = document.getElementById("estado");
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const email = document.getElementById("email").value.trim();
+    if (!email) return;
+
+    estado.innerHTML = "⏳ Verificando tu información...";
+    try {
+      const res = await fetch("https://smartink.app.n8n.cloud/webhook-test/access-link", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+
+      estado.innerHTML = "📨 Enviando tu enlace de acceso...";
+      const data = await res.json();
+
+      if (data.success) {
+        estado.innerHTML = "✅ " + (data.message || "Hemos enviado tu enlace de acceso a tu correo.");
+      } else {
+        estado.innerHTML = "⚠️ " + (data.message || "No pudimos encontrar tu acceso. Verifica tu correo o contacta soporte.");
+      }
+    } catch (error) {
+      estado.innerHTML = "❌ Ocurrió un error. Intenta nuevamente más tarde.";
+    }
+  });
+</script>
+
+<!--rend reocver access section-->
 
 <style>
   /* 🌟 Contact Section Styling */
