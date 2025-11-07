@@ -1,0 +1,61 @@
+{
+  "name": "Smart Ink Website",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "access-link",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "5029a44d-712d-4281-bd68-c70c1eee2ba0",
+      "name": "Webhook",
+      "webhookId": "b88dc936-d975-4e64-86d5-0065fe8821bd"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "{\n  \"success\": true,\n  \"message\": \"¡Listo! Te enviamos tu enlace de acceso por correo. 📩!\"\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        208,
+        0
+      ],
+      "id": "87b93468-4678-4cde-9f0c-fee36d80b4ec",
+      "name": "Respond to Webhook"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "cac6548e-404e-44f1-8d6a-49dd365bc28a",
+  "meta": {
+    "instanceId": "adfde71eef082cf6715e5920631be4dd72ca5db84b2a0054e71e3b59cfd2b90e"
+  },
+  "id": "jw2IXxg9J1ZWz0fs",
+  "tags": []
+}
