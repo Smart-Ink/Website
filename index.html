@@ -51,12 +51,12 @@
 
     <!-- Navigation -->
     <nav class="hidden md:flex items-center space-x-8">
-      <a href="#overview" class="text-gray-300 hover:text-[#C9A227] transition">Inicio</a>
-      <a href="#soluciones" class="text-gray-300 hover:text-[#C9A227] transition">Servicios</a>
-      <a href="#footer" class="text-gray-300 hover:text-[#C9A227] transition">Contacto</a>
+      <a href="#inicio" class="text-gray-300 hover:text-[#C9A227] transition">Inicio</a>
+      <a href="#productos" class="text-gray-300 hover:text-[#C9A227] transition">Servicios</a>
+      <a href="#contacto" class="text-gray-300 hover:text-[#C9A227] transition">Contacto</a>
 
       <!-- Comprar button -->
-      <a href="#comprar"
+      <a href="#productos"
          class="text-[#EAEAEA] font-semibold border border-gray-500/40 bg-gradient-to-b from-[#bfbfbf]/20 to-[#999]/10 rounded-xl px-5 py-2.5 shadow-md hover:shadow-lg hover:scale-105 transition-all duration-300">
         Comprar
       </a>
@@ -80,7 +80,7 @@
       <p class="text-lg md:text-xl mb-8 text-gray-300">
         Convierte tus datos en control, planeación y decisiones inteligentes.
       </p>
-      <a href="#comprar"
+      <a href="#productos"
          class="bg-[#C9A227] text-[#0A192F] font-semibold rounded-2xl px-8 py-4 shadow-lg inline-block hover:scale-105 transition">
          Comprar ahora
       </a>
@@ -158,7 +158,7 @@
         Conoce las soluciones que automatizan tu empresa: desde la lectura de facturas hasta los indicadores financieros 
         y el cumplimiento de normas empresariales, todo con un solo sistema inteligente.
       </p>
-      <a href="#soluciones" class="bg-[#C9A227] text-[#0A192F] font-semibold rounded-2xl px-5 py-2.5 shadow-lg hover:scale-105 transition">
+      <a href="#productos" class="bg-[#C9A227] text-[#0A192F] font-semibold rounded-2xl px-5 py-2.5 shadow-lg hover:scale-105 transition">
         Ver servicios
       </a>
     </div>
@@ -171,7 +171,7 @@
         Somos una empresa mexicana de inteligencia empresarial que convierte datos en decisiones. 
         Creamos sistemas automatizados que brindan control, planeación y visión a negocios modernos.
       </p>
-      <a href="about.html" class="bg-[#C9A227] text-[#0A192F] font-semibold rounded-2xl px-5 py-2.5 shadow-lg hover:scale-105 transition">
+      <a href="#contacto" class="bg-[#C9A227] text-[#0A192F] font-semibold rounded-2xl px-5 py-2.5 shadow-lg hover:scale-105 transition">
         Conócenos
       </a>
     </div>
@@ -348,7 +348,7 @@
 
 
 <!--Beneficios-->
-<section class="py-16 px-6 bg-[#0D1C33] text-white text-center">
+<!--section class="py-16 px-6 bg-[#0D1C33] text-white text-center">
   <h2 class="text-3xl font-semibold mb-8 text-[#C9A227]">Beneficios de Smart Ink</h2>
   <div class="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
     <div class="p-6 bg-[#13233F] rounded-2xl shadow">
@@ -364,11 +364,11 @@
       <p class="text-gray-300">Información cifrada y respaldada automáticamente.</p>
     </div>
   </div>
-</section>
+</section-->
 <!--end Beneficios-->
 
 <!--FAQs-->
-<section class="py-16 px-6 bg-[#0A192F] text-white">
+<!--section class="py-16 px-6 bg-[#0A192F] text-white">
   <h2 class="text-3xl font-semibold mb-8 text-center text-[#C9A227]">Preguntas frecuentes</h2>
   <div class="max-w-3xl mx-auto space-y-6 text-left">
     <details class="bg-[#13233F] p-4 rounded-lg">
@@ -384,7 +384,7 @@
       <p class="mt-2 text-gray-300">Generalmente menos de un minuto. Si no lo ves, revisa tu carpeta de spam o promociones.</p>
     </details>
   </div>
-</section>
+</section-->
 <!--end FAQs-->
 
 
@@ -549,15 +549,130 @@
 
 
   <!-- Footer-->
-<footer id="footer" class="bg-[#0A192F] text-gray-400 text-sm border-t border-[#C9A227]/20">
-  <div class="max-w-6xl mx-auto px-6 py-6 flex flex-col md:flex-row justify-between items-center text-center md:text-left">
-    <p class="text-[#EAEAEA] mb-3 md:mb-0">© 2025 Smart Ink – Inteligencia Empresarial</p>
-    <div class="space-x-4">
-      <a href="#" class="hover:text-[#C9A227]">Aviso de Privacidad</a>
-      <a href="#" class="hover:text-[#C9A227]">Términos de Uso</a>
+<!-- FOOTER LINKS -->
+<footer class="text-center text-sm text-gray-400 py-6">
+  <p>
+    © 2025 Smart Ink — 
+    <a href="#" class="text-gold hover:underline" onclick="openModal('termsModal')">Términos y Condiciones</a> |
+    <a href="#" class="text-gold hover:underline" onclick="openModal('privacyModal')">Política de Privacidad</a>
+  </p>
+</footer>
+
+<!-- TERMS MODAL -->
+<div id="termsModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black bg-opacity-70 backdrop-blur-sm">
+  <div class="bg-[#0A192F] text-gray-100 rounded-2xl shadow-2xl max-w-3xl mx-auto p-8 relative overflow-y-auto max-h-[85vh]">
+    <button class="absolute top-4 right-4 text-gray-400 hover:text-gold text-2xl" onclick="closeModal('termsModal')">&times;</button>
+    <h2 class="text-2xl font-semibold text-gold mb-4">Términos y Condiciones</h2>
+    <div class="space-y-4 text-sm leading-relaxed">
+      <p><strong>Última actualización:</strong> 11 de noviembre de 2025</p>
+      <p>TÉRMINOS Y CONDICIONES (ESPAÑOL)
+
+        **Última actualización:** 11 de noviembre de 2025
+        
+        Bienvenido a **Smart Ink**. Al acceder y utilizar nuestros servicios, aceptas los presentes **Términos y Condiciones**. Si no estás de acuerdo, te pedimos no continuar usando la plataforma.
+        
+        ### 1. Uso del sitio y servicios
+        
+        Smart Ink proporciona soluciones de automatización, inteligencia artificial y análisis de datos para empresas. El uso de estos servicios implica el cumplimiento de todas las leyes aplicables y el respeto a los derechos de terceros.
+        
+        ### 2. Propiedad intelectual
+        
+        Todo el contenido de este sitio, incluyendo logotipos, diseños, textos, software, imágenes y marcas registradas, pertenece a Smart Ink o a sus licenciantes. Queda prohibida su reproducción, modificación o distribución sin autorización expresa.
+        
+        ### 3. Registro y cuentas
+        
+        Al crear una cuenta, garantizas que la información proporcionada es veraz y actualizada. Eres responsable de mantener la confidencialidad de tus credenciales y de todas las actividades realizadas con tu cuenta.
+        
+        ### 4. Limitación de responsabilidad
+        
+        Smart Ink no se hace responsable de pérdidas o daños derivados del uso de nuestros servicios, interrupciones, errores o imposibilidad de acceso. Nos reservamos el derecho de modificar o suspender funcionalidades sin previo aviso.
+        
+        ### 5. Precios y pagos
+        
+        Los precios y condiciones de contratación pueden variar sin previo aviso. Todas las transacciones se realizan de forma segura mediante plataformas autorizadas (por ejemplo, Mercado Pago).
+        
+        ### 6. Modificaciones
+        
+        Smart Ink se reserva el derecho de actualizar estos términos en cualquier momento. Las modificaciones entrarán en vigor al publicarse en esta misma página.
+        
+        ### 7. Ley aplicable
+        
+        Estos términos se regirán por las leyes de México. Cualquier controversia será resuelta ante los tribunales competentes de la Ciudad de México.</p>
     </div>
   </div>
-</footer>
+</div>
+
+<!-- PRIVACY MODAL -->
+<div id="privacyModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black bg-opacity-70 backdrop-blur-sm">
+  <div class="bg-[#0A192F] text-gray-100 rounded-2xl shadow-2xl max-w-3xl mx-auto p-8 relative overflow-y-auto max-h-[85vh]">
+    <button class="absolute top-4 right-4 text-gray-400 hover:text-gold text-2xl" onclick="closeModal('privacyModal')">&times;</button>
+    <h2 class="text-2xl font-semibold text-gold mb-4">Política de Privacidad</h2>
+    <div class="space-y-4 text-sm leading-relaxed">
+      <p><strong>Última actualización:</strong> 11 de noviembre de 2025</p>
+      <p>POLÍTICA DE PRIVACIDAD (ESPAÑOL)
+
+        **Última actualización:** 11 de noviembre de 2025
+        
+        En **Smart Ink**, respetamos tu privacidad y nos comprometemos a proteger tus datos personales conforme a la **Ley Federal de Protección de Datos Personales en Posesión de los Particulares (LFPDPPP)**.
+        
+        ### 1. Datos que recopilamos
+        
+        Recopilamos información que nos proporcionas directamente (nombre, correo, empresa, teléfono) y datos derivados del uso del sitio (cookies, IP, comportamiento de navegación).
+        
+        ### 2. Finalidad del tratamiento
+        
+        Los datos se utilizan para:
+        
+        * Proporcionar y mejorar nuestros servicios.
+        * Gestionar la relación comercial y de soporte.
+        * Enviar comunicaciones informativas o promocionales (previa autorización).
+        
+        ### 3. Protección de la información
+        
+        Implementamos medidas técnicas y administrativas para proteger los datos contra pérdida, acceso no autorizado, alteración o divulgación.
+        
+        ### 4. Derechos ARCO
+        
+        Puedes ejercer tus derechos de **Acceso, Rectificación, Cancelación u Oposición (ARCO)** enviando una solicitud a:
+        📧 **[privacidad@smartink.mx](mailto:privacidad@smartink.mx)**
+        
+        ### 5. Cookies
+        
+        Nuestro sitio puede utilizar cookies para mejorar la experiencia del usuario. Puedes desactivarlas desde tu navegador, aunque algunas funciones podrían verse afectadas.
+        
+        ### 6. Transferencia de datos
+        
+        No compartimos tus datos personales con terceros, salvo requerimiento legal o para cumplir con servicios contratados bajo acuerdos de confidencialidad.
+        
+        ### 7. Cambios en la política
+        
+        Smart Ink podrá modificar esta política en cualquier momento. Te recomendamos revisar periódicamente esta sección.</p>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL SCRIPT -->
+<script>
+  function openModal(id) {
+    const modal = document.getElementById(id);
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+    modal.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 300 });
+  }
+  function closeModal(id) {
+    const modal = document.getElementById(id);
+    modal.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 300 }).onfinish = () => {
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    };
+  }
+</script>
+
+<style>
+  .text-gold { color: #C9A227; }
+  .hover\:text-gold:hover { color: #C9A227; }
+</style>
+
 
 
   
