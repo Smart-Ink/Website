@@ -195,128 +195,67 @@
 
   <!-- Services / Solutions Soluciones Inteligentes Smart Ink -->
 <!-- Smart Ink HCM Main Product Section -->
-<section id="soluciones" class="py-28 bg-[#0A192F] relative text-center overflow-hidden">
+<section id="productos" class="bg-[#0A192F] text-white py-24 px-6 md:px-16">
+  <div class="max-w-7xl mx-auto text-center mb-16">
+    <h2 class="text-4xl md:text-5xl font-bold mb-4 text-[#C9A227]">Soluciones Smart Ink</h2>
+    <p class="text-gray-300 text-lg md:text-xl">
+      Automatiza tus operaciones y convierte la información en decisiones estratégicas.
+    </p>
+  </div>
 
-<style>
-
-/* 🌌 Gradient glassy card for HCM */
-.smart-card-hcm {
-  background: linear-gradient(145deg, rgba(13,25,47,0.9) 0%, rgba(10,25,47,0.85) 100%);
-  backdrop-filter: blur(12px);
-  transition: all 0.5s ease;
-}
-
-.smart-card-hcm:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 0 40px rgba(201,162,39,0.2);
-}
-
-/* ✨ Motion reveal base states */
-.reveal-up {
-  opacity: 0;
-  transform: translateY(40px);
-  transition: all 1s cubic-bezier(0.19, 1, 0.22, 1);
-}
-.reveal-right {
-  opacity: 0;
-  transform: translateX(80px);
-  transition: all 1s cubic-bezier(0.19, 1, 0.22, 1);
-}
-
-/* When revealed */
-.reveal-visible {
-  opacity: 1;
-  transform: translate(0, 0);
-}
-
-/* 🧊 Liquid glass surface */
-.smart-card-hcm {
-  background: linear-gradient(145deg, rgba(20,32,60,0.6), rgba(10,25,47,0.5));
-  backdrop-filter: blur(20px) saturate(180%);
-  -webkit-backdrop-filter: blur(20px) saturate(180%);
-  border: 1px solid rgba(255,255,255,0.1);
-  overflow: hidden;
-  position: relative;
-  transition: all 0.6s ease;
-}
-
-/* Dynamic shimmer */
-.smart-card-hcm::after {
-  content: "";
-  position: absolute;
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
-  background: radial-gradient(
-    circle at 30% 30%,
-    rgba(255,255,255,0.06),
-    transparent 60%
-  );
-  transform: rotate(15deg);
-  animation: shimmerMove 10s infinite linear;
-  pointer-events: none;
-}
-
-@keyframes shimmerMove {
-  0%   { transform: translate(0,0) rotate(15deg); }
-  50%  { transform: translate(20px,20px) rotate(15deg); }
-  100% { transform: translate(0,0) rotate(15deg); }
-}
-
-/* Subtle glow on hover */
-.smart-card-hcm:hover {
-  box-shadow: 0 0 50px rgba(201,162,39,0.25);
-}
-
-
-</style>
-
-  <!-- soft glow background -->
-  <div class="absolute inset-0 bg-gradient-to-br from-[#10213F] via-[#0A192F] to-[#0E2244] opacity-90"></div>
-
-  <div class="relative z-10 max-w-6xl mx-auto px-6">
-    <h2 class="text-6xl md:text-6xl font-bold text-white mb-10">Smart Ink HCM</h2>
-    <p class="text-3xl text-[#C9A227] italic mb-16">“Administra tu capital humano con precisión.”</p>
-
-    <!-- Main card -->
-    <div class="smart-card-hcm rounded-[2rem] p-14 text-left text-white mx-auto shadow-2xl border border-[#C9A227]/20 max-w-5xl backdrop-blur-md relative overflow-hidden">
-      
-      <!-- Decorative gradient glow -->
-      <div class="absolute inset-0 bg-gradient-to-tr from-[#C9A227]/10 via-transparent to-[#C9A227]/10 opacity-60"></div>
-
-      <!-- Content -->
-      <div class="relative z-10 grid md:grid-cols-2 gap-12 items-center">
-        
-        <!-- Text -->
-        <div class="reveal-up">
-          <h3 class="text-3xl font-semibold mb-4">Human Capital Management Inteligente</h3>
-          
-          <ul class="text-slate-300 mb-10 list-disc list-inside space-y-2 text-[15px]">
-            <li>📋 Automatización de contratos y expedientes inteligentes.</li>
-            <li>📋 Expedientes digitales y contratos firmados en línea.</li>
-            <li>🕒 Control de asistencia y gestión de horarios inteligentes.</li>
-            <li>💰 Cálculo automático de nómina con deducciones, préstamos y aportaciones.</li>
-            <li>📊 Reportes analíticos de rotación, desempeño y costos laborales.</li>
-            <li>🤖 Integración con IA para generación de reportes y métricas de clima laboral.</li>
-          </ul>
-
-          <a href="#comprar" class="bg-[#C9A227] text-[#0A192F] font-semibold rounded-2xl px-8 py-4 shadow-lg inline-block hover:scale-105 transition">
-            Descubrir HCM
-          </a>
+  <div class="grid md:grid-cols-2 gap-8">
+    <!-- HCM -->
+    <div class="group relative bg-[#10243A] p-10 rounded-2xl shadow-lg border border-[#1B2E4A] transition-all duration-500 hover:border-[#C9A227] hover:shadow-[0_0_25px_rgba(201,162,39,0.3)]">
+      <div class="flex flex-col items-center text-center h-full">
+        <div class="mb-6">
+          <div class="text-5xl mb-4">🧠</div>
+          <h3 class="text-2xl md:text-3xl font-semibold text-[#C9A227]">Smart Ink HCM</h3>
+          <p class="italic text-gray-400 mt-2">“Automatiza el ciclo completo del talento humano.”</p>
         </div>
 
-        <!-- Visual -->
-        <div class="reveal-right flex justify-center items-center relative">
-          <div class="absolute -inset-10 bg-gradient-to-br from-[#C9A227]/10 to-transparent rounded-3xl blur-3xl opacity-50"></div>
-          <img src="HCM.png" 
-               alt="Smart Ink HCM Dashboard" 
-               class="relative z-10 w-full rounded-3xl border border-[#C9A227]/20 shadow-2xl opacity-95 hover:scale-[1.02] transition duration-700" />
+        <ul class="text-left text-gray-300 space-y-2">
+          <li>• Expedientes digitales y contratos automatizados</li>
+          <li>• Control de asistencia con QR y generación de nómina</li>
+          <li>• Altas, bajas y actualizaciones del personal</li>
+          <li>• Cumplimiento NOM-035 y reportes inteligentes</li>
+          <li>• Dashboard para decisiones de RH</li>
+        </ul>
+
+        <div class="mt-8">
+          <a href="/hcm" class="inline-block bg-[#C9A227] text-[#0A192F] font-semibold px-6 py-3 rounded-xl transition-all duration-300 hover:bg-[#d9b64f] hover:shadow-[0_0_20px_rgba(201,162,39,0.5)]">
+            Explorar HCM
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- SRM -->
+    <div class="group relative bg-[#121A24] p-10 rounded-2xl shadow-lg border border-[#1B2E4A] transition-all duration-500 hover:border-[#C9A227] hover:shadow-[0_0_25px_rgba(201,162,39,0.3)]">
+      <div class="flex flex-col items-center text-center h-full">
+        <div class="mb-6">
+          <div class="text-5xl mb-4">🤝</div>
+          <h3 class="text-2xl md:text-3xl font-semibold text-[#C9A227]">Smart Ink SRM</h3>
+          <p class="italic text-gray-400 mt-2">“Controla tus relaciones con proveedores a través de tus facturas.”</p>
+        </div>
+
+        <ul class="text-left text-gray-300 space-y-2">
+          <li>• Lectura automática de facturas XML / PDF</li>
+          <li>• Extracción de datos clave (RFC, monto, IVA, fecha, UUID, etc.)</li>
+          <li>• Clasificación por proveedor, proyecto o centro de costo</li>
+          <li>• Reportes de flujo de gastos y cuentas por pagar</li>
+          <li>• Integración con Google Sheets / Airtable</li>
+        </ul>
+
+        <div class="mt-8">
+          <a href="/srm" class="inline-block bg-[#C9A227] text-[#0A192F] font-semibold px-6 py-3 rounded-xl transition-all duration-300 hover:bg-[#d9b64f] hover:shadow-[0_0_20px_rgba(201,162,39,0.5)]">
+            Explorar SRM
+          </a>
         </div>
       </div>
     </div>
   </div>
 </section>
+
 
 
 
