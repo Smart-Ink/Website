@@ -375,7 +375,7 @@
       <p class="text-lg md:text-xl mb-8 text-gray-300">
         Convierte tus datos en control, planeación y decisiones inteligentes.
       </p>
-        <button type="button" id="access-dashboard-btn" class="si-btn si-btn-primary">
+        <button type="button" data-access-dashboard="true" class="si-btn si-btn-primary">
     Accede a tu panel
   </button>
 
@@ -515,8 +515,8 @@
           </ul>
   
           <div class="mt-8">
- <button type="button" id="access-dashboard-btn" class="si-btn si-btn-primary">
-    Accede a tu panel
+ <button type="button" data-access-dashboard="true" class="si-btn si-btn-primary">
+    Comprar desde tu Panel
   </button>
           </div>
         </div>
@@ -540,8 +540,8 @@
           </ul>
   
           <div class="mt-8">
-              <button type="button" id="access-dashboard-btn" class="si-btn si-btn-primary">
-    Accede a tu panel
+              <button type="button" data-access-dashboard="true" class="si-btn si-btn-primary">
+    Comprar desde tu Panel
   </button>
           </div>
         </div>
@@ -605,7 +605,7 @@
  Centraliza tus módulos HCM, SRM y más en un solo panel.
   </p>
 
-  <button type="button" id="access-dashboard-btn" class="si-btn si-btn-primary">
+  <button type="button" data-access-dashboard="true" class="si-btn si-btn-primary">
     Accede a tu panel
   </button>
 
@@ -857,19 +857,23 @@
       }
     }
 
-    // ---- Header / acceso CTA ----
-    const accesoBtn = document.getElementById("access-dashboard-btn");
-    if (accesoBtn) {
-      accesoBtn.addEventListener("click", async () => {
-        const { data: { user } } = await supabase.auth.getUser();
-        if (user) {
-          siGoToDashboard();
-        } else {
-          siPostLoginAction = "dashboard";
-          siOpenAuthModal(true);
-        }
-      });
-    }
+
+// Todos los botones que deben llevar al panel / abrir login
+const accessButtons = document.querySelectorAll("[data-access-dashboard]");
+if (accessButtons.length > 0) {
+  accessButtons.forEach((btn) => {
+    btn.addEventListener("click", async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        siGoToDashboard();
+      } else {
+        siPostLoginAction = "dashboard";
+        siOpenAuthModal(true);
+      }
+    });
+  });
+}
+
 
     const fallbackAuthBtn = document.getElementById("fallback-auth-btn");
     if (fallbackAuthBtn) {
