@@ -509,6 +509,7 @@
   </div>
 </div>
 
+
 <!-- ============================
      LÓGICA SUPABASE / DASHBOARD
      ============================ -->
@@ -518,8 +519,10 @@
   const SUPABASE_URL = "https://xjkpyjdvxduzbkriindm.supabase.co";
   const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inhqa3B5amR2eGR1emJrcmlpbmRtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQwMDU3NDEsImV4cCI6MjA3OTU4MTc0MX0.NQGI245biPWESIrxqLH3_gTmzhF78DcBjIF4ENd4Zbc";
 
+
   // 🚪 Ruta del sitio principal (donde está el modal de login)
-  const MAIN_SITE_URL = "Website/index.html"; // cámbialo a "/" o la ruta real de tu landing
+  // Ejemplo GitHub Pages: "/Website/index.html"
+  const MAIN_SITE_URL = "/Website/index.html";
 
   const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
@@ -559,7 +562,6 @@
   async function ensureSession() {
     const { data, error } = await supabase.auth.getSession();
     if (error || !data.session) {
-      // Redirige al main site indicando que se requiere login
       window.location.href = MAIN_SITE_URL + "?auth=required";
       return null;
     }
@@ -583,22 +585,25 @@
     if (profileError) {
       console.error(profileError);
       orgNameEl.textContent = "Perfil no encontrado";
-      orgSubtitleEl.textContent = "Revisa que la función complete_sign_up se haya ejecutado correctamente.";
+      orgSubtitleEl.textContent =
+        "Revisa que la función complete_sign_up se haya ejecutado correctamente.";
       orgStatusEl.textContent = "Error";
       orgStatusExtraEl.textContent = "No se pudo cargar el perfil.";
       return;
     }
 
-    // Mostrar en el badge el dato más útil
+    // Mostrar en el badge: empresa / nombre / email
     userEmailEl.textContent =
       profile.company || profile.full_name || user.email || "Usuario Smart Ink";
 
     // 2) Organización principal
     if (!profile.default_org_id) {
       orgNameEl.textContent = profile.full_name || "Cuenta sin organización";
-      orgSubtitleEl.textContent = "No se encontró una organización asociada a tu perfil.";
+      orgSubtitleEl.textContent =
+        "No se encontró una organización asociada a tu perfil.";
       orgStatusEl.textContent = "Configuración incompleta";
-      orgStatusExtraEl.textContent = "Contacta a soporte para vincular tu organización.";
+      orgStatusExtraEl.textContent =
+        "Contacta a soporte para vincular tu organización.";
       return;
     }
 
@@ -611,9 +616,11 @@
     if (orgError) {
       console.error(orgError);
       orgNameEl.textContent = "Error al cargar organización";
-      orgSubtitleEl.textContent = "No tienes permiso o la organización fue eliminada.";
+      orgSubtitleEl.textContent =
+        "No tienes permiso o la organización fue eliminada.";
       orgStatusEl.textContent = "Error";
-      orgStatusExtraEl.textContent = "Verifica en Supabase la tabla organizations.";
+      orgStatusExtraEl.textContent =
+        "Verifica en Supabase la tabla organizations.";
       return;
     }
 
@@ -623,13 +630,15 @@
       : "Organización configurada en Smart Ink.";
     chipOrgEl.textContent = "ORG · " + (org.id || "").slice(0, 8).toUpperCase();
     orgStatusEl.textContent = "Activa";
-    orgStatusExtraEl.textContent = "Sesión válida y organización vinculada.";
+    orgStatusExtraEl.textContent =
+      "Sesión válida y organización vinculada.";
     orgCreatedEl.textContent = formatDate(org.created_at);
 
     // 3) Suscripciones de esta organización
     const { data: subs, error: subsError } = await supabase
       .from("subscriptions")
-      .select(`
+      .select(
+        `
         id,
         status,
         plan,
@@ -640,7 +649,8 @@
           name,
           description
         )
-      `)
+      `
+      )
       .eq("org_id", org.id)
       .order("created_at", { ascending: true });
 
@@ -648,14 +658,18 @@
 
     if (subsError) {
       console.error(subsError);
-      setError("No se pudieron cargar las suscripciones. Revisa las políticas RLS.");
+      setError(
+        "No se pudieron cargar las suscripciones. Revisa las políticas RLS."
+      );
     } else if (!subs || subs.length === 0) {
       const empty = document.createElement("div");
       empty.className = "loading";
-      empty.textContent = "Tu organización aún no tiene módulos activos. Puedes activar uno desde el panel de la derecha.";
+      empty.textContent =
+        "Tu organización aún no tiene módulos activos. Puedes activar uno desde el panel de la derecha.";
       subsListEl.appendChild(empty);
       orgStatusEl.textContent = "Sin módulos activos";
-      orgStatusExtraEl.textContent = "Tu cuenta está lista, solo falta activar un producto.";
+      orgStatusExtraEl.textContent =
+        "Tu cuenta está lista, solo falta activar un producto.";
       orgTrialEl.textContent = "Trial: aún no iniciado";
     } else {
       let trialText = "Trial: —";
@@ -668,10 +682,187 @@
 
         const name = document.createElement("div");
         name.className = "product-name";
-        name.textContent = s.products?.name || s.products?.code || "Producto";
+        name.textContent =
+          s.products?.name || s.products?.code || "Producto";
 
         const meta = document.createElement("div");
         meta.className = "product-meta";
         const codePart = s.products?.code ? `Código: ${s.products.code}` : "";
         const datesPart = s.expires_at
-          ? ` · Expira: ${formatDate(s
+          ? ` · Expira: ${formatDate(s.expires_at)}`
+          : "";
+        meta.textContent = `${codePart}${datesPart}`;
+
+        left.appendChild(name);
+        left.appendChild(meta);
+
+        const right = document.createElement("div");
+
+        const pill = document.createElement("div");
+        pill.className =
+          "status-pill " + (s.status ? s.status.toLowerCase() : "");
+        pill.textContent =
+          s.status === "active"
+            ? "Activo"
+            : s.status === "trial"
+            ? "Trial"
+            : s.status === "past_due"
+            ? "Pendiente de pago"
+            : s.status === "canceled"
+            ? "Cancelado"
+            : s.status || "—";
+
+        const planPill = document.createElement("div");
+        planPill.className = "pill-plan";
+        planPill.innerHTML = `<span>plan</span><b>${
+          s.plan || "starter"
+        }</b>`;
+
+        right.appendChild(pill);
+        right.appendChild(planPill);
+
+        item.appendChild(left);
+        item.appendChild(right);
+        subsListEl.appendChild(item);
+
+        if (s.status === "trial") {
+          trialText =
+            "Trial: " +
+            (s.expires_at
+              ? "hasta " + formatDate(s.expires_at)
+              : "activo");
+        }
+      });
+
+      orgTrialEl.textContent = trialText;
+    }
+
+    // 4) Módulos disponibles / catálogo visual
+    await loadModules(subs || []);
+  }
+
+  async function loadModules(activeSubs) {
+    modulesGridEl.innerHTML = "";
+
+    const activeCodes = new Set(
+      activeSubs
+        .map((s) => s.products?.code)
+        .filter((c) => typeof c === "string")
+    );
+
+    // Catálogo vivo de módulos Smart Ink
+    const modules = [
+      {
+        code: "HCM",
+        name: "HCM Ejecutivo",
+        desc: "Asistencia, nómina, expedientes y dashboards ejecutivos para Capital Humano.",
+        tags: ["Más usado", "Recomendación Smart Ink"],
+        tip: "Ideal para directores y RRHH que quieren control total de asistencia y nómina sin vivir en Excel.",
+        appUrl: "/apps/hcm/index.html", // CAMBIA a tu frontend real
+        buyUrl: "https://smart-ink.github.io/Website/comprar-hcm" // CAMBIA a tu landing de compra
+      },
+      {
+        code: "SRM",
+        name: "SRM Proveedores",
+        desc: "Automatiza relación con proveedores, facturas, órdenes de compra y pagos críticos.",
+        tags: ["Nuevo", "Alto impacto"],
+        tip: "Perfecto si ya usas facturación automatizada y quieres controlar mejor a quién le compras y cuánto debes.",
+        appUrl: "/apps/srm/index.html",
+        buyUrl: "https://smart-ink.github.io/Website/comprar-srm"
+      },
+      {
+        code: "FACTURAS",
+        name: "Automatización de Facturas",
+        desc: "Lectura de CFDI, panel de flujo de efectivo y reportes para tomar decisiones diarias.",
+        tags: ["Core financiero", "Recomendado dirección"],
+        tip: "Si solo fueras a automatizar una cosa este año, que sea la lectura de facturas.",
+        appUrl: "/apps/facturas/index.html",
+        buyUrl: "https://smart-ink.github.io/Website/comprar-facturas"
+      }
+    ];
+
+    modules.forEach((m) => {
+      const card = document.createElement("div");
+      card.className = "module-card";
+      if (m.tip) card.title = m.tip;
+
+      const name = document.createElement("div");
+      name.className = "module-name";
+      name.textContent = m.name;
+
+      const desc = document.createElement("div");
+      desc.className = "module-desc";
+      desc.textContent = m.desc;
+
+      const tagsRow = document.createElement("div");
+      tagsRow.className = "module-tags";
+      (m.tags || []).forEach((t, idx) => {
+        const tag = document.createElement("div");
+        tag.className = "tag-pill" + (idx > 0 ? " secondary" : "");
+        tag.textContent = t;
+        tagsRow.appendChild(tag);
+      });
+
+      const footer = document.createElement("div");
+      footer.className = "module-footer";
+
+      const label = document.createElement("div");
+      label.className = "small-label";
+      label.textContent = "Módulo · " + m.code;
+
+      const btn = document.createElement("button");
+      btn.className = "btn-soft";
+
+      const alreadyActive = activeCodes.has(m.code);
+
+      if (alreadyActive) {
+        btn.textContent = "Abrir módulo";
+        if (m.tip) btn.title = m.tip;
+        btn.addEventListener("click", () => {
+          if (m.appUrl) {
+            window.location.href = m.appUrl;
+          } else {
+            alert(
+              "Aquí puedes conectar la ruta real del frontend de " +
+                m.code +
+                " (HCM, SRM, etc.)."
+            );
+          }
+        });
+      } else {
+        btn.textContent = "Ver opciones de compra";
+        if (m.tip) btn.title = m.tip;
+        btn.addEventListener("click", () => {
+          if (m.buyUrl) {
+            window.open(m.buyUrl, "_blank");
+          } else {
+            alert(
+              "Aquí conectarás la página de compra o formulario de contacto para el módulo " +
+                m.code +
+                "."
+            );
+          }
+        });
+      }
+
+      footer.appendChild(label);
+      footer.appendChild(btn);
+
+      card.appendChild(name);
+      card.appendChild(desc);
+      if (m.tags && m.tags.length) {
+        card.appendChild(tagsRow);
+      }
+      card.appendChild(footer);
+
+      modulesGridEl.appendChild(card);
+    });
+  }
+
+  logoutBtn.addEventListener("click", async () => {
+    await supabase.auth.signOut();
+    window.location.href = MAIN_SITE_URL;
+  });
+
+  loadDashboard();
+</script>

@@ -1140,61 +1140,90 @@
     }
   }
 
-  async function handleRegister(fullName, companyName, productCode, email, password) {
-    if (!fullName || !companyName) {
-      setStatus("Por favor llena tu nombre y el de la empresa.", "error");
-      return;
+async function handleRegister(fullName, companyName, productCode, email, password) {
+  if (!fullName || !companyName) {
+    setStatus("Por favor llena tu nombre y el de la empresa.", "error");
+    return;
+  }
+
+  setStatus("Creando cuenta...");
+  if (submitBtn) submitBtn.disabled = true;
+
+  // 1) Crear usuario en Supabase Auth
+  const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
+    email,
+    password,
+    options: {
+      data: {
+        full_name: fullName,
+        company: companyName
+      }
     }
+  });
 
-    setStatus("Creando cuenta...");
-    if (submitBtn) submitBtn.disabled = true;
+  if (signUpError) {
+    if (submitBtn) submitBtn.disabled = false;
+    setStatus("Error al crear usuario: " + signUpError.message, "error");
+    return;
+  }
 
-    // 1) Crear usuario en Supabase Auth
-    const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
+  // 2) Asegurarnos de tener sesión (por si el signUp no la regresó)
+  let { data: sessionData } = await supabase.auth.getSession();
+  if (!sessionData.session) {
+    const { error: loginError } = await supabase.auth.signInWithPassword({
       email,
       password
     });
-
-    if (signUpError) {
+    if (loginError) {
       if (submitBtn) submitBtn.disabled = false;
-      setStatus("Error al crear usuario: " + signUpError.message, "error");
-      return;
-    }
-
-    // 2) Llamar RPC para completar alta (org, profile, subscription, etc.)
-    const { data: rpcData, error: rpcError } = await supabase.rpc("complete_sign_up", {
-      p_full_name: fullName,
-      p_company_name: companyName,
-      p_product_code: productCode,
-      p_plan: "starter",
-      p_trial_days: 14
-    });
-
-    if (submitBtn) submitBtn.disabled = false;
-
-    if (rpcError) {
-      console.error(rpcError);
       setStatus(
-        "Usuario creado pero hubo un error al configurar la organización. Contacta a soporte.",
+        "Usuario creado pero no se pudo iniciar sesión automáticamente: " +
+          loginError.message,
         "error"
       );
       return;
     }
-
-    console.log("Alta completa:", rpcData);
-    setStatus("Cuenta creada.", "success");
-
-    // Actualizar header / sesión
-    const { data: userData } = await supabase.auth.getUser();
-    await siRefreshAuthControls(userData?.user ?? null);
-
-    if (siPostLoginAction === "dashboard") {
-      siGoToDashboard();
-      siPostLoginAction = null;
-    } else {
-      siCloseAuthModal();
-    }
+    sessionData = (await supabase.auth.getSession()).data;
   }
+
+  // 3) Llamar RPC para crear organización, perfil y suscripción inicial
+  const { data: rpcData, error: rpcError } = await supabase.rpc(
+    "complete_sign_up",
+    {
+      p_full_name: fullName,
+      p_company_name: companyName,
+      p_product_code: productCode || "HCM",
+      p_plan: "starter",
+      p_trial_days: 14
+    }
+  );
+
+  if (submitBtn) submitBtn.disabled = false;
+
+  if (rpcError) {
+    console.error(rpcError);
+    setStatus(
+      "Usuario creado pero hubo un error al configurar la organización. Contacta a soporte.",
+      "error"
+    );
+    return;
+  }
+
+  console.log("Alta completa:", rpcData);
+  setStatus("Cuenta creada.", "success");
+
+  // 4) Refrescar header y redirigir si es necesario
+  const { data: userData } = await supabase.auth.getUser();
+  await siRefreshAuthControls(userData?.user ?? null);
+
+  if (siPostLoginAction === "dashboard") {
+    siGoToDashboard();
+    siPostLoginAction = null;
+  } else {
+    siCloseAuthModal();
+  }
+}
+
 </script>
 
 
