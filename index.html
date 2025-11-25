@@ -834,21 +834,34 @@
     </div>
   </div>
 </div>
+
+<!--  const SUPABASE_URL = "https://xjkpyjdvxduzbkriindm.supabase.co";
+  const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inhqa3B5amR2eGR1emJrcmlpbmRtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQwMDU3NDEsImV4cCI6MjA3OTU4MTc0MX0.NQGI245biPWESIrxqLH3_gTmzhF78DcBjIF4ENd4Zbc";
+  const DASHBOARD_URL = "/Website/dashboard.html"; -->
+
+
 <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
 <script>
-  // 🔐 CONFIGURA ESTO CON TUS DATOS DE SUPABASE
+  // =============================
+  // CONFIGURACIÓN SUPABASE
+  // =============================
   const SUPABASE_URL = "https://xjkpyjdvxduzbkriindm.supabase.co";
   const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inhqa3B5amR2eGR1emJrcmlpbmRtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQwMDU3NDEsImV4cCI6MjA3OTU4MTc0MX0.NQGI245biPWESIrxqLH3_gTmzhF78DcBjIF4ENd4Zbc";
-  const DASHBOARD_URL = "/Website/dashboard.html"; // ajusta si tu panel está en otra ruta
+
+  // Ruta del dashboard y de landing (ajusta según GitHub Pages)
+  const DASHBOARD_URL = "/Website/dashboard.html";      // o "/Website/dashboard.html"
+  const LANDING_URL   = "/Website/index.html";          // o "/Website/index.html"
 
   const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
   // Estado global
-  let siPostLoginAction = null; // e.g. "dashboard"
+  let siPostLoginAction = null;
   let isLoginMode = true;
 
-  // Refs DOM usadas por el formulario
-  let btnLogin,
+  // Refs globales del modal/form
+  let authModal,
+      authCloseBtn,
+      btnLogin,
       btnRegister,
       titleEl,
       subtitleEl,
@@ -867,15 +880,16 @@
       inputPassword,
       forgotLink;
 
-  let authModal, authCloseBtn;
-
   document.addEventListener("DOMContentLoaded", () => {
     siInitAuthUI();
   });
 
+  // =============================
+  // INIT UI
+  // =============================
   async function siInitAuthUI() {
-    // ---- Modal refs ----
-    authModal = document.getElementById("auth-modal");
+    // ----- Modal refs -----
+    authModal   = document.getElementById("auth-modal");
     authCloseBtn = document.getElementById("auth-close-btn");
 
     if (authCloseBtn) {
@@ -888,78 +902,86 @@
       }
     }
 
-    // Menú móvil
-const mobileToggle = document.getElementById("mobile-menu-toggle");
-const mobileNav = document.getElementById("mobile-nav");
+    // ----- Header auth controls (event delegation) -----
+    const authControls = document.getElementById("auth-controls");
+    if (authControls) {
+      authControls.addEventListener("click", async (event) => {
+        const btn = event.target.closest("[data-si-action]");
+        if (!btn) return;
 
-if (mobileToggle && mobileNav) {
-  mobileToggle.addEventListener("click", () => {
-    mobileNav.classList.toggle("si-hidden");
-  });
-
-  // Cerrar el menú al hacer click en cualquier link
-  mobileNav.addEventListener("click", (event) => {
-    const link = event.target.closest("a, button");
-    if (!link) return;
-    // opcional: solo cerrar en ciertos enlaces
-    mobileNav.classList.add("si-hidden");
-  });
-}
-
-
-
-// Todos los botones que deben llevar al panel / abrir login
-const accessButtons = document.querySelectorAll("[data-access-dashboard]");
-if (accessButtons.length > 0) {
-  accessButtons.forEach((btn) => {
-    btn.addEventListener("click", async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (user) {
-        siGoToDashboard();
-      } else {
-        siPostLoginAction = "dashboard";
-        siOpenAuthModal(true);
-      }
-    });
-  });
-}
-
-
-    const fallbackAuthBtn = document.getElementById("fallback-auth-btn");
-    if (fallbackAuthBtn) {
-      fallbackAuthBtn.addEventListener("click", () => {
-        siPostLoginAction = null;
-        siOpenAuthModal(true);
+        const action = btn.dataset.siAction;
+        if (action === "open-auth") {
+          siPostLoginAction = null;
+          siOpenAuthModal(true);
+        }
+        if (action === "dashboard") {
+          siGoToDashboard();
+        }
+        if (action === "logout") {
+          await supabase.auth.signOut();
+          siPostLoginAction = null;
+          await siRefreshAuthControls(null);
+        }
       });
     }
 
-    // ---- Auth form refs ----
-    btnLogin = document.getElementById("btn-login");
-    btnRegister = document.getElementById("btn-register");
-    titleEl = document.getElementById("title");
-    subtitleEl = document.getElementById("subtitle");
-    authForm = document.getElementById("auth-form");
-    statusEl = document.getElementById("status");
-    submitBtn = document.getElementById("submit-btn");
-    toggleText = document.getElementById("toggle-text");
-    toggleLink = document.getElementById("toggle-link");
+    // ----- Botones "Accede a tu panel" en todas las secciones -----
+    const accessButtons = document.querySelectorAll("[data-access-dashboard]");
+    if (accessButtons.length > 0) {
+      accessButtons.forEach((btn) => {
+        btn.addEventListener("click", async () => {
+          const { data: { user } } = await supabase.auth.getUser();
+          if (user) {
+            siGoToDashboard();
+          } else {
+            siPostLoginAction = "dashboard";
+            siOpenAuthModal(true);
+          }
+        });
+      });
+    }
+
+    // ----- Menú móvil (si existe) -----
+    const mobileToggle = document.getElementById("mobile-menu-toggle");
+    const mobileNav    = document.getElementById("mobile-nav");
+    if (mobileToggle && mobileNav) {
+      mobileToggle.addEventListener("click", () => {
+        mobileNav.classList.toggle("si-hidden");
+      });
+      mobileNav.addEventListener("click", (event) => {
+        const link = event.target.closest("a, button");
+        if (!link) return;
+        mobileNav.classList.add("si-hidden");
+      });
+    }
+
+    // ----- Refs del formulario de auth -----
+    btnLogin     = document.getElementById("btn-login");
+    btnRegister  = document.getElementById("btn-register");
+    titleEl      = document.getElementById("title");
+    subtitleEl   = document.getElementById("subtitle");
+    authForm     = document.getElementById("auth-form");
+    statusEl     = document.getElementById("status");
+    submitBtn    = document.getElementById("submit-btn");
+    toggleText   = document.getElementById("toggle-text");
+    toggleLink   = document.getElementById("toggle-link");
 
     groupFullname = document.getElementById("group-fullname");
-    groupCompany = document.getElementById("group-company");
-    groupProduct = document.getElementById("group-product");
+    groupCompany  = document.getElementById("group-company");
+    groupProduct  = document.getElementById("group-product");
 
     inputFullName = document.getElementById("full_name");
-    inputCompany = document.getElementById("company_name");
-    inputProduct = document.getElementById("product_code");
-    inputEmail = document.getElementById("email");
+    inputCompany  = document.getElementById("company_name");
+    inputProduct  = document.getElementById("product_code");
+    inputEmail    = document.getElementById("email");
     inputPassword = document.getElementById("password");
-    forgotLink = document.getElementById("forgot-link");
+    forgotLink    = document.getElementById("forgot-link");
 
+    // Toggle login / registro
     if (btnLogin && btnRegister) {
       btnLogin.addEventListener("click", () => setMode(true));
       btnRegister.addEventListener("click", () => setMode(false));
     }
-
     if (toggleLink) {
       toggleLink.addEventListener("click", (e) => {
         e.preventDefault();
@@ -967,6 +989,7 @@ if (accessButtons.length > 0) {
       });
     }
 
+    // Olvidé mi contraseña
     if (forgotLink) {
       forgotLink.addEventListener("click", async (e) => {
         e.preventDefault();
@@ -975,12 +998,10 @@ if (accessButtons.length > 0) {
           setStatus("Escribe tu correo primero para enviar el enlace de recuperación.", "error");
           return;
         }
-
         setStatus("Enviando enlace de recuperación...");
         const { error } = await supabase.auth.resetPasswordForEmail(email, {
-          redirectTo: window.location.origin + "/auth.html" // puedes cambiar esto después
+          redirectTo: window.location.origin + LANDING_URL
         });
-
         if (error) {
           setStatus("Error al enviar el enlace: " + error.message, "error");
         } else {
@@ -989,11 +1010,11 @@ if (accessButtons.length > 0) {
       });
     }
 
+    // Submit formulario
     if (authForm) {
       authForm.addEventListener("submit", async (event) => {
         event.preventDefault();
-
-        const email = inputEmail.value.trim();
+        const email    = inputEmail.value.trim();
         const password = inputPassword.value.trim();
 
         if (!email || !password) {
@@ -1004,7 +1025,7 @@ if (accessButtons.length > 0) {
         if (isLoginMode) {
           await handleLogin(email, password);
         } else {
-          const fullName = inputFullName.value.trim();
+          const fullName    = inputFullName.value.trim();
           const companyName = inputCompany.value.trim();
           const productCode = inputProduct.value || "HCM";
           await handleRegister(fullName, companyName, productCode, email, password);
@@ -1015,47 +1036,26 @@ if (accessButtons.length > 0) {
     // Modo inicial: login
     setMode(true);
 
-    // Estado de header inicial
+    // Refrescar header según sesión persistida
     await siRefreshAuthControls();
 
-    // Escuchar cambios de sesión (otra pestaña, logout en dashboard, etc.)
+    // Escuchar cambios de sesión (otras pestañas / dashboard)
     supabase.auth.onAuthStateChange(async (_event, session) => {
       await siRefreshAuthControls(session?.user ?? null);
     });
-  }
 
-  /* ---------- Header auth controls ---------- */
-
-  async function siRefreshAuthControls(existingUser) {
-    const authControls = document.getElementById("auth-controls");
-
-    /*new*/
-
-if (authControls) {
-  authControls.addEventListener("click", async (event) => {
-    const btn = event.target.closest("[data-si-action]");
-    if (!btn) return;
-
-    const action = btn.dataset.siAction;
-
-    if (action === "open-auth") {
-      siPostLoginAction = null;
+    // Si venimos del dashboard con ?auth=required abrir el modal
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("auth") === "required") {
       siOpenAuthModal(true);
     }
+  }
 
-    if (action === "dashboard") {
-      siGoToDashboard();
-    }
-
-    if (action === "logout") {
-      await supabase.auth.signOut();
-      siPostLoginAction = null;
-      await siRefreshAuthControls(null);
-    }
-  });
-}
-
-    /*old*/
+  // =============================
+  // HEADER / CONTROLES AUTH
+  // =============================
+  async function siRefreshAuthControls(existingUser) {
+    const authControls = document.getElementById("auth-controls");
     if (!authControls) return;
 
     let user = existingUser || null;
@@ -1065,21 +1065,19 @@ if (authControls) {
     }
 
     if (!user) {
-     authControls.innerHTML = `
-  <button
-    type="button"
-    class="si-btn si-btn-primary"
-    data-si-action="open-auth"
-  >
-    Entrar / Crear cuenta
-  </button>
-`;
-return; // importante, no seguimos a la parte de "user logueado"
-
-      
+      authControls.innerHTML = `
+        <button
+          type="button"
+          class="si-btn si-btn-primary"
+          data-si-action="open-auth"
+        >
+          Entrar / Crear cuenta
+        </button>
+      `;
+      return;
     }
 
-    // Intentar leer perfil (nombre/empresa)
+    // Intentar leer perfil
     let displayName = user.email;
     try {
       const { data: profile, error: profileError } = await supabase
@@ -1092,26 +1090,26 @@ return; // importante, no seguimos a la parte de "user logueado"
         displayName = profile.company || profile.full_name || user.email;
       }
     } catch (e) {
-      // ignora, fallback a email
+      // ignorar, usamos email
     }
 
-authControls.innerHTML = `
-  <span class="si-user-label">Hola, ${displayName}</span>
-  <button
-    type="button"
-    class="si-btn si-btn-ghost"
-    data-si-action="dashboard"
-  >
-    Ir a mi panel
-  </button>
-  <button
-    type="button"
-    class="si-btn si-btn-ghost"
-    data-si-action="logout"
-  >
-    Cerrar sesión
-  </button>
-`;
+    authControls.innerHTML = `
+      <span class="si-user-label">Hola, ${displayName}</span>
+      <button
+        type="button"
+        class="si-btn si-btn-ghost"
+        data-si-action="dashboard"
+      >
+        Ir a mi panel
+      </button>
+      <button
+        type="button"
+        class="si-btn si-btn-ghost"
+        data-si-action="logout"
+      >
+        Cerrar sesión
+      </button>
+    `;
   }
 
   function siGoToDashboard() {
@@ -1131,20 +1129,20 @@ authControls.innerHTML = `
     setStatus("");
   }
 
-  /* ---------- Login / Registro UI ---------- */
-
+  // =============================
+  // UI LOGIN / REGISTRO
+  // =============================
   function setMode(loginMode) {
     isLoginMode = loginMode;
-
     if (!btnLogin || !btnRegister || !titleEl || !subtitleEl || !statusEl || !toggleText) return;
 
     btnLogin.classList.toggle("active", isLoginMode);
     btnRegister.classList.toggle("active", !isLoginMode);
 
     if (isLoginMode) {
-      titleEl.textContent = "Bienvenido de vuelta";
+      titleEl.textContent    = "Bienvenido de vuelta";
       subtitleEl.textContent = "Ingresa a tu panel de Smart Ink para ver tus productos y dashboards.";
-      submitBtn.textContent = "Entrar";
+      submitBtn.textContent  = "Entrar";
       setStatus("");
 
       document.querySelectorAll(".extra-signup").forEach((el) => {
@@ -1154,9 +1152,9 @@ authControls.innerHTML = `
       toggleText.innerHTML =
         '¿No tienes cuenta? <span class="link" id="toggle-link-inner">Crear una</span>';
     } else {
-      titleEl.textContent = "Crear cuenta Smart Ink";
+      titleEl.textContent    = "Crear cuenta Smart Ink";
       subtitleEl.textContent = "Te daremos acceso a tu primer producto y organización.";
-      submitBtn.textContent = "Crear cuenta";
+      submitBtn.textContent  = "Crear cuenta";
       setStatus("");
 
       document.querySelectorAll(".extra-signup").forEach((el) => {
@@ -1167,7 +1165,7 @@ authControls.innerHTML = `
         '¿Ya tienes cuenta? <span class="link" id="toggle-link-inner">Iniciar sesión</span>';
     }
 
-    // Reconectar listener del link interno
+    // Reconectar link interno
     const innerToggle = document.getElementById("toggle-link-inner");
     if (innerToggle) {
       innerToggle.addEventListener("click", (e) => {
@@ -1181,12 +1179,13 @@ authControls.innerHTML = `
     if (!statusEl) return;
     statusEl.textContent = message || "";
     statusEl.className = "status";
-    if (type === "error") statusEl.classList.add("error");
+    if (type === "error")   statusEl.classList.add("error");
     if (type === "success") statusEl.classList.add("success");
   }
 
-  /* ---------- Lógica Supabase (login / signup) ---------- */
-
+  // =============================
+  // LÓGICA SUPABASE: LOGIN / SIGNUP
+  // =============================
   async function handleLogin(email, password) {
     setStatus("Iniciando sesión...");
     if (submitBtn) submitBtn.disabled = true;
@@ -1204,7 +1203,6 @@ authControls.innerHTML = `
     }
 
     setStatus("Acceso correcto.", "success");
-
     await siRefreshAuthControls(data.user ?? null);
 
     if (siPostLoginAction === "dashboard") {
@@ -1215,91 +1213,90 @@ authControls.innerHTML = `
     }
   }
 
-async function handleRegister(fullName, companyName, productCode, email, password) {
-  if (!fullName || !companyName) {
-    setStatus("Por favor llena tu nombre y el de la empresa.", "error");
-    return;
-  }
-
-  setStatus("Creando cuenta...");
-  if (submitBtn) submitBtn.disabled = true;
-
-  // 1) Crear usuario en Supabase Auth
-  const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
-    email,
-    password,
-    options: {
-      data: {
-        full_name: fullName,
-        company: companyName
-      }
+  async function handleRegister(fullName, companyName, productCode, email, password) {
+    if (!fullName || !companyName) {
+      setStatus("Por favor llena tu nombre y el de la empresa.", "error");
+      return;
     }
-  });
 
-  if (signUpError) {
-    if (submitBtn) submitBtn.disabled = false;
-    setStatus("Error al crear usuario: " + signUpError.message, "error");
-    return;
-  }
+    setStatus("Creando cuenta...");
+    if (submitBtn) submitBtn.disabled = true;
 
-  // 2) Asegurarnos de tener sesión (por si el signUp no la regresó)
-  let { data: sessionData } = await supabase.auth.getSession();
-  if (!sessionData.session) {
-    const { error: loginError } = await supabase.auth.signInWithPassword({
+    // 1) Crear usuario en Auth
+    const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
       email,
-      password
+      password,
+      options: {
+        data: {
+          full_name: fullName,
+          company:   companyName
+        }
+      }
     });
-    if (loginError) {
+
+    if (signUpError) {
       if (submitBtn) submitBtn.disabled = false;
+      setStatus("Error al crear usuario: " + signUpError.message, "error");
+      return;
+    }
+
+    // 2) Asegurar sesión (por si signUp no la dejó activa)
+    let { data: sessionData } = await supabase.auth.getSession();
+    if (!sessionData.session) {
+      const { error: loginError } = await supabase.auth.signInWithPassword({
+        email,
+        password
+      });
+      if (loginError) {
+        if (submitBtn) submitBtn.disabled = false;
+        setStatus(
+          "Usuario creado pero no se pudo iniciar sesión automáticamente: " +
+            loginError.message,
+          "error"
+        );
+        return;
+      }
+      sessionData = (await supabase.auth.getSession()).data;
+    }
+
+    // 3) RPC para crear organización, perfil y suscripción inicial
+    const { data: rpcData, error: rpcError } = await supabase.rpc(
+      "complete_sign_up",
+      {
+        p_full_name:     fullName,
+        p_company_name:  companyName,
+        p_product_code:  productCode || "HCM",
+        p_plan:          "starter",
+        p_trial_days:    14
+      }
+    );
+
+    if (submitBtn) submitBtn.disabled = false;
+
+    if (rpcError) {
+      console.error(rpcError);
       setStatus(
-        "Usuario creado pero no se pudo iniciar sesión automáticamente: " +
-          loginError.message,
+        "Usuario creado pero hubo un error al configurar la organización. Contacta a soporte.",
         "error"
       );
       return;
     }
-    sessionData = (await supabase.auth.getSession()).data;
-  }
 
-  // 3) Llamar RPC para crear organización, perfil y suscripción inicial
-  const { data: rpcData, error: rpcError } = await supabase.rpc(
-    "complete_sign_up",
-    {
-      p_full_name: fullName,
-      p_company_name: companyName,
-      p_product_code: productCode || "HCM",
-      p_plan: "starter",
-      p_trial_days: 14
+    console.log("Alta completa:", rpcData);
+    setStatus("Cuenta creada.", "success");
+
+    const { data: userData } = await supabase.auth.getUser();
+    await siRefreshAuthControls(userData?.user ?? null);
+
+    if (siPostLoginAction === "dashboard") {
+      siGoToDashboard();
+      siPostLoginAction = null;
+    } else {
+      siCloseAuthModal();
     }
-  );
-
-  if (submitBtn) submitBtn.disabled = false;
-
-  if (rpcError) {
-    console.error(rpcError);
-    setStatus(
-      "Usuario creado pero hubo un error al configurar la organización. Contacta a soporte.",
-      "error"
-    );
-    return;
   }
-
-  console.log("Alta completa:", rpcData);
-  setStatus("Cuenta creada.", "success");
-
-  // 4) Refrescar header y redirigir si es necesario
-  const { data: userData } = await supabase.auth.getUser();
-  await siRefreshAuthControls(userData?.user ?? null);
-
-  if (siPostLoginAction === "dashboard") {
-    siGoToDashboard();
-    siPostLoginAction = null;
-  } else {
-    siCloseAuthModal();
-  }
-}
-
 </script>
+
 
 
 
