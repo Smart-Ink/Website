@@ -926,9 +926,7 @@
           
           await supabase.auth.signOut();
           siPostLoginAction = null;
-          
-          
-          window.location.href = MAIN_SITE_URL;
+          siGoToMain();
         }
 
 
@@ -1135,6 +1133,10 @@ async function siRefreshAuthControls(existingUser, options = {}) {
 
   function siGoToDashboard() {
     window.location.href = DASHBOARD_URL;
+  }
+
+  function siGoToMain() {
+    window.location.href = MAIN_SITE_URL;
   }
 
   function siOpenAuthModal(defaultLoginMode = true) {
