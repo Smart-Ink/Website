@@ -926,7 +926,7 @@
           
           await supabase.auth.signOut();
           siPostLoginAction = null;
-          siGoToMain();
+          await siRefreshAuthControls();
         }
 
 
