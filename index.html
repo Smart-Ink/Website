@@ -923,9 +923,10 @@ if (action === "logout") {
   await supabase.auth.signOut();
   siPostLoginAction = null;
 
-  // 🔥 Forzar estado visual de deslogueado, sin consultar a Supabase
-  await siRefreshAuthControls(null, { forceLoggedOut: true });
+  // 🔥 solución robusta: recarga la página para que todo se resetee
+  window.location.reload();
 }
+
 
 
       });
