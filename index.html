@@ -923,23 +923,10 @@ if (action === "logout") {
   await supabase.auth.signOut();
   siPostLoginAction = null;
 
-  // 🔥 Forzar el estado visual de "deslogueado" inmediatamente
-  const authControlsNode = document.getElementById("auth-controls");
-  if (authControlsNode) {
-    authControlsNode.innerHTML = `
-      <button
-        type="button"
-        class="si-btn si-btn-primary"
-        data-si-action="open-auth"
-      >
-        Entrar / Crear cuenta
-      </button>
-    `;
-  }
-
-  // Y además refrescar por si acaso (por ejemplo, si hay otras cosas que dependan de sesión)
-  await siRefreshAuthControls();
+  // 🔥 Forzar estado visual de deslogueado, sin consultar a Supabase
+  await siRefreshAuthControls(null, { forceLoggedOut: true });
 }
+
 
       });
     }
@@ -1073,64 +1060,73 @@ if (action === "logout") {
   // =============================
   // HEADER / CONTROLES AUTH
   // =============================
-  async function siRefreshAuthControls(existingUser) {
-    const authControls = document.getElementById("auth-controls");
-    if (!authControls) return;
+async function siRefreshAuthControls(existingUser, options = {}) {
+  const { forceLoggedOut = false } = options;
 
-    let user = existingUser || null;
+  const authControls = document.getElementById("auth-controls");
+  if (!authControls) return;
 
-    if (!user) {
-      const { data, error } = await supabase.auth.getUser();
-      if (!error) user = data.user;
-    }
-console.log("🔄 siRefreshAuthControls → user =", user);
-    if (!user) {
-      authControls.innerHTML = `
-        <button
-          type="button"
-          class="si-btn si-btn-primary"
-          data-si-action="open-auth"
-        >
-          Entrar / Crear cuenta
-        </button>
-      `;
-      return;
-    }
+  let user = existingUser || null;
 
-    // Intentar leer perfil
-    let displayName = user.email;
-    try {
-      const { data: profile, error: profileError } = await supabase
-        .from("profiles")
-        .select("full_name, company")
-        .eq("id", user.id)
-        .single();
+  if (forceLoggedOut) {
+    // 🔴 No queremos que vuelva a preguntar a Supabase, sabemos que está deslogueado
+    user = null;
+  } else if (!user) {
+    const { data, error } = await supabase.auth.getUser();
+    if (!error) user = data.user;
+  }
 
-      if (!profileError && profile) {
-        displayName = profile.company || profile.full_name || user.email;
-      }
-    } catch (e) {
-      // ignorar, usamos email
-    }
+  console.log("🔄 siRefreshAuthControls → user =", user, "force:", forceLoggedOut);
 
+  // 🔴 SIN SESIÓN → botón "Entrar / Crear cuenta"
+  if (!user) {
     authControls.innerHTML = `
-      <span class="si-user-label">Hola, ${displayName}</span>
       <button
         type="button"
-        class="si-btn si-btn-ghost"
-        data-si-action="dashboard"
+        class="si-btn si-btn-primary"
+        data-si-action="open-auth"
       >
-        Ir a mi panel
-      </button>
-      <button
-        type="button"
-        class="si-btn si-btn-ghost"
-        data-si-action="logout"
-      >
-        Cerrar sesión
+        Entrar / Crear cuenta
       </button>
     `;
+    return;
   }
+
+  // 🟢 CON SESIÓN → saludo + Ir a mi panel + Cerrar sesión
+  let displayName = user.email;
+  try {
+    const { data: profile, error: profileError } = await supabase
+      .from("profiles")
+      .select("full_name, company")
+      .eq("id", user.id)
+      .single();
+
+    if (!profileError && profile) {
+      displayName = profile.company || profile.full_name || user.email;
+    }
+  } catch (e) {
+    // si falla usamos email
+  }
+
+  authControls.innerHTML = `
+    <span class="si-user-label">Hola, ${displayName}</span>
+    <button
+      type="button"
+      class="si-btn si-btn-ghost"
+      data-si-action="dashboard"
+    >
+      Ir a mi panel
+    </button>
+    <button
+      type="button"
+      class="si-btn si-btn-ghost"
+      data-si-action="logout"
+    >
+      Cerrar sesión
+    </button>
+  `;
+}
+
 
   function siGoToDashboard() {
     window.location.href = DASHBOARD_URL;
