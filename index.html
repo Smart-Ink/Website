@@ -917,11 +917,30 @@
         if (action === "dashboard") {
           siGoToDashboard();
         }
-        if (action === "logout") {
-          await supabase.auth.signOut();
-          siPostLoginAction = null;
-          await siRefreshAuthControls();
-        }
+if (action === "logout") {
+  console.log("🔴 Logout clicked");
+
+  await supabase.auth.signOut();
+  siPostLoginAction = null;
+
+  // 🔥 Forzar el estado visual de "deslogueado" inmediatamente
+  const authControlsNode = document.getElementById("auth-controls");
+  if (authControlsNode) {
+    authControlsNode.innerHTML = `
+      <button
+        type="button"
+        class="si-btn si-btn-primary"
+        data-si-action="open-auth"
+      >
+        Entrar / Crear cuenta
+      </button>
+    `;
+  }
+
+  // Y además refrescar por si acaso (por ejemplo, si hay otras cosas que dependan de sesión)
+  await siRefreshAuthControls();
+}
+
       });
     }
 
@@ -1064,7 +1083,7 @@
       const { data, error } = await supabase.auth.getUser();
       if (!error) user = data.user;
     }
-
+console.log("🔄 siRefreshAuthControls → user =", user);
     if (!user) {
       authControls.innerHTML = `
         <button
