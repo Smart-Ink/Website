@@ -865,12 +865,13 @@ window.siGoToDashboardFromHeader = function () {
 };
 
 window.siLogoutFromHeader = async function () {
-  console.log("🔴 Logout clicked (inline)");
+
   await supabase.auth.signOut();
   siPostLoginAction = null;
 
   // 🔥 Igualito al dashboard: signOut + redirect duro
   window.location.href = LANDING_URL;
+    console.log("🔴 Logout clicked (inline)");
 };
 
 
