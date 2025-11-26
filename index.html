@@ -920,7 +920,7 @@
         if (action === "logout") {
           await supabase.auth.signOut();
           siPostLoginAction = null;
-          await siRefreshAuthControls(null);
+          await siRefreshAuthControls();
         }
       });
     }
@@ -1059,6 +1059,7 @@
     if (!authControls) return;
 
     let user = existingUser || null;
+
     if (!user) {
       const { data, error } = await supabase.auth.getUser();
       if (!error) user = data.user;
