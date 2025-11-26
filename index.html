@@ -855,6 +855,25 @@
 
   const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
+window.siOpenAuthFromHeader = function () {
+  siPostLoginAction = null;
+  siOpenAuthModal(true);
+};
+
+window.siGoToDashboardFromHeader = function () {
+  siGoToDashboard();
+};
+
+window.siLogoutFromHeader = async function () {
+  console.log("🔴 Logout clicked (inline)");
+  await supabase.auth.signOut();
+  siPostLoginAction = null;
+
+  // 🔥 Igualito al dashboard: signOut + redirect duro
+  window.location.href = LANDING_URL;
+};
+
+
   // Estado global
   let siPostLoginAction = null;
   let isLoginMode = true;
@@ -903,36 +922,7 @@
       }
     }
 
-    // ----- Header auth controls (event delegation) -----
-    const authControls = document.getElementById("auth-controls");
-    if (authControls) {
-      authControls.addEventListener("click", async (event) => {
-        const btn = event.target.closest("[data-si-action]");
-        if (!btn) return;
 
-        const action = btn.dataset.siAction;
-        
-        if (action === "open-auth") {
-          siPostLoginAction = null;
-          siOpenAuthModal(true);
-        }
-        
-        if (action === "dashboard") {
-          siGoToDashboard();
-        }
-        
-        if (action === "logout") {
-          console.log("🔴 Logout clicked");
-          
-          await supabase.auth.signOut();
-          siPostLoginAction = null;
-          await siRefreshAuthControls();
-        }
-
-
-
-      });
-    }
 
     // ----- Botones "Accede a tu panel" en todas las secciones -----
     const accessButtons = document.querySelectorAll("[data-access-dashboard]");
@@ -1063,23 +1053,18 @@
   // =============================
   // HEADER / CONTROLES AUTH
   // =============================
-async function siRefreshAuthControls(existingUser, options = {}) {
-  const { forceLoggedOut = false } = options;
-
+async function siRefreshAuthControls(existingUser) {
   const authControls = document.getElementById("auth-controls");
   if (!authControls) return;
 
   let user = existingUser || null;
 
-  if (forceLoggedOut) {
-    // 🔴 No queremos que vuelva a preguntar a Supabase, sabemos que está deslogueado
-    user = null;
-  } else if (!user) {
+  if (!user) {
     const { data, error } = await supabase.auth.getUser();
     if (!error) user = data.user;
   }
 
-  console.log("🔄 siRefreshAuthControls → user =", user, "force:", forceLoggedOut);
+  console.log("🔄 siRefreshAuthControls → user =", user);
 
   // 🔴 SIN SESIÓN → botón "Entrar / Crear cuenta"
   if (!user) {
@@ -1087,7 +1072,7 @@ async function siRefreshAuthControls(existingUser, options = {}) {
       <button
         type="button"
         class="si-btn si-btn-primary"
-        data-si-action="open-auth"
+        onclick="window.siOpenAuthFromHeader()"
       >
         Entrar / Crear cuenta
       </button>
@@ -1116,19 +1101,20 @@ async function siRefreshAuthControls(existingUser, options = {}) {
     <button
       type="button"
       class="si-btn si-btn-ghost"
-      data-si-action="dashboard"
+      onclick="window.siGoToDashboardFromHeader()"
     >
       Ir a mi panel
     </button>
     <button
       type="button"
       class="si-btn si-btn-ghost"
-      data-si-action="logout"
+      onclick="window.siLogoutFromHeader()"
     >
       Cerrar sesión
     </button>
   `;
 }
+
 
 
   function siGoToDashboard() {
