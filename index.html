@@ -851,6 +851,7 @@
   // Ruta del dashboard y de landing (ajusta según GitHub Pages)
   const DASHBOARD_URL = "/Website/dashboard.html";      // o "/Website/dashboard.html"
   const LANDING_URL   = "/Website/index.html";          // o "/Website/index.html"
+  const MAIN_SITE_URL = "/Website/";
 
   const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
@@ -910,22 +911,25 @@
         if (!btn) return;
 
         const action = btn.dataset.siAction;
+        
         if (action === "open-auth") {
           siPostLoginAction = null;
           siOpenAuthModal(true);
         }
+        
         if (action === "dashboard") {
           siGoToDashboard();
         }
-if (action === "logout") {
-  console.log("🔴 Logout clicked");
-
-  await supabase.auth.signOut();
-  siPostLoginAction = null;
-
-  // 🔥 solución robusta: recarga la página para que todo se resetee
-  window.location.reload();
-}
+        
+        if (action === "logout") {
+          console.log("🔴 Logout clicked");
+          
+          await supabase.auth.signOut();
+          siPostLoginAction = null;
+          
+          
+          window.location.href = MAIN_SITE_URL;
+        }
 
 
 
