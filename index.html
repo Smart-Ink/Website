@@ -855,24 +855,7 @@
 
   const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-window.siOpenAuthFromHeader = function () {
-  siPostLoginAction = null;
-  siOpenAuthModal(true);
-};
 
-window.siGoToDashboardFromHeader = function () {
-  siGoToDashboard();
-};
-
-window.siLogoutFromHeader = async function () {
-
-  await supabase.auth.signOut();
-  siPostLoginAction = null;
-
-  // 🔥 Igualito al dashboard: signOut + redirect duro
-  window.location.href = LANDING_URL;
-    console.log("🔴 Logout clicked (inline)");
-};
 
 
   // Estado global
@@ -1116,6 +1099,24 @@ async function siRefreshAuthControls(existingUser) {
   `;
 }
 
+window.siOpenAuthFromHeader = function () {
+  siPostLoginAction = null;
+  siOpenAuthModal(true);
+};
+
+window.siGoToDashboardFromHeader = function () {
+  siGoToDashboard();
+};
+
+window.siLogoutFromHeader = async function () {
+
+  await supabase.auth.signOut();
+  siPostLoginAction = null;
+
+  // 🔥 Igualito al dashboard: signOut + redirect duro
+  window.location.href = LANDING_URL;
+    console.log("🔴 Logout clicked (inline)");
+};
 
 
   function siGoToDashboard() {
