@@ -335,6 +335,11 @@
   flex-direction: column;
   gap: 8px;
 }
+
+.si-user-menu.hidden {
+  display: none;
+}
+
 </style>
 
 
@@ -1064,40 +1069,115 @@ async function siRefreshAuthControls(existingUser) {
     return;
   }
 
-  // 🟢 CON SESIÓN → saludo + Ir a mi panel + Cerrar sesión
-  let displayName = user.email;
-  try {
-    const { data: profile, error: profileError } = await supabase
-      .from("profiles")
-      .select("full_name, company")
-      .eq("id", user.id)
-      .single();
+// 🟢 CON SESIÓN → saludo + menú de usuario
+let displayName = user.email;
+try {
+  const { data: profile, error: profileError } = await supabase
+    .from("profiles")
+    .select("full_name, company")
+    .eq("id", user.id)
+    .single();
 
-    if (!profileError && profile) {
-      displayName = profile.company || profile.full_name || user.email;
-    }
-  } catch (e) {
-    // si falla usamos email
+  if (!profileError && profile) {
+    displayName = profile.company || profile.full_name || user.email;
   }
-
-  authControls.innerHTML = `
-    <span class="si-user-label">Hola, ${displayName}</span>
-    <button
-      type="button"
-      class="si-btn si-btn-ghost"
-      onclick="window.siGoToDashboardFromHeader()"
-    >
-      Ir a mi panel
-    </button>
-    <button
-      type="button"
-      class="si-btn si-btn-ghost"
-      onclick="window.siLogoutFromHeader()"
-    >
-      Cerrar sesión
-    </button>
-  `;
+} catch (e) {
+  // si falla usamos email
 }
+
+authControls.innerHTML = `
+  <div class="relative" id="si-user-menu-root">
+    <button
+      type="button"
+      id="si-user-menu-button"
+      class="si-btn si-btn-ghost flex items-center gap-2"
+    >
+      <span class="si-user-label hidden sm:inline-block">
+        Hola, ${displayName}
+      </span>
+      <span class="inline-block w-6 h-6 rounded-full border border-[#C9A227]/40 bg-[#020617] flex items-center justify-center text-xs">
+        ▼
+      </span>
+    </button>
+
+    <div
+      id="si-user-menu-panel"
+      class="si-user-menu hidden absolute right-0 mt-2 w-48 rounded-xl bg-slate-900/95 border border-slate-700/70 shadow-xl py-1 text-sm z-50"
+    >
+      <button
+        type="button"
+        class="w-full text-left px-3 py-2 hover:bg-slate-800/90"
+        data-si-menu="dashboard"
+      >
+        Ir a mi panel
+      </button>
+      <button
+        type="button"
+        class="w-full text-left px-3 py-2 hover:bg-slate-800/90"
+        data-si-menu="account"
+      >
+        Mi cuenta (próximamente)
+      </button>
+      <div class="border-t border-slate-700/60 my-1"></div>
+      <a
+        href="logout.html"
+        class="block w-full text-left px-3 py-2 hover:bg-red-600/20 text-red-400"
+      >
+        Cerrar sesión
+      </a>
+    </div>
+  </div>
+`;
+
+// re-conectar behavior del menú
+siWireUserMenu();
+}
+
+  // =============================
+  // SIGNED IN MENU BEHAVIOR
+  // =============================
+
+window.siOpenAuthFromHeader = function () {
+  siPostLoginAction = null;
+  siOpenAuthModal(true);
+};
+
+function siWireUserMenu() {
+  const root   = document.getElementById("si-user-menu-root");
+  const button = document.getElementById("si-user-menu-button");
+  const panel  = document.getElementById("si-user-menu-panel");
+  if (!root || !button || !panel) return;
+
+  const toggle = () => {
+    panel.classList.toggle("hidden");
+  };
+
+  button.onclick = toggle;
+
+  // click en opciones
+  panel.onclick = (event) => {
+    const item = event.target.closest("[data-si-menu]");
+    if (!item) return;
+    const action = item.dataset.siMenu;
+    if (action === "dashboard") {
+      window.location.href = DASHBOARD_URL;
+    }
+    if (action === "account") {
+      // luego mandamos a /account.html
+      alert("Pantalla de cuenta vendrá después 😉");
+    }
+    panel.classList.add("hidden");
+  };
+
+  // cerrar al hacer click fuera
+  document.addEventListener("click", (event) => {
+    if (!root.contains(event.target)) {
+      panel.classList.add("hidden");
+    }
+  }, { once: true });
+}
+
+
 
 window.siOpenAuthFromHeader = function () {
   siPostLoginAction = null;
