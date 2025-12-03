@@ -857,6 +857,8 @@
   const DASHBOARD_URL = "/Website/dashboard.html";      // o "/Website/dashboard.html"
   const LANDING_URL   = "/Website/index.html";          // o "/Website/index.html"
   const MAIN_SITE_URL = "/Website/";
+  const ACCOUNT_URL   = "/Website/account.html";
+
 
   const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
@@ -1176,13 +1178,13 @@ function wireHeaderAuth() {
     };
   }
 
-  if (accountItem) {
-    accountItem.onclick = () => {
-      // luego mandamos a ACCOUNT_URL cuando tengamos la página lista
-      alert("Pantalla de cuenta vendrá después 😉");
-      menuPanel && menuPanel.classList.add("hidden");
-    };
-  }
+if (accountItem) {
+  accountItem.onclick = () => {
+    menuPanel && menuPanel.classList.add("hidden");
+    window.location.href = ACCOUNT_URL;
+  };
+}
+
 
   if (logoutItem) {
     logoutItem.onclick = async () => {

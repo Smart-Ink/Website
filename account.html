@@ -21,6 +21,7 @@
       },
     };
   </script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body class="bg-slate-950 text-slate-100 min-h-screen">
   <!-- Page wrapper -->
@@ -49,34 +50,60 @@
         </div>
 
         <div class="flex items-center gap-3">
-          <!-- Estado de suscripción -->
-          <div class="hidden sm:flex flex-col items-end">
-            <span class="text-xs text-slate-400">Plan actual</span>
-            <div class="flex items-center gap-2">
-              <span class="text-xs font-medium text-smartink.gold">HCM + SRM · PRO</span>
-              <span class="text-[10px] px-2 py-[2px] rounded-full border border-smartink.gold/40 text-[10px] text-smartink.gold/90">
-                Renovación: 25/12/2025
-              </span>
-            </div>
-          </div>
+<!-- Estado de suscripción -->
+<div class="hidden sm:flex flex-col items-end">
+  <span class="text-xs text-slate-400">Plan actual</span>
+  <div class="flex items-center gap-2">
+    <span
+      id="top-plan-name"
+      class="text-xs font-medium text-smartink.gold"
+    >
+      HCM + SRM · PRO
+    </span>
+    <span
+      id="top-plan-renewal"
+      class="text-[10px] px-2 py-[2px] rounded-full bg-emerald-500/10 text-emerald-300 border border-emerald-500/30"
+    >
+      Renovación: 25/12/2025
+    </span>
+  </div>
+</div>
 
-          <!-- User mini -->
-          <button class="flex items-center gap-2 rounded-xl border border-slate-700 bg-slate-900/70 px-3 py-1.5 hover:border-smartink.gold/60 hover:bg-slate-900 transition-colors">
-            <div class="h-8 w-8 rounded-full bg-gradient-to-br from-cyan-400 to-emerald-400 flex items-center justify-center text-slate-900 text-sm font-bold">
-              JV
-            </div>
-            <div class="hidden sm:block text-left">
-              <p class="text-xs font-medium text-slate-100">
-                Javier Villarreal
-              </p>
-              <p class="text-[11px] text-slate-400">
-                admin@smartink.mx
-              </p>
-            </div>
-            <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 9l6 6 6-6" />
-            </svg>
-          </button>
+<!-- User mini + logout -->
+<div class="flex items-center gap-2">
+  <button
+    id="account-user-button"
+    class="flex items-center gap-2 rounded-xl border border-slate-700 bg-slate-900/70 px-3 py-1.5 hover:border-smartink.gold/60 hover:bg-slate-900 transition-colors"
+    type="button"
+  >
+    <div
+      id="top-user-avatar"
+      class="h-8 w-8 rounded-full bg-gradient-to-br from-cyan-400 to-emerald-400 flex items-center justify-center text-slate-900 text-sm font-bold"
+    >
+      JV
+    </div>
+    <div class="hidden sm:block text-left">
+      <p id="top-user-name" class="text-xs font-medium text-slate-100">
+        Javier Villarreal
+      </p>
+      <p id="top-user-email" class="text-[11px] text-slate-400">
+        admin@smartink.mx
+      </p>
+    </div>
+    <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 9l6 6 6-6" />
+    </svg>
+  </button>
+
+  <button
+    id="account-logout-btn"
+    type="button"
+    class="text-[11px] text-slate-400 hover:text-red-400"
+  >
+    Cerrar sesión
+  </button>
+</div>
+
         </div>
       </div>
     </header>
@@ -1120,34 +1147,160 @@
   </div>
 
   <!-- Tabs logic -->
-  <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      const buttons = document.querySelectorAll(".settings-tab-btn");
-      const panels = document.querySelectorAll(".settings-panel");
+<script>
+  document.addEventListener("DOMContentLoaded", async () => {
+    // 🔐 Same project as landing/dashboard
+    const SUPABASE_URL = "https://xjkpyjdvxduzbkriindm.supabase.co";
+    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inhqa3B5amR2eGR1emJrcmlpbmRtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQwMDU3NDEsImV4cCI6MjA3OTU4MTc0MX0.NQGI245biPWESIrxqLH3_gTmzhF78DcBjIF4ENd4Zbc";
 
-      buttons.forEach(btn => {
-        btn.addEventListener("click", () => {
-          const target = btn.getAttribute("data-target");
+    const LANDING_URL   = "/Website/";
+    const DASHBOARD_URL = "/Website/dashboard.html";
 
-          // Cambiar estilos de tabs
-          buttons.forEach(b => {
-            b.classList.remove("bg-smartink.soft", "border-smartink.gold/40", "text-slate-50");
-            b.classList.add("hover:bg-slate-900/70", "text-slate-300");
-          });
-          btn.classList.add("bg-smartink.soft", "border-smartink.gold/40", "text-slate-50");
-          btn.classList.remove("hover:bg-slate-900/70", "text-slate-300");
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-          // Mostrar panel correspondiente
-          panels.forEach(p => {
-            if (p.id === "panel-" + target) {
-              p.classList.remove("hidden");
-            } else {
-              p.classList.add("hidden");
+    // ---------------------------
+    // 1) Proteger la página
+    // ---------------------------
+    const { data, error } = await supabase.auth.getSession();
+    if (error || !data.session) {
+      // Sin sesión → regresar al sitio principal y pedir login
+      window.location.href = LANDING_URL + "?auth=required";
+      return;
+    }
+    const session = data.session;
+    const user = session.user;
+
+    // ---------------------------
+    // 2) Cargar perfil / organización / plan
+    // ---------------------------
+    async function loadAccountData() {
+      let displayName = user.email;
+      let emailLabel = user.email;
+      let initials = (user.email || "?").charAt(0).toUpperCase();
+
+      try {
+        const { data: profile, error: profileError } = await supabase
+          .from("profiles")
+          .select("full_name, company, default_org_id")
+          .eq("id", user.id)
+          .single();
+
+        if (!profileError && profile) {
+          displayName = profile.company || profile.full_name || user.email;
+          emailLabel  = user.email || emailLabel;
+          initials    = (profile.company || profile.full_name || emailLabel || "?")
+            .split(" ")
+            .map(p => p[0])
+            .join("")
+            .slice(0, 2)
+            .toUpperCase();
+
+          // Intentar leer plan / suscripción de la org
+          if (profile.default_org_id) {
+            const { data: org, error: orgError } = await supabase
+              .from("organizations")
+              .select("id, name")
+              .eq("id", profile.default_org_id)
+              .single();
+
+            if (!orgError && org) {
+              const { data: subs, error: subsError } = await supabase
+                .from("subscriptions")
+                .select(`
+                  id,
+                  status,
+                  plan,
+                  expires_at,
+                  products ( code, name )
+                `)
+                .eq("org_id", org.id)
+                .order("created_at", { ascending: true });
+
+              if (!subsError && subs && subs.length > 0) {
+                const active = subs.find(s => s.status === "active" || s.status === "trial") || subs[0];
+
+                const planName =
+                  (active.products && (active.products.name || active.products.code)) ||
+                  active.plan ||
+                  "Plan Smart Ink";
+
+                const planLabelEl = document.getElementById("top-plan-name");
+                const planRenewEl = document.getElementById("top-plan-renewal");
+
+                if (planLabelEl) {
+                  planLabelEl.textContent = planName;
+                }
+                if (planRenewEl) {
+                  const d = active.expires_at ? new Date(active.expires_at) : null;
+                  planRenewEl.textContent = d
+                    ? "Renovación: " + d.toLocaleDateString("es-MX")
+                    : "Renovación automática activa";
+                }
+              }
             }
-          });
+          }
+        }
+      } catch (e) {
+        console.warn("Error cargando perfil/plan:", e);
+      }
+
+      // Pinta datos en el header
+      const nameEl   = document.getElementById("top-user-name");
+      const emailEl  = document.getElementById("top-user-email");
+      const avatarEl = document.getElementById("top-user-avatar");
+
+      if (nameEl)   nameEl.textContent = displayName;
+      if (emailEl)  emailEl.textContent = emailLabel;
+      if (avatarEl) avatarEl.textContent = initials;
+    }
+
+    await loadAccountData();
+
+    // ---------------------------
+    // 3) Logout desde account
+    // ---------------------------
+    const logoutBtn = document.getElementById("account-logout-btn");
+    if (logoutBtn) {
+      logoutBtn.addEventListener("click", async () => {
+        await supabase.auth.signOut();
+        window.location.href = LANDING_URL;
+      });
+    }
+
+    // ---------------------------
+    // 4) Lógica de tabs (igual que antes)
+    // ---------------------------
+    const buttons = document.querySelectorAll(".settings-tab-btn");
+    const panels  = document.querySelectorAll(".settings-panel");
+
+    buttons.forEach(btn => {
+      btn.addEventListener("click", () => {
+        const target = btn.getAttribute("data-target");
+
+        // Cambiar estilos de tabs
+        buttons.forEach(b => {
+          b.classList.remove("bg-smartink.soft", "border-smartink.gold/40", "text-slate-50");
+          b.classList.add("hover:bg-slate-900/70", "text-slate-300");
+        });
+        btn.classList.add("bg-smartink.soft", "border-smartink.gold/40", "text-slate-50");
+        btn.classList.remove("hover:bg-slate-900/70", "text-slate-300");
+
+        // Mostrar panel correspondiente
+        panels.forEach(p => {
+          if (p.id === "panel-" + target) {
+            p.classList.remove("hidden");
+          } else {
+            p.classList.add("hidden");
+          }
         });
       });
     });
-  </script>
+
+    // Seleccionar tab inicial (Perfil)
+    const firstBtn = document.querySelector('.settings-tab-btn[data-target="perfil"]');
+    if (firstBtn) firstBtn.click();
+  });
+</script>
+
 </body>
 </html>
