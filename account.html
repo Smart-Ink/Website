@@ -248,27 +248,33 @@
 
           <!-- PERFIL -->
           <div id="panel-perfil" class="settings-panel rounded-2xl border border-slate-800 bg-slate-950/60 shadow-lg shadow-black/40 p-5">
-            <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
-              <div>
-                <h2 class="text-base md:text-lg font-semibold text-slate-50">
-                  Perfil del usuario
-                </h2>
-                <p class="text-xs md:text-sm text-slate-400">
-                  Controla tu identidad dentro de Smart Ink y tus preferencias básicas.
-                </p>
-              </div>
-              <button
-                class="rounded-xl px-4 py-2 text-xs md:text-sm font-medium bg-smartink.gold text-slate-900 hover:bg-amber-300 transition-colors">
-                Guardar cambios
-              </button>
-            </div>
+<div class="flex flex-wrap items-center justify-between gap-3 mb-4">
+  <div>
+    <h2 class="text-base md:text-lg font-semibold text-slate-50">
+      Perfil del usuario
+    </h2>
+    <p class="text-xs md:text-sm text-slate-400">
+      Controla tu identidad dentro de Smart Ink y tus preferencias básicas.
+    </p>
+  </div>
+  <div class="flex flex-col items-end gap-1">
+    <button
+      id="perfil-save-btn"
+      class="rounded-xl px-4 py-2 text-xs md:text-sm font-medium bg-smartink.gold text-slate-900 hover:bg-amber-300 transition-colors">
+      Guardar cambios
+    </button>
+    <p id="perfil-status" class="text-[11px] text-slate-500"></p>
+  </div>
+</div>
+
 
             <div class="grid md:grid-cols-[auto,1fr] gap-6 mt-2">
               <!-- Avatar -->
               <div class="flex flex-col items-center gap-3">
                 <div
+                id="perfil-avatar"
                   class="h-20 w-20 rounded-2xl bg-gradient-to-br from-cyan-400 to-emerald-400 flex items-center justify-center text-2xl font-bold text-slate-900">
-                  JV
+                  SI
                 </div>
                 <button
                   class="text-[11px] px-3 py-1.5 rounded-full border border-slate-700 text-slate-200 hover:border-smartink.gold/80 hover:text-smartink.gold transition-colors">
@@ -280,52 +286,64 @@
               </div>
 
               <!-- Form -->
-              <div class="grid sm:grid-cols-2 gap-4">
-                <div>
-                  <label class="block text-xs font-medium text-slate-300 mb-1">Nombre</label>
-                  <input
-                    class="w-full rounded-xl border border-slate-700 bg-slate-900/70 px-3 py-2 text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-smartink.gold/70 focus:border-smartink.gold/70"
-                    placeholder="Nombre completo" value="Javier Roberto Villarreal" />
-                </div>
-                <div>
-                  <label class="block text-xs font-medium text-slate-300 mb-1">Correo principal</label>
-                  <input
-                    class="w-full rounded-xl border border-slate-700 bg-slate-900/70 px-3 py-2 text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-smartink.gold/70 focus:border-smartink.gold/70"
-                    placeholder="correo@empresa.com" value="admin@smartink.mx" />
-                </div>
-                <div>
-                  <label class="block text-xs font-medium text-slate-300 mb-1">Teléfono</label>
-                  <input
-                    class="w-full rounded-xl border border-slate-700 bg-slate-900/70 px-3 py-2 text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-smartink.gold/70 focus:border-smartink.gold/70"
-                    placeholder="+52 614 000 0000" />
-                </div>
-                <div>
-                  <label class="block text-xs font-medium text-slate-300 mb-1">Zona horaria</label>
-                  <select
-                    class="w-full rounded-xl border border-slate-700 bg-slate-900/70 px-3 py-2 text-sm text-slate-100 focus:outline-none focus:ring-1 focus:ring-smartink.gold/70 focus:border-smartink.gold/70">
-                    <option>America/Chihuahua (CDMX -1)</option>
-                    <option>America/Mexico_City</option>
-                    <option>America/Monterrey</option>
-                    <option>UTC</option>
-                  </select>
-                </div>
-                <div>
-                  <label class="block text-xs font-medium text-slate-300 mb-1">Idioma</label>
-                  <select
-                    class="w-full rounded-xl border border-slate-700 bg-slate-900/70 px-3 py-2 text-sm text-slate-100 focus:outline-none focus:ring-1 focus:ring-smartink.gold/70 focus:border-smartink.gold/70">
-                    <option>Español (MX)</option>
-                    <option>Inglés (US)</option>
-                  </select>
-                </div>
-                <div>
-                  <label class="block text-xs font-medium text-slate-300 mb-1">Formato de fecha</label>
-                  <select
-                    class="w-full rounded-xl border border-slate-700 bg-slate-900/70 px-3 py-2 text-sm text-slate-100 focus:outline-none focus:ring-1 focus:ring-smartink.gold/70 focus:border-smartink.gold/70">
-                    <option>DD/MM/AAAA</option>
-                    <option>MM/DD/YYYY</option>
-                  </select>
-                </div>
-              </div>
+<div class="grid sm:grid-cols-2 gap-4">
+  <div>
+    <label class="block text-xs font-medium text-slate-300 mb-1">Nombre</label>
+    <input
+      id="perfil-full-name"
+      class="w-full rounded-xl border border-slate-700 bg-slate-900/70 px-3 py-2 text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-smartink.gold/70 focus:border-smartink.gold/70"
+      placeholder="Nombre completo"
+      value=""
+    />
+  </div>
+  <div>
+    <label class="block text-xs font-medium text-slate-300 mb-1">Correo principal</label>
+    <input
+      id="perfil-email"
+      class="w-full rounded-xl border border-slate-700 bg-slate-900/70 px-3 py-2 text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-smartink.gold/70 focus:border-smartink.gold/70"
+      placeholder="correo@empresa.com"
+      value=""
+    />
+  </div>
+  <div>
+    <label class="block text-xs font-medium text-slate-300 mb-1">Teléfono</label>
+    <input
+      id="perfil-phone"
+      class="w-full rounded-xl border border-slate-700 bg-slate-900/70 px-3 py-2 text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-smartink.gold/70 focus:border-smartink.gold/70"
+      placeholder="+52 614 000 0000"
+      value=""
+    />
+  </div>
+  <div>
+    <label class="block text-xs font-medium text-slate-300 mb-1">Zona horaria</label>
+    <select
+      id="perfil-timezone"
+      class="w-full rounded-xl border border-slate-700 bg-slate-900/70 px-3 py-2 text-sm text-slate-100 focus:outline-none focus:ring-1 focus:ring-smartink.gold/70 focus:border-smartink.gold/70">
+      <option value="America/Chihuahua">America/Chihuahua (CDMX -1)</option>
+      <option value="America/Mexico_City">America/Mexico_City</option>
+      <option value="America/Monterrey">America/Monterrey</option>
+      <option value="UTC">UTC</option>
+    </select>
+  </div>
+  <div>
+    <label class="block text-xs font-medium text-slate-300 mb-1">Idioma</label>
+    <select
+      id="perfil-language"
+      class="w-full rounded-xl border border-slate-700 bg-slate-900/70 px-3 py-2 text-sm text-slate-100 focus:outline-none focus:ring-1 focus:ring-smartink.gold/70 focus:border-smartink.gold/70">
+      <option value="es-MX">Español (MX)</option>
+      <option value="en-US">Inglés (US)</option>
+    </select>
+  </div>
+  <div>
+    <label class="block text-xs font-medium text-slate-300 mb-1">Formato de fecha</label>
+    <select
+      id="perfil-date-format"
+      class="w-full rounded-xl border border-slate-700 bg-slate-900/70 px-3 py-2 text-sm text-slate-100 focus:outline-none focus:ring-1 focus:ring-smartink.gold/70 focus:border-smartink.gold/70">
+      <option value="DD/MM/YYYY">DD/MM/AAAA</option>
+      <option value="MM/DD/YYYY">MM/DD/YYYY</option>
+    </select>
+  </div>
+</div>
             </div>
           </div>
 
@@ -1158,6 +1176,18 @@
 
     const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
+    // Refs PERFIL
+const perfilAvatarEl      = document.getElementById("perfil-avatar");
+const perfilFullNameInput = document.getElementById("perfil-full-name");
+const perfilEmailInput    = document.getElementById("perfil-email");
+const perfilPhoneInput    = document.getElementById("perfil-phone");
+const perfilTzSelect      = document.getElementById("perfil-timezone");
+const perfilLangSelect    = document.getElementById("perfil-language");
+const perfilDateSelect    = document.getElementById("perfil-date-format");
+const perfilSaveBtn       = document.getElementById("perfil-save-btn");
+const perfilStatusEl      = document.getElementById("perfil-status");
+
+
     // ---------------------------
     // 1) Proteger la página
     // ---------------------------
@@ -1173,88 +1203,169 @@
     // ---------------------------
     // 2) Cargar perfil / organización / plan
     // ---------------------------
-    async function loadAccountData() {
-      let displayName = user.email;
-      let emailLabel = user.email;
-      let initials = (user.email || "?").charAt(0).toUpperCase();
+async function loadAccountData() {
+  let displayName = user.email;
+  let emailLabel  = user.email;
+  let initials    = (user.email || "?").charAt(0).toUpperCase();
 
-      try {
-        const { data: profile, error: profileError } = await supabase
-          .from("profiles")
-          .select("full_name, company, default_org_id")
-          .eq("id", user.id)
+  let profile = null;
+
+  try {
+    const { data: profileData, error: profileError } = await supabase
+      .from("profiles")
+      .select("full_name, company, phone, timezone, language, date_format, default_org_id")
+      .eq("id", user.id)
+      .single();
+
+    if (!profileError && profileData) {
+      profile = profileData;
+
+      displayName = profile.company || profile.full_name || user.email;
+      emailLabel  = user.email || emailLabel;
+      initials    = (profile.company || profile.full_name || emailLabel || "?")
+        .split(" ")
+        .map(p => p[0])
+        .join("")
+        .slice(0, 2)
+        .toUpperCase();
+
+      // ---- Rellenar PERFIL ----
+      if (perfilFullNameInput) perfilFullNameInput.value = profile.full_name || "";
+      if (perfilEmailInput)    perfilEmailInput.value    = emailLabel;
+      if (perfilPhoneInput)    perfilPhoneInput.value    = profile.phone || "";
+
+      if (perfilTzSelect) {
+        const tzValue = profile.timezone || "America/Chihuahua";
+        // sólo cambia si existe esa opción
+        if ([...perfilTzSelect.options].some(o => o.value === tzValue)) {
+          perfilTzSelect.value = tzValue;
+        }
+      }
+
+      if (perfilLangSelect) {
+        const langValue = profile.language || "es-MX";
+        if ([...perfilLangSelect.options].some(o => o.value === langValue)) {
+          perfilLangSelect.value = langValue;
+        }
+      }
+
+      if (perfilDateSelect) {
+        const dfValue = profile.date_format || "DD/MM/YYYY";
+        if ([...perfilDateSelect.options].some(o => o.value === dfValue)) {
+          perfilDateSelect.value = dfValue;
+        }
+      }
+
+      if (perfilAvatarEl) {
+        perfilAvatarEl.textContent = initials;
+      }
+
+      // ---- Plan / suscripción para el top bar ----
+      if (profile.default_org_id) {
+        const { data: org, error: orgError } = await supabase
+          .from("organizations")
+          .select("id, name")
+          .eq("id", profile.default_org_id)
           .single();
 
-        if (!profileError && profile) {
-          displayName = profile.company || profile.full_name || user.email;
-          emailLabel  = user.email || emailLabel;
-          initials    = (profile.company || profile.full_name || emailLabel || "?")
-            .split(" ")
-            .map(p => p[0])
-            .join("")
-            .slice(0, 2)
-            .toUpperCase();
+        if (!orgError && org) {
+          const { data: subs, error: subsError } = await supabase
+            .from("subscriptions")
+            .select(`
+              id,
+              status,
+              plan,
+              expires_at,
+              products ( code, name )
+            `)
+            .eq("org_id", org.id)
+            .order("created_at", { ascending: true });
 
-          // Intentar leer plan / suscripción de la org
-          if (profile.default_org_id) {
-            const { data: org, error: orgError } = await supabase
-              .from("organizations")
-              .select("id, name")
-              .eq("id", profile.default_org_id)
-              .single();
+          if (!subsError && subs && subs.length > 0) {
+            const active = subs.find(s => s.status === "active" || s.status === "trial") || subs[0];
 
-            if (!orgError && org) {
-              const { data: subs, error: subsError } = await supabase
-                .from("subscriptions")
-                .select(`
-                  id,
-                  status,
-                  plan,
-                  expires_at,
-                  products ( code, name )
-                `)
-                .eq("org_id", org.id)
-                .order("created_at", { ascending: true });
+            const planName =
+              (active.products && (active.products.name || active.products.code)) ||
+              active.plan ||
+              "Plan Smart Ink";
 
-              if (!subsError && subs && subs.length > 0) {
-                const active = subs.find(s => s.status === "active" || s.status === "trial") || subs[0];
+            const planLabelEl = document.getElementById("top-plan-name");
+            const planRenewEl = document.getElementById("top-plan-renewal");
 
-                const planName =
-                  (active.products && (active.products.name || active.products.code)) ||
-                  active.plan ||
-                  "Plan Smart Ink";
-
-                const planLabelEl = document.getElementById("top-plan-name");
-                const planRenewEl = document.getElementById("top-plan-renewal");
-
-                if (planLabelEl) {
-                  planLabelEl.textContent = planName;
-                }
-                if (planRenewEl) {
-                  const d = active.expires_at ? new Date(active.expires_at) : null;
-                  planRenewEl.textContent = d
-                    ? "Renovación: " + d.toLocaleDateString("es-MX")
-                    : "Renovación automática activa";
-                }
-              }
+            if (planLabelEl) {
+              planLabelEl.textContent = planName;
+            }
+            if (planRenewEl) {
+              const d = active.expires_at ? new Date(active.expires_at) : null;
+              planRenewEl.textContent = d
+                ? "Renovación: " + d.toLocaleDateString("es-MX")
+                : "Renovación automática activa";
             }
           }
         }
-      } catch (e) {
-        console.warn("Error cargando perfil/plan:", e);
       }
-
-      // Pinta datos en el header
-      const nameEl   = document.getElementById("top-user-name");
-      const emailEl  = document.getElementById("top-user-email");
-      const avatarEl = document.getElementById("top-user-avatar");
-
-      if (nameEl)   nameEl.textContent = displayName;
-      if (emailEl)  emailEl.textContent = emailLabel;
-      if (avatarEl) avatarEl.textContent = initials;
     }
+  } catch (e) {
+    console.warn("Error cargando perfil/plan:", e);
+  }
+
+  // ---- Pinta datos en el header mini user (aunque no haya perfil) ----
+  const nameEl   = document.getElementById("top-user-name");
+  const emailEl  = document.getElementById("top-user-email");
+  const avatarEl = document.getElementById("top-user-avatar");
+
+  if (nameEl)   nameEl.textContent = displayName;
+  if (emailEl)  emailEl.textContent = emailLabel;
+  if (avatarEl) avatarEl.textContent = initials;
+}
+
 
     await loadAccountData();
+
+    // ---------------------------
+// 3) Guardar PERFIL
+// ---------------------------
+if (perfilSaveBtn) {
+  perfilSaveBtn.addEventListener("click", async () => {
+    if (perfilStatusEl) {
+      perfilStatusEl.textContent = "Guardando cambios...";
+      perfilStatusEl.className = "text-[11px] text-slate-400";
+    }
+
+    const updates = {
+      full_name: (perfilFullNameInput?.value || "").trim() || null,
+      phone:     (perfilPhoneInput?.value || "").trim() || null,
+      timezone:  perfilTzSelect?.value || null,
+      language:  perfilLangSelect?.value || null,
+      date_format: perfilDateSelect?.value || null,
+      updated_at: new Date().toISOString()
+    };
+
+    // Nota: email se mantiene en Supabase Auth; por ahora no lo cambiamos aquí.
+    const { error: updateError } = await supabase
+      .from("profiles")
+      .update(updates)
+      .eq("id", user.id);
+
+    if (updateError) {
+      console.error(updateError);
+      if (perfilStatusEl) {
+        perfilStatusEl.textContent = "Error al guardar cambios: " + updateError.message;
+        perfilStatusEl.className = "text-[11px] text-red-400";
+      }
+      return;
+    }
+
+    if (perfilStatusEl) {
+      perfilStatusEl.textContent = "Cambios guardados correctamente.";
+      perfilStatusEl.className = "text-[11px] text-emerald-400";
+    }
+
+    // Refresca header + avatar con los nuevos datos
+    await loadAccountData();
+  });
+}
+
 
     // ---------------------------
     // 3) Logout desde account
