@@ -1061,77 +1061,141 @@ async function siRefreshAuthControls(existingUser) {
       <button
         type="button"
         class="si-btn si-btn-primary"
-        onclick="window.siOpenAuthFromHeader()"
+        id="header-auth-btn"
       >
         Entrar / Crear cuenta
       </button>
     `;
+    wireHeaderAuth();
     return;
   }
 
-// 🟢 CON SESIÓN → saludo + menú de usuario
-let displayName = user.email;
-try {
-  const { data: profile, error: profileError } = await supabase
-    .from("profiles")
-    .select("full_name, company")
-    .eq("id", user.id)
-    .single();
+  // 🟢 CON SESIÓN → saludo + menú usuario
+  let displayName = user.email;
+  let emailLabel  = user.email;
+  try {
+    const { data: profile, error: profileError } = await supabase
+      .from("profiles")
+      .select("full_name, company")
+      .eq("id", user.id)
+      .single();
 
-  if (!profileError && profile) {
-    displayName = profile.company || profile.full_name || user.email;
+    if (!profileError && profile) {
+      displayName = profile.company || profile.full_name || user.email;
+    }
+  } catch (e) {
+    // si falla usamos email
   }
-} catch (e) {
-  // si falla usamos email
-}
 
-authControls.innerHTML = `
-  <div class="relative" id="si-user-menu-root">
-    <button
-      type="button"
-      id="si-user-menu-button"
-      class="si-btn si-btn-ghost flex items-center gap-2"
-    >
-      <span class="si-user-label hidden sm:inline-block">
-        Hola, ${displayName}
-      </span>
-      <span class="inline-block w-6 h-6 rounded-full border border-[#C9A227]/40 bg-[#020617] flex items-center justify-center text-xs">
-        ▼
-      </span>
-    </button>
-
-    <div
-      id="si-user-menu-panel"
-      class="si-user-menu hidden absolute right-0 mt-2 w-48 rounded-xl bg-slate-900/95 border border-slate-700/70 shadow-xl py-1 text-sm z-50"
-    >
+  authControls.innerHTML = `
+    <div class="relative">
       <button
         type="button"
-        class="w-full text-left px-3 py-2 hover:bg-slate-800/90"
-        data-si-menu="dashboard"
+        class="si-btn si-btn-ghost flex items-center gap-2"
+        id="header-user-menu-btn"
       >
-        Ir a mi panel
+        <span class="si-user-label hidden sm:inline-block">
+          Hola, ${displayName}
+        </span>
+        <span class="inline-block w-6 h-6 rounded-full border border-[#C9A227]/40 bg-[#020617] flex items-center justify-center text-xs">
+          ▼
+        </span>
       </button>
-      <button
-        type="button"
-        class="w-full text-left px-3 py-2 hover:bg-slate-800/90"
-        data-si-menu="account"
+
+      <div
+        id="header-user-menu-panel"
+        class="si-user-menu hidden absolute right-0 mt-2 w-56 rounded-xl bg-slate-900/95 border border-slate-700/70 shadow-xl py-1 text-sm z-50"
       >
-        Mi cuenta (próximamente)
-      </button>
-      <div class="border-t border-slate-700/60 my-1"></div>
-      <a
-        href="logout.html"
-        class="block w-full text-left px-3 py-2 hover:bg-red-600/20 text-red-400"
-      >
-        Cerrar sesión
-      </a>
+        <div class="px-3 py-2 text-xs text-slate-400 border-b border-slate-700/70">
+          <div class="font-semibold text-slate-100 text-[11px]">
+            ${displayName}
+          </div>
+          <div class="truncate">${emailLabel}</div>
+        </div>
+        <button
+          type="button"
+          class="w-full text-left px-3 py-2 hover:bg-slate-800/90"
+          id="header-dashboard-item"
+        >
+          Ir a mi panel
+        </button>
+        <button
+          type="button"
+          class="w-full text-left px-3 py-2 hover:bg-slate-800/90"
+          id="header-account-item"
+        >
+          Mi cuenta (próximamente)
+        </button>
+        <div class="border-t border-slate-700/60 my-1"></div>
+        <button
+          type="button"
+          class="w-full text-left px-3 py-2 hover:bg-red-600/20 text-red-400"
+          id="header-logout-item"
+        >
+          Cerrar sesión
+        </button>
+      </div>
     </div>
-  </div>
-`;
+  `;
 
-// re-conectar behavior del menú
-siWireUserMenu();
+  wireHeaderAuth();
 }
+
+function wireHeaderAuth() {
+  // 🔹 BOTÓN LOGIN (cuando no hay sesión)
+  const loginBtn = document.getElementById("header-auth-btn");
+  if (loginBtn) {
+    loginBtn.onclick = () => {
+      siPostLoginAction = null;
+      siOpenAuthModal(true);
+    };
+  }
+
+  // 🔹 MENÚ USUARIO (cuando sí hay sesión)
+  const menuBtn   = document.getElementById("header-user-menu-btn");
+  const menuPanel = document.getElementById("header-user-menu-panel");
+  const dashItem  = document.getElementById("header-dashboard-item");
+  const accountItem = document.getElementById("header-account-item");
+  const logoutItem  = document.getElementById("header-logout-item");
+
+  if (menuBtn && menuPanel) {
+    menuBtn.onclick = () => {
+      menuPanel.classList.toggle("hidden");
+    };
+
+    // cerrar si haces click fuera
+    document.addEventListener("click", (event) => {
+      if (!menuPanel.contains(event.target) && !menuBtn.contains(event.target)) {
+        menuPanel.classList.add("hidden");
+      }
+    });
+  }
+
+  if (dashItem) {
+    dashItem.onclick = () => {
+      window.location.href = DASHBOARD_URL;
+    };
+  }
+
+  if (accountItem) {
+    accountItem.onclick = () => {
+      // luego mandamos a ACCOUNT_URL cuando tengamos la página lista
+      alert("Pantalla de cuenta vendrá después 😉");
+      menuPanel && menuPanel.classList.add("hidden");
+    };
+  }
+
+  if (logoutItem) {
+    logoutItem.onclick = async () => {
+      console.log("🔴 Header logout clicked");
+      await supabase.auth.signOut();
+      siPostLoginAction = null;
+      window.location.href = LANDING_URL;   // igual que en el dashboard
+    };
+  }
+}
+
+
 
   // =============================
   // SIGNED IN MENU BEHAVIOR
