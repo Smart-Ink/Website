@@ -409,6 +409,45 @@
       color: var(--muted);
       text-align: right;
     }
+
+    .badge-user {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 3px 10px;
+}
+
+.badge-avatar {
+  width: 26px;
+  height: 26px;
+  border-radius: 999px;
+  background: radial-gradient(circle at top left, rgba(56,189,248,0.9), rgba(16,185,129,0.9));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 600;
+  color: #020617;
+  background-size: cover;
+  background-position: center;
+  overflow: hidden;
+}
+
+.badge-user-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.badge-email {
+  font-size: 11px;
+  color: var(--text);
+}
+
+.badge-name {
+  font-size: 10px;
+  color: var(--muted);
+}
+
   </style>
 </head>
 
@@ -427,12 +466,16 @@
     </div>
     <div class="topbar-right">
       <div class="badge-user" id="user-badge">
-        <span class="badge-dot"></span>
-        <span id="user-email">Cargando usuario...</span>
+        <div class="badge-avatar" id="user-avatar">SI</div>
+        <div class="badge-user-text">
+          <div id="user-email" class="badge-email">Cargando usuario...</div>
+          <div id="user-name" class="badge-name">—</div>
+        </div>
       </div>
       <button class="btn-ghost" id="logout-btn">
         Cerrar sesión
       </button>
+      
     </div>
   </header>
 
@@ -525,7 +568,8 @@
   const MAIN_SITE_URL = "/Website/";
 
   const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
+  const userAvatarEl = document.getElementById("user-avatar");
+  const userNameEl   = document.getElementById("user-name");
   const userEmailEl = document.getElementById("user-email");
   const chipOrgEl = document.getElementById("chip-org");
   const orgNameEl = document.getElementById("org-name");
@@ -577,24 +621,55 @@
 
     // 1) Perfil
     const { data: profile, error: profileError } = await supabase
-      .from("profiles")
-      .select("*")
-      .eq("id", user.id)
-      .single();
+  .from("profiles")
+  .select("full_name, company, avatar_url, default_org_id")
+  .eq("id", user.id)
+  .single();
 
-    if (profileError) {
-      console.error(profileError);
-      orgNameEl.textContent = "Perfil no encontrado";
-      orgSubtitleEl.textContent =
-        "Revisa que la función complete_sign_up se haya ejecutado correctamente.";
-      orgStatusEl.textContent = "Error";
-      orgStatusExtraEl.textContent = "No se pudo cargar el perfil.";
-      return;
-    }
+if (profileError) {
+  console.error(profileError);
+  orgNameEl.textContent = "Perfil no encontrado";
+  orgSubtitleEl.textContent = "Revisa que la función complete_sign_up se haya ejecutado correctamente.";
+  orgStatusEl.textContent = "Error";
+  orgStatusExtraEl.textContent = "No se pudo cargar el perfil.";
+
+  // Fallback mini header
+  const initials = (user.email || "?").charAt(0).toUpperCase();
+  if (userAvatarEl) {
+    userAvatarEl.style.backgroundImage = "none";
+    userAvatarEl.textContent = initials;
+  }
+  if (userNameEl) userNameEl.textContent = user.email || "Usuario Smart Ink";
+  return;
+}
+
+const displayName =
+  profile.company || profile.full_name || (user.email || "Usuario Smart Ink");
+const initials = (profile.company || profile.full_name || user.email || "?")
+  .split(" ")
+  .filter(Boolean)
+  .map(p => p[0])
+  .join("")
+  .slice(0, 2)
+  .toUpperCase();
+const avatarUrl = profile.avatar_url || null;
+
+// Mini header
+if (userNameEl) userNameEl.textContent = displayName;
+if (userAvatarEl) {
+  if (avatarUrl) {
+    userAvatarEl.style.backgroundImage = `url(${avatarUrl})`;
+    userAvatarEl.textContent = "";
+  } else {
+    userAvatarEl.style.backgroundImage = "none";
+    userAvatarEl.textContent = initials;
+  }
+}
+
 
     // Mostrar en el badge: empresa / nombre / email
-    userEmailEl.textContent =
-      profile.company || profile.full_name || user.email || "Usuario Smart Ink";
+//  userEmailEl.textContent =
+  //  profile.company || profile.full_name || user.email || "Usuario Smart Ink";
 
     // 2) Organización principal
     if (!profile.default_org_id) {

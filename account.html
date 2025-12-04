@@ -71,30 +71,26 @@
 
 <!-- User mini + logout -->
 <div class="flex items-center gap-2">
-  <button
-    id="account-user-button"
-    class="flex items-center gap-2 rounded-xl border border-slate-700 bg-slate-900/70 px-3 py-1.5 hover:border-smartink.gold/60 hover:bg-slate-900 transition-colors"
-    type="button"
-  >
-    <div
-      id="top-user-avatar"
-      class="h-8 w-8 rounded-full bg-gradient-to-br from-cyan-400 to-emerald-400 flex items-center justify-center text-slate-900 text-sm font-bold"
-    >
-      JV
-    </div>
-    <div class="hidden sm:block text-left">
-      <p id="top-user-name" class="text-xs font-medium text-slate-100">
-        Smart Ink
-      </p>
-      <p id="top-user-email" class="text-[11px] text-slate-400">
-        demo@smartink.mx
-      </p>
-    </div>
-    <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 9l6 6 6-6" />
-    </svg>
-  </button>
-
+<!-- User mini -->
+<button class="flex items-center gap-2 rounded-xl border border-slate-700 bg-slate-900/70 px-3 py-1.5 hover:border-smartink.gold/60 hover:bg-slate-900 transition-colors">
+  <div
+    id="top-user-avatar"
+    class="h-8 w-8 rounded-full bg-gradient-to-br from-cyan-400 to-emerald-400 flex items-center justify-center text-slate-900 text-sm font-bold bg-cover bg-center">
+    JV
+  </div>
+  <div class="hidden sm:block text-left">
+    <p id="top-user-name" class="text-xs font-medium text-slate-100">
+      Cargando usuario...
+    </p>
+    <p id="top-user-email" class="text-[11px] text-slate-400">
+      —
+    </p>
+  </div>
+  <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 9l6 6 6-6" />
+  </svg>
+</button>
+<!--logout-->
   <button
     id="account-logout-btn"
     type="button"
@@ -1234,129 +1230,142 @@
       // 2) Cargar perfil / organización / plan
       // ---------------------------
       async function loadAccountData() {
-        let displayName = user.email;
-        let emailLabel  = user.email;
-        let initials    = (user.email || "?").charAt(0).toUpperCase();
-  
-        let profile = null;
-  
-        try {
-          const { data: profileData, error: profileError } = await supabase
-            .from("profiles")
-            .select("full_name, company, phone, timezone, language, date_format, default_org_id, avatar_url")
-            .eq("id", user.id)
-            .single();
-  
-          if (!profileError && profileData) {
-            profile = profileData;
-  
-            displayName = profile.company || profile.full_name || user.email;
-            emailLabel  = user.email || emailLabel;
-            initials    = (profile.company || profile.full_name || emailLabel || "?")
-              .split(" ")
-              .filter(Boolean)
-              .map(p => p[0])
-              .join("")
-              .slice(0, 2)
-              .toUpperCase();
-  
-            // ---- Rellenar PERFIL ----
-            if (perfilFullNameInput) perfilFullNameInput.value = profile.full_name || "";
-            if (perfilEmailInput)    perfilEmailInput.value    = emailLabel;
-            if (perfilPhoneInput)    perfilPhoneInput.value    = profile.phone || "";
-  
-            if (perfilTzSelect) {
-              const tzValue = profile.timezone || "America/Chihuahua";
-              if ([...perfilTzSelect.options].some(o => o.value === tzValue)) {
-                perfilTzSelect.value = tzValue;
-              }
+  let displayName = user.email;
+  let emailLabel  = user.email;
+  let initials    = (user.email || "?").charAt(0).toUpperCase();
+  let avatarUrl   = null;
+  let profile     = null;
+
+  try {
+    const { data: profileData, error: profileError } = await supabase
+      .from("profiles")
+      .select("full_name, company, phone, timezone, language, date_format, default_org_id, avatar_url")
+      .eq("id", user.id)
+      .single();
+
+    if (!profileError && profileData) {
+      profile = profileData;
+
+      displayName = profile.company || profile.full_name || user.email;
+      emailLabel  = user.email || emailLabel;
+      initials    = (profile.company || profile.full_name || emailLabel || "?")
+        .split(" ")
+        .filter(Boolean)
+        .map(p => p[0])
+        .join("")
+        .slice(0, 2)
+        .toUpperCase();
+
+      avatarUrl = profile.avatar_url || null;
+
+      // ---- PERFIL form ----
+      if (perfilFullNameInput) perfilFullNameInput.value = profile.full_name || "";
+      if (perfilEmailInput)    perfilEmailInput.value    = emailLabel;
+      if (perfilPhoneInput)    perfilPhoneInput.value    = profile.phone || "";
+
+      if (perfilTzSelect) {
+        const tzValue = profile.timezone || "America/Chihuahua";
+        if ([...perfilTzSelect.options].some(o => o.value === tzValue)) {
+          perfilTzSelect.value = tzValue;
+        }
+      }
+
+      if (perfilLangSelect) {
+        const langValue = profile.language || "es-MX";
+        if ([...perfilLangSelect.options].some(o => o.value === langValue)) {
+          perfilLangSelect.value = langValue;
+        }
+      }
+
+      if (perfilDateSelect) {
+        const dfValue = profile.date_format || "DD/MM/YYYY";
+        if ([...perfilDateSelect.options].some(o => o.value === dfValue)) {
+          perfilDateSelect.value = dfValue;
+        }
+      }
+
+      // ---- Avatar grande (panel Perfil) ----
+      if (perfilAvatarEl) {
+        if (avatarUrl) {
+          perfilAvatarEl.style.backgroundImage = `url(${avatarUrl})`;
+          perfilAvatarEl.style.backgroundSize  = "cover";
+          perfilAvatarEl.style.backgroundPosition = "center";
+          perfilAvatarEl.textContent = "";
+        } else {
+          perfilAvatarEl.style.backgroundImage = "none";
+          perfilAvatarEl.textContent = initials;
+        }
+      }
+
+      // ---- Plan / suscripción top bar (ya lo tenías) ----
+      if (profile.default_org_id) {
+        const { data: org, error: orgError } = await supabase
+          .from("organizations")
+          .select("id, name")
+          .eq("id", profile.default_org_id)
+          .single();
+
+        if (!orgError && org) {
+          const { data: subs, error: subsError } = await supabase
+            .from("subscriptions")
+            .select(`
+              id,
+              status,
+              plan,
+              expires_at,
+              products ( code, name )
+            `)
+            .eq("org_id", org.id)
+            .order("created_at", { ascending: true });
+
+          if (!subsError && subs && subs.length > 0) {
+            const active = subs.find(s => s.status === "active" || s.status === "trial") || subs[0];
+
+            const planName =
+              (active.products && (active.products.name || active.products.code)) ||
+              active.plan ||
+              "Plan Smart Ink";
+
+            const planLabelEl = document.getElementById("top-plan-name");
+            const planRenewEl = document.getElementById("top-plan-renewal");
+
+            if (planLabelEl) {
+              planLabelEl.textContent = planName;
             }
-  
-            if (perfilLangSelect) {
-              const langValue = profile.language || "es-MX";
-              if ([...perfilLangSelect.options].some(o => o.value === langValue)) {
-                perfilLangSelect.value = langValue;
-              }
-            }
-  
-            if (perfilDateSelect) {
-              const dfValue = profile.date_format || "DD/MM/YYYY";
-              if ([...perfilDateSelect.options].some(o => o.value === dfValue)) {
-                perfilDateSelect.value = dfValue;
-              }
-            }
-  
-            // ---- Avatar: usar avatar_url si existe; si no, iniciales ----
-            if (perfilAvatarEl) {
-              if (profile.avatar_url) {
-                perfilAvatarEl.style.backgroundImage = `url(${profile.avatar_url})`;
-                perfilAvatarEl.style.backgroundSize  = "cover";
-                perfilAvatarEl.style.backgroundPosition = "center";
-                perfilAvatarEl.textContent = "";
-              } else {
-                perfilAvatarEl.style.backgroundImage = "none";
-                perfilAvatarEl.textContent = initials;
-              }
-            }
-  
-            // ---- Plan / suscripción para el top bar ----
-            if (profile.default_org_id) {
-              const { data: org, error: orgError } = await supabase
-                .from("organizations")
-                .select("id, name")
-                .eq("id", profile.default_org_id)
-                .single();
-  
-              if (!orgError && org) {
-                const { data: subs, error: subsError } = await supabase
-                  .from("subscriptions")
-                  .select(`
-                    id,
-                    status,
-                    plan,
-                    expires_at,
-                    products ( code, name )
-                  `)
-                  .eq("org_id", org.id)
-                  .order("created_at", { ascending: true });
-  
-                if (!subsError && subs && subs.length > 0) {
-                  const active = subs.find(s => s.status === "active" || s.status === "trial") || subs[0];
-  
-                  const planName =
-                    (active.products && (active.products.name || active.products.code)) ||
-                    active.plan ||
-                    "Plan Smart Ink";
-  
-                  const planLabelEl = document.getElementById("top-plan-name");
-                  const planRenewEl = document.getElementById("top-plan-renewal");
-  
-                  if (planLabelEl) {
-                    planLabelEl.textContent = planName;
-                  }
-                  if (planRenewEl) {
-                    const d = active.expires_at ? new Date(active.expires_at) : null;
-                    planRenewEl.textContent = d
-                      ? "Renovación: " + d.toLocaleDateString("es-MX")
-                      : "Renovación automática activa";
-                  }
-                }
-              }
+            if (planRenewEl) {
+              const d = active.expires_at ? new Date(active.expires_at) : null;
+              planRenewEl.textContent = d
+                ? "Renovación: " + d.toLocaleDateString("es-MX")
+                : "Renovación automática activa";
             }
           }
-        } catch (e) {
-          console.warn("Error cargando perfil/plan:", e);
         }
-  
-        // ---- Pinta datos en el header mini user (aunque no haya perfil) ----
-        const nameEl   = document.getElementById("top-user-name");
-        const emailEl  = document.getElementById("top-user-email");
-        const avatarEl = document.getElementById("top-user-avatar");
-  
-        if (nameEl)   nameEl.textContent = displayName;
-        if (emailEl)  emailEl.textContent = emailLabel;
-        if (avatarEl) avatarEl.textContent = initials;
       }
+    }
+  } catch (e) {
+    console.warn("Error cargando perfil/plan:", e);
+  }
+
+  // ---- Mini header (top user) ----
+  const nameEl   = document.getElementById("top-user-name");
+  const emailEl  = document.getElementById("top-user-email");
+  const avatarEl = document.getElementById("top-user-avatar");
+
+  if (nameEl)  nameEl.textContent  = displayName;
+  if (emailEl) emailEl.textContent = emailLabel;
+
+  if (avatarEl) {
+    if (avatarUrl) {
+      avatarEl.style.backgroundImage = `url(${avatarUrl})`;
+      avatarEl.style.backgroundSize  = "cover";
+      avatarEl.style.backgroundPosition = "center";
+      avatarEl.textContent = "";
+    } else {
+      avatarEl.style.backgroundImage = "none";
+      avatarEl.textContent = initials;
+    }
+  }
+}
   
       await loadAccountData();
   

@@ -340,6 +340,24 @@
   display: none;
 }
 
+.si-user-avatar {
+  width: 26px;
+  height: 26px;
+  border-radius: 999px;
+  background: radial-gradient(circle at top left, rgba(56,189,248,0.9), rgba(16,185,129,0.9));
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 600;
+  color: #020617;
+  overflow: hidden;
+}
+
+.si-user-avatar--img {
+  background-size: cover;
+  background-position: center;
+}
 </style>
 
 
@@ -1044,7 +1062,7 @@
   // =============================
   // HEADER / CONTROLES AUTH
   // =============================
-async function siRefreshAuthControls(existingUser) {
+  async function siRefreshAuthControls(existingUser) {
   const authControls = document.getElementById("auth-controls");
   if (!authControls) return;
 
@@ -1072,22 +1090,53 @@ async function siRefreshAuthControls(existingUser) {
     return;
   }
 
-  // 🟢 CON SESIÓN → saludo + menú usuario
+  // 🟢 CON SESIÓN → saludo + menú usuario + avatar
   let displayName = user.email;
   let emailLabel  = user.email;
+  let initials    = (user.email || "?").charAt(0).toUpperCase();
+  let avatarUrl   = null;
+
   try {
     const { data: profile, error: profileError } = await supabase
       .from("profiles")
-      .select("full_name, company")
+      .select("full_name, company, avatar_url")
       .eq("id", user.id)
       .single();
 
     if (!profileError && profile) {
-      displayName = profile.company || profile.full_name || user.email;
+      displayName =
+        profile.company || profile.full_name || user.email || "Usuario Smart Ink";
+
+      initials = (profile.company || profile.full_name || user.email || "?")
+        .split(" ")
+        .filter(Boolean)
+        .map(p => p[0])
+        .join("")
+        .slice(0, 2)
+        .toUpperCase();
+
+      avatarUrl = profile.avatar_url || null;
     }
   } catch (e) {
-    // si falla usamos email
+    // si falla usamos email + initials ya calculados
   }
+
+  const avatarHtml = avatarUrl
+    ? `
+      <span
+        id="header-user-avatar"
+        class="si-user-avatar si-user-avatar--img"
+        style="background-image:url('${avatarUrl}');"
+      ></span>
+    `
+    : `
+      <span
+        id="header-user-avatar"
+        class="si-user-avatar"
+      >
+        ${initials}
+      </span>
+    `;
 
   authControls.innerHTML = `
     <div class="relative">
@@ -1096,6 +1145,7 @@ async function siRefreshAuthControls(existingUser) {
         class="si-btn si-btn-ghost flex items-center gap-2"
         id="header-user-menu-btn"
       >
+        ${avatarHtml}
         <span class="si-user-label hidden sm:inline-block">
           Hola, ${displayName}
         </span>
@@ -1129,12 +1179,12 @@ async function siRefreshAuthControls(existingUser) {
           Mi cuenta
         </button>
         <div class="border-t border-slate-700/60 my-1"></div>
-          <a
-        href="logout.html"
-        class="block w-full text-left px-3 py-2 hover:bg-red-600/20 text-red-400"
-      >
-        Cerrar sesión
-      </a>
+        <a
+          href="logout.html"
+          class="block w-full text-left px-3 py-2 hover:bg-red-600/20 text-red-400"
+        >
+          Cerrar sesión
+        </a>
       </div>
     </div>
   `;
