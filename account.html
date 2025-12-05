@@ -69,28 +69,50 @@
   </div>
 </div>
 
-<!-- User mini + logout -->
+<!-- User mini + nav + logout -->
 <div class="flex items-center gap-2">
-<!-- User mini -->
-<button class="flex items-center gap-2 rounded-xl border border-slate-700 bg-slate-900/70 px-3 py-1.5 hover:border-smartink.gold/60 hover:bg-slate-900 transition-colors">
-  <div
-    id="top-user-avatar"
-    class="h-8 w-8 rounded-full bg-gradient-to-br from-cyan-400 to-emerald-400 flex items-center justify-center text-slate-900 text-sm font-bold bg-cover bg-center">
-    JV
-  </div>
-  <div class="hidden sm:block text-left">
-    <p id="top-user-name" class="text-xs font-medium text-slate-100">
-      Cargando usuario...
-    </p>
-    <p id="top-user-email" class="text-[11px] text-slate-400">
-      —
-    </p>
-  </div>
-  <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 9l6 6 6-6" />
-  </svg>
-</button>
-<!--logout-->
+  <!-- User mini -->
+  <button
+    class="flex items-center gap-2 rounded-xl border border-slate-700 bg-slate-900/70 px-3 py-1.5 hover:border-smartink.gold/60 hover:bg-slate-900 transition-colors"
+  >
+    <div
+      id="top-user-avatar"
+      class="h-8 w-8 rounded-full bg-gradient-to-br from-cyan-400 to-emerald-400 flex items-center justify-center text-slate-900 text-sm font-bold bg-cover bg-center"
+    >
+      JV
+    </div>
+    <div class="hidden sm:block text-left">
+      <p id="top-user-name" class="text-xs font-medium text-slate-100">
+        Cargando usuario...
+      </p>
+      <p id="top-user-email" class="text-[11px] text-slate-400">
+        —
+      </p>
+    </div>
+    <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 9l6 6 6-6" />
+    </svg>
+  </button>
+
+  <!-- Ir a mi panel (dashboard) -->
+  <button
+    id="account-go-dashboard-btn"
+    type="button"
+    class="hidden sm:inline-flex items-center px-3 py-1.5 rounded-xl border border-slate-700 text-[11px] text-slate-200 hover:border-smartink.gold/70 hover:text-smartink.gold"
+  >
+    Ir a mi panel
+  </button>
+
+  <!-- Volver al inicio (landing) sin cerrar sesión -->
+  <button
+    id="account-go-home-btn"
+    type="button"
+    class="hidden sm:inline-flex items-center px-3 py-1.5 rounded-xl border border-slate-700 text-[11px] text-slate-200 hover:border-smartink.gold/70 hover:text-smartink.gold"
+  >
+    Inicio
+  </button>
+
+  <!-- Logout -->
   <button
     id="account-logout-btn"
     type="button"
@@ -1507,16 +1529,32 @@
         });
       }
   
-      // ---------------------------
-      // 4) Logout desde account
-      // ---------------------------
-      const logoutBtn = document.getElementById("account-logout-btn");
-      if (logoutBtn) {
-        logoutBtn.addEventListener("click", async () => {
-          await supabase.auth.signOut();
-          window.location.href = LANDING_URL;
-        });
-      }
+// ---------------------------
+// 4) Navegación + Logout desde account
+// ---------------------------
+const logoutBtn      = document.getElementById("account-logout-btn");
+const goDashboardBtn = document.getElementById("account-go-dashboard-btn");
+const goHomeBtn      = document.getElementById("account-go-home-btn");
+
+if (logoutBtn) {
+  logoutBtn.addEventListener("click", async () => {
+    await supabase.auth.signOut();
+    window.location.href = LANDING_URL;
+  });
+}
+
+if (goDashboardBtn) {
+  goDashboardBtn.addEventListener("click", () => {
+    window.location.href = DASHBOARD_URL;
+  });
+}
+
+if (goHomeBtn) {
+  goHomeBtn.addEventListener("click", () => {
+    window.location.href = LANDING_URL;
+  });
+}
+
   
       // ---------------------------
       // 5) Lógica de tabs

@@ -464,19 +464,28 @@
         </div>
       </div>
     </div>
-    <div class="topbar-right">
-      <div class="badge-user" id="user-badge">
-        <div class="badge-avatar" id="user-avatar">SI</div>
-        <div class="badge-user-text">
-          <div id="user-email" class="badge-email">Cargando usuario...</div>
-          <div id="user-name" class="badge-name">—</div>
-        </div>
-      </div>
-      <button class="btn-ghost" id="logout-btn">
-        Cerrar sesión
-      </button>
-      
-    </div>
+<div class="topbar-right">
+  <div class="badge-user" id="user-badge">
+    <span class="badge-dot"></span>
+    <span id="user-email">Cargando usuario...</span>
+  </div>
+
+  <!-- Ir al inicio (landing) SIN cerrar sesión -->
+  <button class="btn-ghost" id="go-home-btn">
+    Inicio
+  </button>
+
+  <!-- Ir a la página de cuenta -->
+  <button class="btn-ghost" id="go-account-btn">
+    Mi cuenta
+  </button>
+
+  <!-- Cerrar sesión -->
+  <button class="btn-ghost" id="logout-btn">
+    Cerrar sesión
+  </button>
+</div>
+
   </header>
 
   <main class="main">
@@ -565,7 +574,12 @@
 
   // 🚪 Ruta del sitio principal (donde está el modal de login)
   // Ejemplo GitHub Pages: "/Website/index.html"
-  const MAIN_SITE_URL = "/Website/";
+const MAIN_SITE_URL = "/Website/";
+const LANDING_URL  = "/Website/";
+const ACCOUNT_URL  = "/Website/account.html";
+const DASHBOARD_URL = "/Website/dashboard.html"; // opcional pero consistente
+
+
 
   const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
   const userAvatarEl = document.getElementById("user-avatar");
@@ -581,6 +595,8 @@
   const subsListEl = document.getElementById("subs-list");
   const modulesGridEl = document.getElementById("modules-grid");
   const logoutBtn = document.getElementById("logout-btn");
+  const goHomeBtn    = document.getElementById("go-home-btn");
+  const goAccountBtn = document.getElementById("go-account-btn");
 
   // Utilidad: formatear fechas
   function formatDate(value) {
@@ -934,10 +950,27 @@ if (userAvatarEl) {
     });
   }
 
+
+if (logoutBtn) {
   logoutBtn.addEventListener("click", async () => {
     await supabase.auth.signOut();
-    window.location.href = MAIN_SITE_URL;
+    window.location.href = LANDING_URL;
   });
+}
+
+if (goHomeBtn) {
+  goHomeBtn.addEventListener("click", () => {
+    // Solo navega, NO hace signOut
+    window.location.href = LANDING_URL;
+  });
+}
+
+if (goAccountBtn) {
+  goAccountBtn.addEventListener("click", () => {
+    window.location.href = ACCOUNT_URL;
+  });
+}
+
 
   loadDashboard();
 </script>
