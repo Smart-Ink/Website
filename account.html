@@ -69,10 +69,12 @@
   </div>
 </div>
 
-<!-- User mini + nav + logout -->
-<div class="flex items-center gap-2">
-  <!-- User mini -->
+<!-- User dropdown -->
+<div class="relative">
+  <!-- Trigger button -->
   <button
+    id="account-user-menu-btn"
+    type="button"
     class="flex items-center gap-2 rounded-xl border border-slate-700 bg-slate-900/70 px-3 py-1.5 hover:border-smartink.gold/60 hover:bg-slate-900 transition-colors"
   >
     <div
@@ -94,32 +96,47 @@
     </svg>
   </button>
 
-  <!-- Ir a mi panel (dashboard) -->
-  <button
-    id="account-go-dashboard-btn"
-    type="button"
-    class="hidden sm:inline-flex items-center px-3 py-1.5 rounded-xl border border-slate-700 text-[11px] text-slate-200 hover:border-smartink.gold/70 hover:text-smartink.gold"
+  <!-- Dropdown panel -->
+  <div
+    id="account-user-menu-panel"
+    class="hidden absolute right-0 mt-2 w-56 rounded-xl bg-slate-900/95 border border-slate-700/70 shadow-xl py-1 text-sm z-50"
   >
-    Ir a mi panel
-  </button>
+    <div class="px-3 py-2 text-[11px] text-slate-400 border-b border-slate-700/70">
+      <div class="font-semibold text-slate-100" id="account-menu-name">
+        <!-- se rellena vía JS, pero dejamos algo por defecto -->
+        Usuario Smart Ink
+      </div>
+      <div class="truncate" id="account-menu-email">
+        correo@empresa.com
+      </div>
+    </div>
 
-  <!-- Volver al inicio (landing) sin cerrar sesión -->
-  <button
-    id="account-go-home-btn"
-    type="button"
-    class="hidden sm:inline-flex items-center px-3 py-1.5 rounded-xl border border-slate-700 text-[11px] text-slate-200 hover:border-smartink.gold/70 hover:text-smartink.gold"
-  >
-    Inicio
-  </button>
+    <button
+      type="button"
+      id="account-menu-dashboard"
+      class="w-full text-left px-3 py-2 hover:bg-slate-800/90 text-[13px]"
+    >
+      Ir a mi panel
+    </button>
 
-  <!-- Logout -->
-  <button
-    id="account-logout-btn"
-    type="button"
-    class="text-[11px] text-slate-400 hover:text-red-400"
-  >
-    Cerrar sesión
-  </button>
+    <button
+      type="button"
+      id="account-menu-home"
+      class="w-full text-left px-3 py-2 hover:bg-slate-800/90 text-[13px]"
+    >
+      Ir al inicio
+    </button>
+
+    <div class="border-t border-slate-700/60 my-1"></div>
+
+    <button
+      type="button"
+      id="account-menu-logout"
+      class="w-full text-left px-3 py-2 hover:bg-red-600/20 text-red-400 text-[13px]"
+    >
+      Cerrar sesión
+    </button>
+  </div>
 </div>
 
         </div>
@@ -1372,6 +1389,8 @@
   const nameEl   = document.getElementById("top-user-name");
   const emailEl  = document.getElementById("top-user-email");
   const avatarEl = document.getElementById("top-user-avatar");
+  const menuNameEl  = document.getElementById("account-menu-name");
+  const menuEmailEl = document.getElementById("account-menu-email");
 
   if (nameEl)  nameEl.textContent  = displayName;
   if (emailEl) emailEl.textContent = emailLabel;
@@ -1387,6 +1406,8 @@
       avatarEl.textContent = initials;
     }
   }
+  if (menuNameEl)  menuNameEl.textContent  = displayName;
+  if (menuEmailEl) menuEmailEl.textContent = emailLabel;
 }
   
       await loadAccountData();
@@ -1530,30 +1551,54 @@
       }
   
 // ---------------------------
-// 4) Navegación + Logout desde account
+// 4) User dropdown + navegación + logout
 // ---------------------------
-const logoutBtn      = document.getElementById("account-logout-btn");
-const goDashboardBtn = document.getElementById("account-go-dashboard-btn");
-const goHomeBtn      = document.getElementById("account-go-home-btn");
+const accountMenuBtn     = document.getElementById("account-user-menu-btn");
+const accountMenuPanel   = document.getElementById("account-user-menu-panel");
+const accountMenuDash    = document.getElementById("account-menu-dashboard");
+const accountMenuHome    = document.getElementById("account-menu-home");
+const accountMenuLogout  = document.getElementById("account-menu-logout");
 
-if (logoutBtn) {
-  logoutBtn.addEventListener("click", async () => {
+// Abre/cierra el dropdown
+if (accountMenuBtn && accountMenuPanel) {
+  accountMenuBtn.addEventListener("click", (event) => {
+    event.stopPropagation();
+    accountMenuPanel.classList.toggle("hidden");
+  });
+
+  // Cerrar al hacer click fuera
+  document.addEventListener("click", (event) => {
+    if (
+      !accountMenuPanel.contains(event.target) &&
+      !accountMenuBtn.contains(event.target)
+    ) {
+      accountMenuPanel.classList.add("hidden");
+    }
+  });
+}
+
+// Navegar al dashboard
+if (accountMenuDash) {
+  accountMenuDash.addEventListener("click", () => {
+    window.location.href = DASHBOARD_URL;
+  });
+}
+
+// Navegar al landing sin cerrar sesión
+if (accountMenuHome) {
+  accountMenuHome.addEventListener("click", () => {
+    window.location.href = LANDING_URL;
+  });
+}
+
+// Cerrar sesión
+if (accountMenuLogout) {
+  accountMenuLogout.addEventListener("click", async () => {
     await supabase.auth.signOut();
     window.location.href = LANDING_URL;
   });
 }
 
-if (goDashboardBtn) {
-  goDashboardBtn.addEventListener("click", () => {
-    window.location.href = DASHBOARD_URL;
-  });
-}
-
-if (goHomeBtn) {
-  goHomeBtn.addEventListener("click", () => {
-    window.location.href = LANDING_URL;
-  });
-}
 
   
       // ---------------------------
