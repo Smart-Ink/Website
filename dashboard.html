@@ -568,65 +568,192 @@
   display: none;
 }
 
+.dash-user-menu-wrapper {
+  position: relative;
+}
+
+.dash-user-menu-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.dash-user-avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 999px;
+  background: radial-gradient(circle at top left, #22d3ee, #22c55e);
+  color: #020617;
+  font-size: 12px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-size: cover;
+  background-position: center;
+  overflow: hidden;
+}
+
+.dash-user-text {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.dash-user-name {
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.dash-user-email {
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.dash-chevron {
+  font-size: 10px;
+  margin-left: 4px;
+  color: var(--muted);
+}
+
+.dash-user-menu-panel {
+  position: absolute;
+  right: 0;
+  margin-top: 8px;
+  min-width: 220px;
+  background: rgba(15, 23, 42, 0.98);
+  border-radius: 12px;
+  border: 1px solid var(--border-subtle);
+  box-shadow: var(--shadow-soft);
+  padding: 4px 0;
+  z-index: 50;
+}
+
+.dash-user-menu-panel.hidden {
+  display: none;
+}
+
+.dash-menu-header {
+  padding: 6px 10px 8px;
+  border-bottom: 1px solid rgba(51, 65, 85, 0.9);
+  font-size: 11px;
+}
+
+.dash-menu-name {
+  font-weight: 600;
+  color: #e5e7eb;
+}
+
+.dash-menu-email {
+  color: var(--muted);
+  font-size: 11px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.dash-menu-item {
+  width: 100%;
+  text-align: left;
+  padding: 6px 10px;
+  font-size: 12px;
+  color: #e5e7eb;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.dash-menu-item:hover {
+  background: rgba(30, 64, 175, 0.45);
+}
+
+.dash-menu-divider {
+  height: 1px;
+  margin: 4px 0;
+  background: rgba(51, 65, 85, 0.9);
+}
+
+.dash-menu-danger {
+  color: #f97373;
+}
+
+.dash-menu-danger:hover {
+  background: rgba(127, 29, 29, 0.45);
+}
+
+
   </style>
 </head>
 
 <body>
 <div class="app-shell">
-<div class="topbar-right">
-  <!-- Botón / trigger del menú usuario -->
-  <button class="badge-user" id="dash-user-menu-btn" type="button">
-    <div
-      id="dash-user-avatar"
-      class="dash-user-avatar"
-    >
-      SI
-    </div>
-    <div class="dash-user-text">
-      <div id="dash-user-name" class="dash-user-name">
-        Cargando usuario...
-      </div>
-      <div id="dash-user-email" class="dash-user-email">
-        —
+<header class="topbar">
+  <div class="topbar-left">
+    <img src="logo.png" alt="Smart Ink" class="topbar-logo" />
+    <div>
+      <div class="topbar-title">Smart Ink · Panel del Cliente</div>
+      <div style="font-size:11px;color:var(--muted);">
+        Productos, suscripciones y estado de tu cuenta
       </div>
     </div>
-    <span class="dash-user-chevron">▼</span>
-  </button>
-
-  <!-- Panel desplegable -->
-  <div id="dash-user-menu-panel" class="dash-user-menu hidden">
-    <div class="dash-user-menu-header">
-      <div id="dash-menu-name" class="dash-menu-name">Usuario Smart Ink</div>
-      <div id="dash-menu-email" class="dash-menu-email">correo@empresa.com</div>
-    </div>
-
-    <button
-      type="button"
-      id="dash-menu-home"
-      class="dash-menu-item"
-    >
-      Ir al inicio
-    </button>
-
-    <button
-      type="button"
-      id="dash-menu-account"
-      class="dash-menu-item"
-    >
-      Mi cuenta
-    </button>
-
-    <div class="dash-menu-divider"></div>
-
-    <button
-      type="button"
-      id="dash-menu-logout"
-      class="dash-menu-item dash-menu-item-danger"
-    >
-      Cerrar sesión
-    </button>
   </div>
-</div>
+
+  <div class="topbar-right">
+    <div class="dash-user-menu-wrapper">
+      <!-- Button with avatar + name -->
+      <button
+        type="button"
+        class="btn-ghost dash-user-menu-btn"
+        id="dash-user-menu-btn"
+      >
+        <div
+          id="dash-user-avatar"
+          class="dash-user-avatar"
+        >
+          SI
+        </div>
+        <div class="dash-user-text">
+          <div id="dash-user-name" class="dash-user-name">
+            Cargando usuario...
+          </div>
+          <div id="dash-user-email" class="dash-user-email">
+            —
+          </div>
+        </div>
+        <span class="dash-chevron">▼</span>
+      </button>
+
+      <!-- Dropdown panel -->
+      <div
+        id="dash-user-menu-panel"
+        class="dash-user-menu-panel hidden"
+      >
+        <div class="dash-menu-header">
+          <div id="dash-menu-name" class="dash-menu-name">Smart Ink</div>
+          <div id="dash-menu-email" class="dash-menu-email">demo@smartink.mx</div>
+        </div>
+
+        <button type="button" id="dash-menu-home" class="dash-menu-item">
+          Inicio
+        </button>
+        <button type="button" id="dash-menu-account" class="dash-menu-item">
+          Mi cuenta
+        </button>
+
+        <div class="dash-menu-divider"></div>
+
+        <button
+          type="button"
+          id="dash-menu-logout"
+          class="dash-menu-item dash-menu-danger"
+        >
+          Cerrar sesión
+        </button>
+      </div>
+    </div>
+  </div>
+</header>
+
 
 
   <main class="main">
@@ -752,6 +879,7 @@ const dashMenuLogout    = document.getElementById("dash-menu-logout");
 
 
 
+
   // Utilidad: formatear fechas
   function formatDate(value) {
     if (!value) return "—";
@@ -839,22 +967,24 @@ async function loadDashboard() {
     .slice(0, 2)
     .toUpperCase();
 
-  // Mini header + menú
-  if (dashUserNameEl)  dashUserNameEl.textContent  = displayName;
-  if (dashUserEmailEl) dashUserEmailEl.textContent = emailLabel;
+// Rellenar header dropdown
+if (dashUserNameEl) dashUserNameEl.textContent = displayName;
+if (dashUserEmailEl) dashUserEmailEl.textContent = emailLabel || "";
+if (dashMenuNameEl) dashMenuNameEl.textContent = displayName;
+if (dashMenuEmailEl) dashMenuEmailEl.textContent = emailLabel || "";
 
-  if (dashUserAvatarEl) {
-    if (avatarUrl) {
-      dashUserAvatarEl.style.backgroundImage = `url(${avatarUrl})`;
-      dashUserAvatarEl.textContent = "";
-    } else {
-      dashUserAvatarEl.style.backgroundImage = "none";
-      dashUserAvatarEl.textContent = initials;
-    }
+if (dashUserAvatarEl) {
+  if (avatarUrl) {
+    dashUserAvatarEl.style.backgroundImage = `url(${avatarUrl})`;
+    dashUserAvatarEl.textContent = "";
+  } else {
+    dashUserAvatarEl.style.backgroundImage = "none";
+    dashUserAvatarEl.textContent = initials;
   }
+}
 
-  if (dashMenuNameEl)  dashMenuNameEl.textContent  = displayName;
-  if (dashMenuEmailEl) dashMenuEmailEl.textContent = emailLabel;
+
+
 
 
     // 2) Organización principal
@@ -1123,38 +1253,39 @@ async function loadDashboard() {
 // ---------------------
 // Dropdown usuario (dashboard)
 // ---------------------
+// Toggle dropdown
 if (dashUserMenuBtn && dashUserMenuPanel) {
-  dashUserMenuBtn.addEventListener("click", (event) => {
-    event.stopPropagation();
+  dashUserMenuBtn.addEventListener("click", (e) => {
+    e.stopPropagation();
     dashUserMenuPanel.classList.toggle("hidden");
   });
 
-  // Cerrar al hacer click fuera
-  document.addEventListener("click", (event) => {
+  document.addEventListener("click", (e) => {
     if (
-      !dashUserMenuPanel.contains(event.target) &&
-      !dashUserMenuBtn.contains(event.target)
+      !dashUserMenuPanel.classList.contains("hidden") &&
+      !dashUserMenuPanel.contains(e.target) &&
+      !dashUserMenuBtn.contains(e.target)
     ) {
       dashUserMenuPanel.classList.add("hidden");
     }
   });
 }
 
-// Ir al landing SIN cerrar sesión
+// Actions
 if (dashMenuHome) {
   dashMenuHome.addEventListener("click", () => {
     window.location.href = LANDING_URL;
   });
 }
 
-// Ir a la página de cuenta
+
 if (dashMenuAccount) {
   dashMenuAccount.addEventListener("click", () => {
     window.location.href = ACCOUNT_URL;
   });
 }
 
-// Cerrar sesión
+
 if (dashMenuLogout) {
   dashMenuLogout.addEventListener("click", async () => {
     await supabase.auth.signOut();
@@ -1162,8 +1293,9 @@ if (dashMenuLogout) {
   });
 }
 
-// Finalmente, arranca el dashboard
+// Start dashboard
 loadDashboard();
+
 
 
 
